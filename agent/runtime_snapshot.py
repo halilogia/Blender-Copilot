@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple
 
+from agent.timeline_models import ActiveTurnView, TimelineTurn
+
 
 @dataclass(frozen=True)
 class RuntimeSnapshot:
@@ -16,3 +18,6 @@ class RuntimeSnapshot:
     last_plan_summary: Optional[Dict[str, Any]]
     pending_approval: Optional[Dict[str, Any]]
     history: Tuple[Dict[str, Any], ...]
+    timeline: Tuple[TimelineTurn, ...] = ()
+    active_turn: Optional[ActiveTurnView] = None
+

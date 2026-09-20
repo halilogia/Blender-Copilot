@@ -33,6 +33,7 @@ from agent.event_router import EventRoute, EventRouter
 from agent.history import HistoryKind, RuntimeHistory
 from agent.prompt_queue import PromptQueue, QueuedPrompt
 from agent.runtime_snapshot import RuntimeSnapshot
+from agent.timeline_models import build_timeline_projection
 from agent.verifier import ChangeVerifier, build_change_set_from_result
 from agent.visual_verifier import (
     VisualResultParser,
@@ -227,6 +228,12 @@ class AgentRuntime:
                 "tool_name": self._pending_approval.tool_name,
             }
         last_response = self._last_result.final_text if self._last_result else ""
+        timeline, active_turn = build_timeline_projection(
+            history_items=self.history.items,
+            current_turn_id=self._current_turn_id,
+            current_prompt=self._current_prompt,
+            streaming_text=self._streaming_text,
+        )
         return RuntimeSnapshot(
             state=self.current_state.value,
             current_turn_id=self._current_turn_id,
@@ -236,6 +243,8 @@ class AgentRuntime:
             last_plan_summary=self.last_plan_summary,
             pending_approval=pending,
             history=tuple(item.to_dict() for item in self.history.items),
+            timeline=timeline,
+            active_turn=active_turn,
         )
 
     @property
