@@ -1,4 +1,4 @@
-# Blender AI Copilot (Blender AI Sidebar) — v1.0.0
+# Blender - Copilot — v1.0.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2.1 LTS.
 
@@ -9,9 +9,9 @@
 [![Tests](https://img.shields.io/badge/Tests-618%20Unit%20%7C%2023%20Integration%20Suites-brightgreen.svg)]()
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-**Blender AI Copilot** is a native, extensible AI agent built specifically for Blender 5.2.1 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
+**Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2.1 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
 
-> v1.0.0 is the first public release checkpoint. It includes FIFO prompt queueing, structured plan/task progress, diagnostics, multiline HUD input, and 618 passing pure-Python unit tests.
+> v1.0.0 is the first public release checkpoint for Blender - Copilot. It includes FIFO prompt queueing, structured plan/task progress, diagnostics, multiline HUD input, and 618 passing pure-Python unit tests.
 
 ---
 
@@ -204,7 +204,7 @@ Blender AI Sidebar/
    git clone https://github.com/halilogia/Blender-AI-Sidebar.git
    ```
 2. In Blender, open **Edit > Preferences > Add-ons**.
-3. Search for **Blender AI Sidebar** and enable the checkbox.
+3. Search for **Blender - Copilot** and enable the checkbox.
 4. Expand the addon preferences to configure:
    - **Base URL**: e.g. `http://localhost:20128/v1` (or your local/remote endpoint).
    - **Model**: e.g. `gpt-4o`, `qwen2.5-coder`, `llama3.1`.
@@ -276,7 +276,7 @@ contain prompts and provider error details.
 
 ## Türkçe
 
-Blender AI Copilot, Blender içinde çalışan yerel ve genişletilebilir bir AI
+Blender - Copilot, Blender içinde çalışan yerel ve genişletilebilir bir AI
 ajanıdır. OpenAI uyumlu LLM sağlayıcılarıyla konuşur; sahneyi incelemek,
 nesne oluşturmak, dönüştürmek, silmek, materyal düzenlemek ve çok adımlı
 işlemleri güvenli biçimde yürütmek için yapılandırılmış araçlar kullanır.

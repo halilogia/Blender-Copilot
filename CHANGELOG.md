@@ -1,4 +1,4 @@
-# Changelog — Blender AI Copilot
+# Changelog — Blender - Copilot
 
 All notable changes to this project will be documented in this file.
 

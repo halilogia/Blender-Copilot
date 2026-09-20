@@ -1,11 +1,11 @@
-"""Blender AI Sidebar — Autonomous AI Agent & Grounding Copilot for Blender."""
+"""Blender - Copilot — Autonomous AI Agent & Grounding Copilot for Blender."""
 
 bl_info = {
-    "name": "Blender AI Sidebar",
+    "name": "Blender - Copilot",
     "author": "Halil Emre",
     "version": (1, 0, 0),
     "blender": (4, 2, 0),
-    "location": "View3D > Sidebar > AI Sidebar / View3D > Alt+Space",
+    "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",
     "category": "Development",
 }

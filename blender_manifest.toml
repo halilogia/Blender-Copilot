@@ -2,7 +2,7 @@ schema_version = "1.0.0"
 
 id = "blender_ai_sidebar"
 version = "1.0.0"
-name = "Blender AI Sidebar"
+name = "Blender - Copilot"
 tagline = "Autonomous AI Agent & Grounding Copilot for Blender"
 maintainer = "Halil Emre"
 type = "add-on"

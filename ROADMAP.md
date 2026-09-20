@@ -1,4 +1,4 @@
-# Project Roadmap — Blender AI Copilot
+# Project Roadmap — Blender - Copilot
 
 This roadmap outlines the phased development trajectory for Blender AI Copilot, transitioning from a robust, non-destructive grounding foundation to a fully autonomous, safe Blender copilot.
 

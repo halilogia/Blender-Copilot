@@ -494,7 +494,7 @@ def draw_overlay_hud(context) -> None:
                 draw_rounded_rect(drawer_x, drawer_y, drawer_w, drawer_h, corner_r, (0.09, 0.095, 0.11, 0.96))
 
                 # Header
-                draw_text("🤖 Blender AI Assistant", drawer_x + 16.0, drawer_y + drawer_h - 22.0, size=11, color=(0.82, 0.99, 0.09, 0.9))
+                draw_text("🤖 Blender - Copilot", drawer_x + 16.0, drawer_y + drawer_h - 22.0, size=11, color=(0.82, 0.99, 0.09, 0.9))
 
                 # Copy action for the complete response text.
                 copy_w = 60.0

@@ -112,7 +112,7 @@ class AISIDEBAR_OT_copy_diagnostic_log_path(Operator):
 
     bl_idname = "ai_sidebar.copy_diagnostic_log_path"
     bl_label = "Copy Diagnostic Log Path"
-    bl_description = "Copy the Blender AI Sidebar diagnostic log path"
+    bl_description = "Copy the Blender - Copilot diagnostic log path"
 
     def execute(self, context):
         from core.logging_utils import get_log_path

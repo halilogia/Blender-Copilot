@@ -8,18 +8,18 @@ from core.logging_utils import get_log_path
 class AISIDEBAR_PT_main_panel(Panel):
     """Launcher, live status, and ordered conversation timeline."""
 
-    bl_label = "Blender AI Copilot"
+    bl_label = "Blender - Copilot"
     bl_idname = "AISIDEBAR_PT_main_panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "AI Sidebar"
+    bl_category = "Blender - Copilot"
 
     def draw(self, context):
         layout = self.layout
         props = getattr(context.window_manager, "ai_sidebar", None)
 
         if not props:
-            layout.label(text="AI Sidebar properties not initialized.", icon="ERROR")
+            layout.label(text="Blender - Copilot properties not initialized.", icon="ERROR")
             return
 
         # ---------------------------------------------------------------------
