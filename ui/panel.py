@@ -1,12 +1,18 @@
-"""3D Viewport N-Panel minimal launcher for Blender AI Sidebar."""
+"""3D Viewport N-Panel native Agent Chat Timeline for Blender Copilot."""
 
 import bpy
 from bpy.types import Panel
+
 from core.logging_utils import get_log_path
+from .text_formatting import (
+    format_tool_status_icon,
+    map_agent_status_to_ui,
+    wrap_multiline_text,
+)
 
 
 class AISIDEBAR_PT_main_panel(Panel):
-    """Launcher, live status, and ordered conversation timeline."""
+    """Native N-Panel Agent Chat Timeline and control interface."""
 
     bl_label = "Blender - Copilot"
     bl_idname = "AISIDEBAR_PT_main_panel"
@@ -23,96 +29,182 @@ class AISIDEBAR_PT_main_panel(Panel):
             return
 
         # ---------------------------------------------------------------------
-        # 1. Primary Action: Launch In-Viewport AI HUD (Higgsfield Style)
+        # 1. Agent Status Bar
         # ---------------------------------------------------------------------
-        col = layout.column(align=True)
-        col.scale_y = 1.4
-        col.operator("ai_sidebar.viewport_hud", text="✦ Open AI HUD", icon="WINDOW")
+        status_info = map_agent_status_to_ui(props.agent_status)
+        status_box = layout.box()
+        status_row = status_box.row(align=True)
+        status_row.label(
+            text=f"AGENT: {status_info['label']}",
+            icon=status_info["icon"],
+        )
+        queued = getattr(props, "queued_count", 0)
+        if queued > 0:
+            status_row.label(text=f"({queued} queued)", icon="TIME")
 
-        hint_row = layout.row(align=True)
-        hint_row.scale_y = 0.85
-        hint_row.label(text="Shortcut: Alt + Space", icon="INFO")
+        # ---------------------------------------------------------------------
+        # 2. Prompt Input & Primary Action
+        # ---------------------------------------------------------------------
+        input_box = layout.box()
+        input_box.prop(props, "prompt_input", text="", placeholder="Type prompt...")
+
+        btn_row = input_box.row(align=True)
+        is_processing = props.agent_status in ("PROCESSING", "EXECUTING_TOOL")
+        send_btn = btn_row.operator("ai_sidebar.send_prompt", text="Send", icon="PLAY")
+        if is_processing:
+            btn_row.operator("ai_sidebar.cancel_turn", text="Cancel", icon="CANCEL")
+
+        # In-Viewport HUD launcher shortcut
+        hud_row = layout.row(align=True)
+        hud_row.scale_y = 1.1
+        hud_row.operator("ai_sidebar.viewport_hud", text="✦ Open AI HUD (Alt+Space)", icon="WINDOW")
 
         layout.separator()
 
         # ---------------------------------------------------------------------
-        # 2. Agent & Bridge Status
+        # 3. Plan Card (if active or last executed plan exists)
         # ---------------------------------------------------------------------
-        box = layout.box()
-        status = props.agent_status
+        plan_title = getattr(props, "plan_title", "")
+        if plan_title:
+            plan_box = layout.box()
+            plan_header = plan_box.row(align=True)
+            plan_status = getattr(props, "plan_status", "")
+            icon = "CHECKMARK" if plan_status in ("COMPLETED", "APPROVED") else "TIME"
+            plan_header.label(text=f"PLAN: {plan_title}", icon=icon)
+            summary = getattr(props, "plan_steps_summary", "")
+            if summary:
+                plan_header.label(text=summary)
 
-        if status == "IDLE":
-            box.label(text="AI Agent: Ready", icon="CHECKMARK")
-        elif status in ("PROCESSING", "EXECUTING_TOOL"):
-            box.label(text=f"AI: {props.current_action}", icon="TIME")
-            box.operator("ai_sidebar.cancel_turn", text="Cancel Turn", icon="CANCEL")
-        elif status == "ERROR":
-            box.label(text="AI: Error encountered", icon="ERROR")
+        # ---------------------------------------------------------------------
+        # 4. CURRENT ACTIVE TURN (In-Flight Streaming / Tool Execution)
+        # ---------------------------------------------------------------------
+        if getattr(props, "has_active_turn", False):
+            active_box = layout.box()
+            active_header = active_box.row(align=True)
+            active_header.label(text="CURRENT TURN", icon="TIME")
+            active_header.label(text=props.active_status)
+
+            # User prompt
+            if props.active_prompt:
+                p_col = active_box.column(align=True)
+                p_col.label(text="YOU", icon="USER")
+                self._draw_multiline(p_col, props.active_prompt)
+
+            # Live streaming response
+            if props.active_streaming_response:
+                active_box.separator()
+                a_col = active_box.column(align=True)
+                a_col.label(text="ASSISTANT (streaming)", icon="COMMUNITY")
+                self._draw_multiline(a_col, props.active_streaming_response)
+
+            # Active tools in-flight
+            if len(props.active_tools) > 0:
+                active_box.separator()
+                active_box.label(text="TOOLS", icon="TOOL_SETTINGS")
+                for tool in props.active_tools:
+                    t_row = active_box.row(align=True)
+                    icon_str = format_tool_status_icon(tool.status)
+                    t_row.label(text=f" {icon_str} {tool.tool_name}")
+                    if tool.summary:
+                        s_col = active_box.column(align=True)
+                        s_col.label(text=f"    {tool.summary}")
+
+            # Active error if any
+            if props.active_error:
+                active_box.separator()
+                err_col = active_box.column(align=True)
+                err_col.label(text="ERROR", icon="ERROR")
+                self._draw_multiline(err_col, props.active_error)
+
+        # ---------------------------------------------------------------------
+        # 5. CHAT TIMELINE (Completed Conversation Turns)
+        # ---------------------------------------------------------------------
+        timeline_turns = list(getattr(props, "timeline", []))
+        timeline_box = layout.box()
+        tl_header = timeline_box.row(align=True)
+        tl_header.label(text=f"CHAT TIMELINE ({len(timeline_turns)})", icon="TEXT")
+
+        if not timeline_turns and not getattr(props, "has_active_turn", False):
+            timeline_box.label(text="No conversation yet.", icon="INFO")
         else:
-            box.label(text=f"Status: {status}", icon="INFO")
+            # Render turns in chronological order (newest turns visible)
+            for turn in timeline_turns:
+                turn_box = timeline_box.box()
+
+                # User Prompt Block
+                p_col = turn_box.column(align=True)
+                p_col.label(text="YOU", icon="USER")
+                self._draw_multiline(p_col, turn.prompt)
+
+                # Tool Execution Checklist Block
+                if len(turn.tools) > 0:
+                    turn_box.separator()
+                    tools_header = turn_box.row(align=True)
+                    tools_header.label(text="TOOLS", icon="TOOL_SETTINGS")
+                    for tool in turn.tools:
+                        t_row = turn_box.row(align=True)
+                        icon_str = format_tool_status_icon(tool.status)
+                        t_row.label(text=f" {icon_str} {tool.tool_name}")
+                        if tool.summary:
+                            s_col = turn_box.column(align=True)
+                            s_col.label(text=f"    {tool.summary}")
+
+                # Assistant Final Response Block
+                if turn.final_response:
+                    turn_box.separator()
+                    a_col = turn_box.column(align=True)
+                    a_col.label(text="ASSISTANT", icon="CHECKMARK")
+                    self._draw_multiline(a_col, turn.final_response)
+
+                # Error Message Block if failed
+                if turn.error_message:
+                    turn_box.separator()
+                    e_col = turn_box.column(align=True)
+                    e_col.label(text="ERROR", icon="ERROR")
+                    self._draw_multiline(e_col, turn.error_message)
+
+                # Turn status footer
+                status_row = turn_box.row(align=True)
+                status_row.scale_y = 0.8
+                status_icon = "CHECKMARK" if turn.status == "COMPLETED" else ("CANCEL" if turn.status == "CANCELLED" else "ERROR")
+                status_row.label(text=f"{turn.status}", icon=status_icon)
 
         # ---------------------------------------------------------------------
-        # 3. Ordered conversation / prompt queue
+        # 6. Approval Actions Gate (When human approval is requested)
         # ---------------------------------------------------------------------
-        history = list(getattr(props, "history", []))
-        conversation_box = layout.box()
-        header = conversation_box.row(align=True)
-        header.label(text=f"Conversation ({len(history)})", icon="TEXT")
-        queued_count = int(getattr(props, "queued_count", 0))
-        if queued_count:
-            header.label(text=f"{queued_count} queued", icon="TIME")
+        if props.agent_status == "PENDING_APPROVAL":
+            approval_box = layout.box()
+            approval_box.label(text="⚠ Human Approval Required", icon="QUESTION")
+            appr_row = approval_box.row(align=True)
+            appr_row.scale_y = 1.3
+            appr_row.operator("ai_sidebar.approve_action", text="Approve", icon="CHECKMARK")
+            appr_row.operator("ai_sidebar.reject_action", text="Reject", icon="X")
 
-        if not history:
-            conversation_box.label(text="No messages yet.", icon="INFO")
-        else:
-            # RuntimeHistory is chronological. Showing the newest entries in
-            # this order makes queued prompts visible without hiding their
-            # position in the conversation.
-            for item in history[-12:]:
-                row = conversation_box.row(align=True)
-                row.label(text=_status_marker(item.status), icon="DOT")
-                row.label(text=_clip(item.title, 58))
-                summary = _clip(item.summary, 88)
-                if summary and summary != item.title:
-                    detail_row = conversation_box.row()
-                    detail_row.label(text=f"  {summary}")
+        # ---------------------------------------------------------------------
+        # 7. Actions & Diagnostics
+        # ---------------------------------------------------------------------
+        diag_box = layout.box()
+        diag_header = diag_box.row(align=True)
+        diag_header.label(text="Diagnostics & Controls", icon="INFO")
+        if timeline_turns or getattr(props, "history", []):
+            diag_header.operator("ai_sidebar.clear_history", text="Clear", icon="TRASH")
 
-        if status == "PENDING_APPROVAL":
-            approval_row = conversation_box.row(align=True)
-            approval_row.operator("ai_sidebar.approve_action", text="Approve", icon="CHECKMARK")
-            approval_row.operator("ai_sidebar.reject_action", text="Reject", icon="X")
-        if history:
-            conversation_box.operator("ai_sidebar.clear_history", text="Clear Conversation", icon="TRASH")
+        diag_row = diag_box.row(align=True)
+        diag_row.scale_y = 0.9
+        diag_row.label(text="Log: " + get_log_path())
+        diag_row.operator("ai_sidebar.copy_diagnostic_log_path", text="", icon="COPYDOWN")
 
-        diagnostics = layout.box()
-        diagnostics.label(text="Diagnostics", icon="INFO")
-        diagnostics.label(text="Log: " + get_log_path())
-        diagnostics.operator(
-            "ai_sidebar.copy_diagnostic_log_path",
-            text="Copy Log Path",
-            icon="COPYDOWN",
-        )
-
-
-def _clip(value, limit):
-    """Keep N-panel rows readable while retaining full text in the HUD."""
-    text = str(value or "").replace("\n", " ").strip()
-    return text if len(text) <= limit else text[: max(1, limit - 1)] + "…"
-
-
-def _status_marker(status):
-    return {
-        "QUEUED": "○",
-        "RUNNING": "●",
-        "PROCESSING": "●",
-        "PENDING": "◌",
-        "OK": "✓",
-        "SENT": "✓",
-        "COMPLETED": "✓",
-        "ERROR": "✕",
-        "FAILED": "✕",
-        "CANCELLED": "—",
-    }.get(str(status or "").upper(), "·")
+    @staticmethod
+    def _draw_multiline(col, text: str, width: int = 42) -> None:
+        """Helper to draw wrapped text sublines inside a layout column."""
+        if not text:
+            return
+        lines = wrap_multiline_text(text, width=width)
+        for line in lines:
+            if not line:
+                col.separator()
+            else:
+                col.label(text=line)
 
 
 CLASSES = (

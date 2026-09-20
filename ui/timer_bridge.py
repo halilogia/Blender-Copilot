@@ -182,8 +182,75 @@ class TimerBridge:
                     dst.title = src.title
                     dst.status = src.status
                     dst.summary = src.summary
+
+            # 4. Synchronize V2 Timeline and Active Turn presentation
+            if snapshot:
+                # Active in-flight turn
+                if snapshot.active_turn is not None:
+                    active = snapshot.active_turn
+                    props.has_active_turn = True
+                    props.active_turn_id = active.turn_id
+                    props.active_prompt = active.prompt
+                    props.active_streaming_response = clean_assistant_text(active.streaming_response)
+                    props.active_status = active.status.value if hasattr(active.status, "value") else str(active.status)
+                    props.active_error = active.error_message or ""
+                    self._sync_tool_collection(props.active_tools, active.tool_executions)
+                else:
+                    props.has_active_turn = False
+                    props.active_turn_id = ""
+                    props.active_prompt = ""
+                    props.active_streaming_response = ""
+                    props.active_status = ""
+                    props.active_error = ""
+                    if len(props.active_tools) > 0:
+                        props.active_tools.clear()
+
+                # Completed timeline turns (up to last 15 turns for performance)
+                if hasattr(snapshot, "timeline"):
+                    recent_turns = list(snapshot.timeline[-15:])
+                    if len(props.timeline) > len(recent_turns) or (
+                        len(props.timeline) > 0 and len(recent_turns) > 0 and props.timeline[0].turn_id != recent_turns[0].turn_id
+                    ):
+                        props.timeline.clear()
+                    while len(props.timeline) < len(recent_turns):
+                        props.timeline.add()
+                    for idx, src_turn in enumerate(recent_turns):
+                        dst_turn = props.timeline[idx]
+                        dst_turn.turn_id = src_turn.turn_id
+                        dst_turn.prompt = src_turn.prompt
+                        dst_turn.status = src_turn.status.value if hasattr(src_turn.status, "value") else str(src_turn.status)
+                        dst_turn.final_response = clean_assistant_text(src_turn.final_response)
+                        dst_turn.error_message = src_turn.error_message or ""
+                        self._sync_tool_collection(dst_turn.tools, src_turn.tool_executions)
+
+                # Plan summary projection
+                if snapshot.last_plan_summary:
+                    props.plan_title = str(snapshot.last_plan_summary.get("title", "") or "")
+                    props.plan_status = str(snapshot.last_plan_summary.get("status", "") or "")
+                    steps = snapshot.last_plan_summary.get("step_results") or []
+                    total = snapshot.last_plan_summary.get("steps_total", 0)
+                    props.plan_steps_summary = f"{len(steps)}/{total} steps" if total else f"{len(steps)} steps"
+                else:
+                    props.plan_title = ""
+                    props.plan_status = ""
+                    props.plan_steps_summary = ""
         except Exception:
             _logger.exception("Failed to synchronize Blender UI properties")
+
+
+    @staticmethod
+    def _sync_tool_collection(dst_coll, src_tools) -> None:
+        """Synchronize a collection property of tools with lightweight tool view objects."""
+        if len(dst_coll) > len(src_tools):
+            dst_coll.clear()
+        while len(dst_coll) < len(src_tools):
+            dst_coll.add()
+        for i, t in enumerate(src_tools):
+            item = dst_coll[i]
+            item.tool_name = t.tool_name
+            item.status = t.status
+            item.summary = t.summary
+            item.error_message = t.error_message or ""
 
     @staticmethod
     def tag_redraw_view3d() -> None:

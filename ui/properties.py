@@ -2,12 +2,20 @@
 
 import bpy
 from bpy.props import (
+    BoolProperty,
     CollectionProperty,
     IntProperty,
     PointerProperty,
     StringProperty,
 )
 from bpy.types import PropertyGroup
+
+from .timeline_properties import (
+    AISidebarToolItem,
+    AISidebarTurnItem,
+    register_timeline_properties,
+    unregister_timeline_properties,
+)
 
 
 class AISidebarHistoryItem(PropertyGroup):
@@ -80,6 +88,64 @@ class AISidebarUIProperties(PropertyGroup):
         default="",
     )
 
+    # -------------------------------------------------------------------------
+    # V2 Agent Timeline Presentation Properties
+    # -------------------------------------------------------------------------
+    has_active_turn: BoolProperty(
+        name="Has Active Turn",
+        description="True while a turn is in-flight and streaming/executing",
+        default=False,
+    )
+
+    active_turn_id: StringProperty(
+        name="Active Turn ID",
+        default="",
+    )
+
+    active_prompt: StringProperty(
+        name="Active Prompt",
+        default="",
+    )
+
+    active_streaming_response: StringProperty(
+        name="Active Streaming Response",
+        default="",
+    )
+
+    active_status: StringProperty(
+        name="Active Status",
+        default="RUNNING",
+    )
+
+    active_error: StringProperty(
+        name="Active Error",
+        default="",
+    )
+
+    active_tools: CollectionProperty(type=AISidebarToolItem)
+
+    timeline: CollectionProperty(type=AISidebarTurnItem)
+
+    timeline_index: IntProperty(
+        name="Timeline Index",
+        default=-1,
+    )
+
+    plan_title: StringProperty(
+        name="Plan Title",
+        default="",
+    )
+
+    plan_status: StringProperty(
+        name="Plan Status",
+        default="",
+    )
+
+    plan_steps_summary: StringProperty(
+        name="Plan Steps Summary",
+        default="",
+    )
+
 
 CLASSES = (
     AISidebarHistoryItem,
@@ -89,6 +155,7 @@ CLASSES = (
 
 def register_properties():
     """Register property groups and window manager pointer."""
+    register_timeline_properties()
     for cls in CLASSES:
         try:
             bpy.utils.register_class(cls)
@@ -105,10 +172,14 @@ def unregister_properties():
         if wm and hasattr(wm, "ai_sidebar"):
             wm.ai_sidebar.history.clear()
             wm.ai_sidebar.history_index = -1
+            wm.ai_sidebar.active_tools.clear()
+            wm.ai_sidebar.timeline.clear()
+            wm.ai_sidebar.timeline_index = -1
             wm.ai_sidebar.agent_status = "IDLE"
             wm.ai_sidebar.current_action = "Ready"
             wm.ai_sidebar.prompt_input = ""
             wm.ai_sidebar.queued_count = 0
+            wm.ai_sidebar.has_active_turn = False
     except Exception:
         pass
     if hasattr(bpy.types.WindowManager, "ai_sidebar"):
@@ -116,5 +187,6 @@ def unregister_properties():
     for cls in reversed(CLASSES):
         try:
             bpy.utils.unregister_class(cls)
-        except (RuntimeError, ValueError):
+        except (ValueError, RuntimeError):
             pass
+    unregister_timeline_properties()
