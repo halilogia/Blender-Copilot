@@ -28,10 +28,22 @@ class AISidebarTurnItem(PropertyGroup):
     tools: CollectionProperty(type=AISidebarToolItem)
 
 
+class AISidebarPlanStepItem(PropertyGroup):
+    """Presentation representation of an individual step in the active plan."""
+
+    step_id: StringProperty(name="Step ID", default="")
+    tool_name: StringProperty(name="Tool Name", default="")
+    description: StringProperty(name="Description", default="")
+    status: StringProperty(name="Status", default="PENDING")
+    error_message: StringProperty(name="Error Message", default="")
+
+
 TIMELINE_CLASSES = (
     AISidebarToolItem,
     AISidebarTurnItem,
+    AISidebarPlanStepItem,
 )
+
 
 
 def register_timeline_properties():

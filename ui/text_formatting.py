@@ -2,7 +2,8 @@
 
 from html import unescape
 import textwrap
-from typing import Dict, List
+from typing import Any, Dict, List, Sequence
+
 
 
 def clean_assistant_text(text: str) -> str:
@@ -62,3 +63,55 @@ def format_tool_status_icon(status: str) -> str:
     elif s in ("PENDING", "QUEUED"):
         return "○"
     return "·"
+
+
+def format_plan_step_status(status: str) -> Dict[str, str]:
+    """Map PlanStepStatus to UI symbol, Blender icon, and label."""
+    s = str(status or "").upper()
+    if s == "COMPLETED":
+        return {"symbol": "✓", "icon": "CHECKMARK", "label": "completed"}
+    elif s in ("RUNNING", "EXECUTING", "IN_PROGRESS"):
+        return {"symbol": "⟳", "icon": "TIME", "label": "running"}
+    elif s in ("FAILED", "ERROR"):
+        return {"symbol": "!", "icon": "ERROR", "label": "failed"}
+    elif s in ("CANCELLED", "ABORTED"):
+        return {"symbol": "—", "icon": "CANCEL", "label": "cancelled"}
+    elif s in ("SKIPPED", "BYPASSED"):
+        return {"symbol": "⤼", "icon": "FORWARD", "label": "skipped"}
+    elif s in ("PENDING", "QUEUED", "WAITING"):
+        return {"symbol": "○", "icon": "DOT", "label": "pending"}
+    return {"symbol": "·", "icon": "DOT", "label": s.lower()}
+
+
+def format_plan_text_for_clipboard(title: str, status: str, steps: Sequence[Any]) -> str:
+    """Format plan details and steps into clean, human-readable text for clipboard export."""
+    t = str(title or "Untitled Plan").strip()
+    st = str(status or "UNKNOWN").strip().lower()
+    lines = [
+        f"Plan: {t}",
+        f"Status: {st}",
+        "",
+    ]
+    for idx, s in enumerate(steps):
+        desc = ""
+        step_status = ""
+        if isinstance(s, dict):
+            desc = s.get("description") or s.get("tool_name") or f"Step {idx + 1}"
+            step_status = s.get("status") or "pending"
+        else:
+            desc = getattr(s, "description", "") or getattr(s, "tool_name", "") or f"Step {idx + 1}"
+            step_status = getattr(s, "status", "") or "pending"
+        mapped_status = format_plan_step_status(step_status)["label"]
+        lines.append(f"{idx + 1}. {desc}")
+        lines.append(f"   Status: {mapped_status}")
+
+    return "\n".join(lines).strip()
+
+
+def format_tool_text_for_clipboard(tool_name: str, status: str, summary: str) -> str:
+    """Format single tool execution record into clean, human-readable text for clipboard export."""
+    t_name = str(tool_name or "unknown_tool").strip()
+    st = str(status or "UNKNOWN").strip()
+    sum_text = str(summary or "").strip()
+    return f"Tool: {t_name}\nStatus: {st}\nSummary: {sum_text}".strip()
+

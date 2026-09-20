@@ -5,10 +5,12 @@ from bpy.types import Panel
 
 from core.logging_utils import get_log_path
 from .text_formatting import (
+    format_plan_step_status,
     format_tool_status_icon,
     map_agent_status_to_ui,
     wrap_multiline_text,
 )
+
 
 
 class AISIDEBAR_PT_main_panel(Panel):
@@ -73,7 +75,21 @@ class AISIDEBAR_PT_main_panel(Panel):
             plan_header.label(text=f"PLAN: {plan_title}", icon=icon)
             summary = getattr(props, "plan_steps_summary", "")
             if summary:
-                plan_header.label(text=summary)
+                plan_header.label(text=f"({summary})")
+            copy_p_btn = plan_header.operator("ai_sidebar.copy_plan", text="Copy Plan", icon="COPYDOWN")
+
+            # Step-by-step checklist
+            plan_steps = list(getattr(props, "plan_steps", []))
+            if plan_steps:
+                steps_col = plan_box.column(align=True)
+                for step in plan_steps:
+                    s_row = steps_col.row(align=True)
+                    s_info = format_plan_step_status(step.status)
+                    desc = step.description or step.tool_name
+                    s_row.label(text=f" {s_info['symbol']} {desc}", icon=s_info["icon"])
+                    if step.status and step.status.upper() not in ("COMPLETED", "PENDING"):
+                        s_row.label(text=f"[{step.status}]")
+
 
         # ---------------------------------------------------------------------
         # 4. CURRENT ACTIVE TURN (In-Flight Streaming / Tool Execution)
@@ -93,9 +109,13 @@ class AISIDEBAR_PT_main_panel(Panel):
             # Live streaming response
             if props.active_streaming_response:
                 active_box.separator()
+                a_hdr = active_box.row(align=True)
+                a_hdr.label(text="ASSISTANT (streaming)", icon="COMMUNITY")
+                copy_act = a_hdr.operator("ai_sidebar.copy_turn_response", text="Copy", icon="COPYDOWN")
+                copy_act.turn_id = getattr(props, "active_turn_id", "")
                 a_col = active_box.column(align=True)
-                a_col.label(text="ASSISTANT (streaming)", icon="COMMUNITY")
                 self._draw_multiline(a_col, props.active_streaming_response)
+
 
             # Active tools in-flight
             if len(props.active_tools) > 0:
@@ -145,16 +165,25 @@ class AISIDEBAR_PT_main_panel(Panel):
                         t_row = turn_box.row(align=True)
                         icon_str = format_tool_status_icon(tool.status)
                         t_row.label(text=f" {icon_str} {tool.tool_name}")
+                        copy_t = t_row.operator("ai_sidebar.copy_tool_details", text="", icon="COPYDOWN")
+                        copy_t.tool_name = tool.tool_name
+                        copy_t.status = tool.status
+                        copy_t.summary = tool.summary
                         if tool.summary:
                             s_col = turn_box.column(align=True)
                             s_col.label(text=f"    {tool.summary}")
 
+
                 # Assistant Final Response Block
                 if turn.final_response:
                     turn_box.separator()
+                    a_hdr = turn_box.row(align=True)
+                    a_hdr.label(text="ASSISTANT", icon="CHECKMARK")
+                    copy_resp = a_hdr.operator("ai_sidebar.copy_turn_response", text="Copy", icon="COPYDOWN")
+                    copy_resp.turn_id = turn.turn_id
                     a_col = turn_box.column(align=True)
-                    a_col.label(text="ASSISTANT", icon="CHECKMARK")
                     self._draw_multiline(a_col, turn.final_response)
+
 
                 # Error Message Block if failed
                 if turn.error_message:

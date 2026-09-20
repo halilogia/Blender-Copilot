@@ -11,11 +11,13 @@ from bpy.props import (
 from bpy.types import PropertyGroup
 
 from .timeline_properties import (
+    AISidebarPlanStepItem,
     AISidebarToolItem,
     AISidebarTurnItem,
     register_timeline_properties,
     unregister_timeline_properties,
 )
+
 
 
 class AISidebarHistoryItem(PropertyGroup):
@@ -146,6 +148,16 @@ class AISidebarUIProperties(PropertyGroup):
         default="",
     )
 
+    plan_steps: CollectionProperty(type=AISidebarPlanStepItem)
+
+    last_copied_text: StringProperty(
+        name="Last Copied Text",
+        description="Text most recently copied to clipboard by UI action",
+        default="",
+    )
+
+
+
 
 CLASSES = (
     AISidebarHistoryItem,
@@ -180,7 +192,10 @@ def unregister_properties():
             wm.ai_sidebar.prompt_input = ""
             wm.ai_sidebar.queued_count = 0
             wm.ai_sidebar.has_active_turn = False
+            if hasattr(wm.ai_sidebar, "plan_steps"):
+                wm.ai_sidebar.plan_steps.clear()
     except Exception:
+
         pass
     if hasattr(bpy.types.WindowManager, "ai_sidebar"):
         del bpy.types.WindowManager.ai_sidebar

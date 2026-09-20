@@ -1,8 +1,10 @@
 """Blender operators for AI Sidebar user interactions."""
 
 import bpy
+from bpy.props import StringProperty
 from bpy.types import Operator
 from core.logging_utils import get_logger
+
 
 
 _logger = get_logger("operators")
@@ -217,6 +219,118 @@ class AISIDEBAR_OT_reject_action(Operator):
             return {"CANCELLED"}
 
 
+_last_copied_text: str = ""
+
+
+def get_last_copied_text() -> str:
+    """Return the text most recently copied by an AI Sidebar copy operator."""
+    return _last_copied_text
+
+
+class AISIDEBAR_OT_copy_turn_response(Operator):
+    """Copy assistant response of a timeline turn to clipboard."""
+
+    bl_idname = "ai_sidebar.copy_turn_response"
+    bl_label = "Copy Response"
+    bl_description = "Copy assistant response to clipboard"
+
+    turn_id: StringProperty(name="Turn ID", default="")
+
+    def execute(self, context):
+        props = getattr(context.window_manager, "ai_sidebar", None)
+        if not props:
+            self.report({"ERROR"}, "AI Sidebar properties not available.")
+            return {"CANCELLED"}
+
+        text_to_copy = ""
+        # 1. Search in timeline turns
+        for turn in getattr(props, "timeline", []):
+            if turn.turn_id == self.turn_id:
+                text_to_copy = turn.final_response
+                break
+
+        # 2. If not found and target matches active turn
+        if not text_to_copy and self.turn_id == getattr(props, "active_turn_id", ""):
+            text_to_copy = getattr(props, "active_streaming_response", "")
+
+        # 3. Fallback to latest timeline turn if turn_id omitted
+        if not text_to_copy and not self.turn_id and len(props.timeline) > 0:
+            text_to_copy = props.timeline[-1].final_response
+
+        if not text_to_copy:
+            self.report({"WARNING"}, "No response text found to copy.")
+            return {"CANCELLED"}
+
+        global _last_copied_text
+        _last_copied_text = text_to_copy
+        if hasattr(props, "last_copied_text"):
+            props.last_copied_text = text_to_copy
+        context.window_manager.clipboard = text_to_copy
+        self.report({"INFO"}, "Response copied to clipboard.")
+        return {"FINISHED"}
+
+
+class AISIDEBAR_OT_copy_plan(Operator):
+    """Copy structured plan and step statuses to clipboard."""
+
+    bl_idname = "ai_sidebar.copy_plan"
+    bl_label = "Copy Plan"
+    bl_description = "Copy plan details and steps to clipboard"
+
+    def execute(self, context):
+        props = getattr(context.window_manager, "ai_sidebar", None)
+        if not props or not getattr(props, "plan_title", ""):
+            self.report({"WARNING"}, "No active plan found to copy.")
+            return {"CANCELLED"}
+
+        from .text_formatting import format_plan_text_for_clipboard
+
+        steps = list(getattr(props, "plan_steps", []))
+        text = format_plan_text_for_clipboard(
+            title=props.plan_title,
+            status=props.plan_status,
+            steps=steps,
+        )
+        global _last_copied_text
+        _last_copied_text = text
+        if hasattr(props, "last_copied_text"):
+            props.last_copied_text = text
+        context.window_manager.clipboard = text
+        self.report({"INFO"}, "Plan copied to clipboard.")
+        return {"FINISHED"}
+
+
+class AISIDEBAR_OT_copy_tool_details(Operator):
+    """Copy tool execution details to clipboard."""
+
+    bl_idname = "ai_sidebar.copy_tool_details"
+    bl_label = "Copy Tool Details"
+    bl_description = "Copy tool execution details to clipboard"
+
+    tool_name: StringProperty(name="Tool Name", default="")
+    status: StringProperty(name="Status", default="OK")
+    summary: StringProperty(name="Summary", default="")
+
+    def execute(self, context):
+        props = getattr(context.window_manager, "ai_sidebar", None)
+        from .text_formatting import format_tool_text_for_clipboard
+
+        text = format_tool_text_for_clipboard(
+            tool_name=self.tool_name,
+            status=self.status,
+            summary=self.summary,
+        )
+        global _last_copied_text
+        _last_copied_text = text
+        if props and hasattr(props, "last_copied_text"):
+            props.last_copied_text = text
+        context.window_manager.clipboard = text
+
+        self.report({"INFO"}, f"Tool '{self.tool_name or 'tool'}' details copied.")
+        return {"FINISHED"}
+
+
+
 CLASSES = (
     AISIDEBAR_OT_send_prompt,
     AISIDEBAR_OT_cancel_turn,
@@ -224,7 +338,11 @@ CLASSES = (
     AISIDEBAR_OT_copy_diagnostic_log_path,
     AISIDEBAR_OT_approve_action,
     AISIDEBAR_OT_reject_action,
+    AISIDEBAR_OT_copy_turn_response,
+    AISIDEBAR_OT_copy_plan,
+    AISIDEBAR_OT_copy_tool_details,
 )
+
 
 
 def register_operators():

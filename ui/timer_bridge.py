@@ -227,16 +227,49 @@ class TimerBridge:
                 if snapshot.last_plan_summary:
                     props.plan_title = str(snapshot.last_plan_summary.get("title", "") or "")
                     props.plan_status = str(snapshot.last_plan_summary.get("status", "") or "")
-                    steps = snapshot.last_plan_summary.get("step_results") or []
-                    total = snapshot.last_plan_summary.get("steps_total", 0)
-                    props.plan_steps_summary = f"{len(steps)}/{total} steps" if total else f"{len(steps)} steps"
+                    raw_steps = snapshot.last_plan_summary.get("steps") or []
+                    total = snapshot.last_plan_summary.get("steps_total", len(raw_steps))
+                    completed = snapshot.last_plan_summary.get(
+                        "steps_completed",
+                        sum(
+                            1
+                            for s in raw_steps
+                            if (s.get("status") if isinstance(s, dict) else getattr(s, "status", "")) == "COMPLETED"
+                        ),
+                    )
+                    props.plan_steps_summary = f"{completed}/{total} steps" if total else f"{len(raw_steps)} steps"
+                    if hasattr(props, "plan_steps"):
+                        self._sync_plan_steps(props.plan_steps, raw_steps)
                 else:
                     props.plan_title = ""
                     props.plan_status = ""
                     props.plan_steps_summary = ""
+                    if hasattr(props, "plan_steps") and len(props.plan_steps) > 0:
+                        props.plan_steps.clear()
         except Exception:
             _logger.exception("Failed to synchronize Blender UI properties")
 
+    @staticmethod
+    def _sync_plan_steps(dst_coll, src_steps) -> None:
+        """Synchronize a collection property of plan steps."""
+        if len(dst_coll) > len(src_steps):
+            dst_coll.clear()
+        while len(dst_coll) < len(src_steps):
+            dst_coll.add()
+        for i, s in enumerate(src_steps):
+            item = dst_coll[i]
+            if isinstance(s, dict):
+                item.step_id = str(s.get("step_id") or "")
+                item.tool_name = str(s.get("tool_name") or "")
+                item.description = str(s.get("description") or s.get("tool_name") or "")
+                item.status = str(s.get("status") or "PENDING")
+                item.error_message = str(s.get("error_message") or "")
+            else:
+                item.step_id = str(getattr(s, "step_id", "") or "")
+                item.tool_name = str(getattr(s, "tool_name", "") or "")
+                item.description = str(getattr(s, "description", "") or getattr(s, "tool_name", "") or "")
+                item.status = str(getattr(s, "status", "PENDING") or "PENDING")
+                item.error_message = str(getattr(s, "error_message", "") or "")
 
     @staticmethod
     def _sync_tool_collection(dst_coll, src_tools) -> None:
@@ -251,6 +284,7 @@ class TimerBridge:
             item.status = t.status
             item.summary = t.summary
             item.error_message = t.error_message or ""
+
 
     @staticmethod
     def tag_redraw_view3d() -> None:
