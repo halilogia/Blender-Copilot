@@ -63,3 +63,5 @@ archives/
 logs/
 *.log
 .kilo/
+# Agent Internal Brain & Scratch
+brain/
