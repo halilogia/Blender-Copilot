@@ -4,6 +4,8 @@
 
 [English](#english) | [Türkçe](#türkçe)
 
+[Contributing](CONTRIBUTING.md)
+
 [![Blender Version](https://img.shields.io/badge/Blender-5.2.1%20LTS-orange.svg)](https://www.blender.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%20Zero%20Dependencies-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-618%20Unit%20%7C%2023%20Integration%20Suites-brightgreen.svg)]()
@@ -201,7 +203,7 @@ Blender AI Sidebar/
 ### Install as Extension / Addon
 1. Download or clone this repository into your Blender extensions or addons directory:
    ```bash
-   git clone https://github.com/halilogia/Blender-AI-Sidebar.git
+   git clone https://github.com/halilogia/Blender-Copilot.git
    ```
 2. In Blender, open **Edit > Preferences > Add-ons**.
 3. Search for **Blender - Copilot** and enable the checkbox.
@@ -298,7 +300,7 @@ işlemleri güvenli biçimde yürütmek için yapılandırılmış araçlar kull
 1. Repository’yi indirin veya clone edin:
 
    ```bash
-   git clone https://github.com/halilogia/Blender-AI-Sidebar.git
+   git clone https://github.com/halilogia/Blender-Copilot.git
    ```
 
 2. Blender’da **Edit > Preferences > Add-ons** menüsünü açın.
