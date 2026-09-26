@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a reproducible problem with Blender Copilot.
+title: "[Bug]: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Before submitting, search existing issues. Do not include API keys,
+        private prompts, or unredacted diagnostic logs; logs can contain prompt
+        and provider error details.
+  - type: input
+    id: blender-version
+    attributes:
+      label: Blender version
+      description: Include the full version and whether it is a stable or daily build.
+      placeholder: 5.2.1 LTS
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      placeholder: Windows 11, macOS, or Linux distribution
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the actions needed to reproduce the problem.
+      placeholder: "1. Open ...\n2. Select ...\n3. Ask ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the visible error or result. Redact private data.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Redacted diagnostics (optional)
+      description: Remove prompts, API keys, endpoint credentials, and personal data before sharing.
+      render: text
+

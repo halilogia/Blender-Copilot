@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and setup help
+    url: https://github.com/halilogia/Blender-Copilot/discussions
+    about: Ask questions or get setup help in GitHub Discussions.

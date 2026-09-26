@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a focused improvement to Blender Copilot.
+title: "[Feature]: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: Search existing issues and Discussions before submitting a new idea.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to do, and what gets in the way?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe the behavior that would solve the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered (optional)
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Safety and workflow
+      options:
+        - label: I considered whether this changes scene data, undo behavior, or approval requirements.
+          required: false
+
