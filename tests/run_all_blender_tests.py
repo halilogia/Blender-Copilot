@@ -28,6 +28,8 @@ TESTS = [
     "tests/integration/test_geometry_quality_integration.py",
     "tests/integration/test_duplicate_integration.py",
     "tests/integration/test_agentic_acceptance.py",
+    "tests/integration/test_asset_import.py",
+    "tests/integration/test_anthropic_roundtrip.py",
 ]
 
 BLENDER_PATH = r"C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe"

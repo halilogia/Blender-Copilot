@@ -3,7 +3,7 @@
 bl_info = {
     "name": "Blender - Copilot",
     "author": "Halil Emre",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",
@@ -49,6 +49,7 @@ from .tools.mutations.transform_object import TransformObjectTool
 from .tools.mutations.delete_object import DeleteObjectTool
 from .tools.mutations.set_material import SetMaterialTool
 from .tools.mutations.assign_material import AssignMaterialTool
+from .tools.mutations.import_asset import ImportAssetTool
 from .tools.read_only.capture_viewport import CaptureViewportTool
 from .tools.read_only.visual_verify import VisualVerifyTool
 from .tools.propose_plan import ProposePlanTool
@@ -71,10 +72,13 @@ _timer_bridge: Optional[TimerBridge] = None
 
 
 def create_production_provider() -> BaseProvider:
-    """Construct real OpenAICompatibleProvider from effective configuration."""
+    """Construct real provider from effective configuration (v1.1: openai|anthropic)."""
     import bpy
     cfg = get_effective_config()
     online_access = getattr(bpy.app, "online_access", True)
+    if getattr(cfg, "provider", "openai_compatible") == "anthropic":
+        from .agent.anthropic_provider import AnthropicCompatibleProvider
+        return AnthropicCompatibleProvider(config=cfg, online_access=online_access)
     return OpenAICompatibleProvider(config=cfg, online_access=online_access)
 
 
@@ -135,6 +139,7 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(DeleteObjectTool())
     registry.register(SetMaterialTool())
     registry.register(AssignMaterialTool())
+    registry.register(ImportAssetTool())
     registry.register(CaptureViewportTool())
     registry.register(VisualVerifyTool())
     registry.register(ProposePlanTool())

@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.0.0
+# Blender - Copilot — v1.1.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2.1 LTS.
 
@@ -8,12 +8,12 @@
 
 [![Blender Version](https://img.shields.io/badge/Blender-5.2.1%20LTS-orange.svg)](https://www.blender.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%20Zero%20Dependencies-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-618%20Unit%20%7C%2023%20Integration%20Suites-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-682%20Unit%20%7C%2025%20Integration%20Suites-brightgreen.svg)]()
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
 **Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2.1 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
 
-> v1.0.0 is the first public release checkpoint for Blender - Copilot. It includes FIFO prompt queueing, structured plan/task progress, diagnostics, multiline HUD input, and 618 passing pure-Python unit tests.
+> v1.1.0 completes Vision (Anthropic native + `max_side` capture guard + stdlib local embedding) and adds check-only auto-update plus a local asset browser (`import_asset`). Verified with 682 passing pure-Python unit tests.
 
 ---
 
@@ -50,11 +50,18 @@
   - **Main Thread Event Pump**: All Blender Python API (`bpy`) queries, mutations, and undo pushes run exclusively on Blender's main event loop via `TimerBridge` (`bpy.app.timers`).
   - **Thread-Safe Queue**: High-performance, lock-bounded event passing prevents race conditions, memory leaks, and UI starvation.
 
-- **OpenAI-Compatible LLM Integration**:
-  - Native Chat Completions streaming protocol (`POST /v1/chat/completions` with `stream=True`).
+- **LLM Integration (dual dialect)**:
+  - OpenAI-Compatible Chat Completions streaming (`POST /v1/chat/completions` with `stream=True`).
+  - Native Anthropic Messages streaming (`POST /v1/messages`, `anthropic-version: 2023-06-01`, shared `SSEParser` + `ToolCallAccumulator`); switch via Preferences Provider dropdown or `BLENDER_AI_PROVIDER`.
   - End-to-end tool/function calling round-trips (`tool_calls` -> approval gate -> execute tool -> return `tool` message -> final synthesis).
   - Multi-round conversational loops with automated loop guards (`max_tool_rounds`).
-  - Tested with **9Router**, **LM Studio**, **Ollama**, **OpenRouter**, and **OpenAI** endpoints.
+  - Tested with **9Router**, **LM Studio**, **Ollama**, **OpenRouter**, **OpenAI**, and **Anthropic** endpoints.
+- **Vision Cost Guard & Local Semantic Search**:
+  - `capture_viewport(max_side=256)` thumbnail mode for cheap visual grounding.
+  - Stdlib-only local embedding (hashed trigram + token TF, dim 256) for scene/asset ranking — no numpy, no network.
+- **Local Asset Browser + Check-Only Updates**:
+  - `import_asset(path)` (`LOW` risk, traversal-guarded, undo-integrated, verifier-checked) over a user library dir (`.blend/.glb/.obj/.fbx`).
+  - `ai_sidebar.check_updates` operator: GitHub releases check only, never downloads; gated by Blender `online_access`.
 
 - **Zero External Dependencies**:
   - Built entirely with Python's standard library (`urllib.request`, `http.client`, `json`, `threading`, `queue`, `dataclasses`).
@@ -208,9 +215,10 @@ Blender AI Sidebar/
 2. In Blender, open **Edit > Preferences > Add-ons**.
 3. Search for **Blender - Copilot** and enable the checkbox.
 4. Expand the addon preferences to configure:
-   - **Base URL**: e.g. `http://localhost:20128/v1` (or your local/remote endpoint).
-   - **Model**: e.g. `gpt-4o`, `qwen2.5-coder`, `llama3.1`.
-   - **API Key**: Enter if required (masked automatically).
+   - **Provider**: `OpenAI-Compatible` or `Anthropic Native`.
+   - **Base URL**: e.g. `http://localhost:20128/v1` (or `https://api.anthropic.com/v1` for Anthropic).
+   - **Model**: e.g. `gpt-4o`, `qwen2.5-coder`, `llama3.1`, `claude-sonnet-4-5`.
+   - **API Key**: Enter if required (masked automatically; sent as `Bearer` for OpenAI, `x-api-key` for Anthropic).
    - **Timeout (seconds)**: Default is `30.0`.
 5. In the 3D Viewport:
    - Press **`Alt + Space`** to open the floating **GPU Viewport HUD**, or
@@ -287,7 +295,9 @@ işlemleri güvenli biçimde yürütmek için yapılandırılmış araçlar kull
 
 - Sahne, seçim, obje, materyal ve mesh inceleme araçları.
 - Küp, küre ve düzlem oluşturma; obje dönüştürme ve silme.
-- Kamera, ışık, materyal, modifier, shading ve duplicate işlemleri.
+- Kamera, ışık, materyal, modifier, shading, duplicate ve asset import (`import_asset`) işlemleri.
+- Anthropic native desteği (Preferences > Provider), `capture_viewport(max_side=256)` maliyet kalkanı, stdlib local embedding ile sahne/asset araması.
+- Check-only güncelleme kontrolü (`ai_sidebar.check_updates`; otomatik indirme yok).
 - Risk tabanlı onay sistemi: düşük riskli işlemler otomatik, orta/yüksek riskli işlemler kullanıcı onaylıdır.
 - Plan kartı, Approve/Reject butonları ve task ilerlemesi.
 - Uzun promptlar ve AI cevapları için çok satırlı GPU HUD görünümü.
@@ -331,9 +341,10 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.0.0 checkpoint’inde 618 pure-Python unit testi ve 23 Blender integration
-test dosyası bulunmaktadır. Gerçek Blender entegrasyon testleri Blender’ın
-kurulu olduğu ortamda çalıştırılmalıdır.
+v1.1.0 durumunda 682 pure-Python unit testi ve 25 Blender integration
+test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
+asset import 6/6, anthropic roundtrip). Headless 25/25 Blender 5.2.2 LTS’te
+doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.
 
 ### Tanılama logları
 

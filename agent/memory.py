@@ -35,6 +35,10 @@ MUTATION_TOOLS = {
     "delete_object",
     "set_material",
     "assign_material",
+    "duplicate_object",
+    "import_asset",
+    "create_camera",
+    "create_light",
 }
 
 

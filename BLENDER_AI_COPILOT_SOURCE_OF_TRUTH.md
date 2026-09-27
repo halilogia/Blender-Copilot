@@ -7,8 +7,8 @@
 > Kullanıcı doğal dil talebini sahne bağlamını anlayarak planlayan, semantic Blender tools ve gerektiğinde harici 3D generation servislerini kullanan, yaptığı değişiklikleri doğrulayan ve güvenli onay mekanizmasıyla Blender sahnesinde gerçekleştiren agentic bir copilot olmaktır.
 
 ### Mevcut Durum vs. Hedef Ürün Ayrımı
-- **CURRENT (Mevcut Durum):** M1–M4.1 aşamaları tamamlanmış; sahneyi okuyabilen (`inspect_*`), temel mutasyonları yapabilen (`create_primitive`, `transform_object`, `delete_object`), her başarılı mutasyon için Blender undo state oluşturan ve riskli eylemleri programatik onay kapısıyla (`PendingApproval`) durduran **semantic Blender assistant**.
-- **TARGET (Hedeflenen Ürün):** Planning + mutation + verification + vision + materials + controlled scripting + opsiyonel external 3D generation yeteneklerine sahip tam kapsamlı **agentic copilot**.
+- **CURRENT (v1.1.0, 2026-09-27, 682 unit test OK):** M1–M9 + v1.0 + v1.1 tamamlanmış; sahneyi okuyabilen (`inspect_*`), güvenli mutasyon yapabilen (`create_primitive`, `transform_object`, `delete_object`, camera/light/modifier/shading/duplicate, **`import_asset`**), her mutasyonda undo state oluşturan, riskli eylemleri `PendingApproval` ile durduran, `ChangeVerifier` ile doğrulayan, vision (`capture_viewport` + `max_side`, Anthropic native multimodal) + stdlib local embedding + check-only auto-update içeren **semantic Blender assistant**.
+- **TARGET (Hedeflenen Ürün):** Planning + mutation + verification + vision + materials + asset browser derinleştirme + controlled scripting + opsiyonel external 3D generation yeteneklerine sahip tam kapsamlı **agentic copilot** (v1.2: Blender-runtime mühürleme; v1.3 adayı: text-to-3D araştırması).
 
 ---
 
@@ -36,8 +36,9 @@
    - Her başarılı mutasyon için Blender undo state oluşturulur (`bpy.ops.ed.undo_push()`) ve mutasyon tek bir undo adımı olarak tasarlanır.
 4. **Deterministic Approval Gate**:
    - Onay kararı LLM'e bırakılamaz. `ApprovalPolicy`, risk seviyesi `MEDIUM` veya `HIGH` olan araç çağrılarını yakalar ve `PENDING_APPROVAL` durumuna geçirir. Kullanıcı açık onay vermeden eylem yürütülmez.
-5. **Provider-Agnostic Engine**:
+5. **Provider-Agnostic Engine (v1.1: dual dialect)**:
    - Sistem belirli bir modele kilitli değildir; 9Router veya OpenAI uyumlu herhangi bir endpoint üzerinden çalışır. Resmî OpenAI kaynaklarında yer alan `gpt-6-astra` API modeli de dahil olmak üzere OpenAI uyumlu tüm modeller bu çerçevede desteklenen sağlayıcı seçenekleri arasındadır (önceki "Astra yok" tespiti kapatılmıştır).
+   - v1.1 ile ikinci kutsanmış lehçe eklendi: Anthropic Messages (`agent/anthropic_provider.py`, `POST /v1/messages`). Seçim deterministiktir (`Config.provider`, `BLENDER_AI_PROVIDER`, Preferences dropdown); LLM seçimi tahmin etmez. Her iki lehçe aynı `SSEParser` + `ToolCallAccumulator` + multimodal gate disiplinini paylaşır.
 6. **Credential Hygiene**:
    - API anahtarları sahneye, WindowManager'a, `.blend` dosyasına veya loglara kaydedilmez.
 
@@ -53,12 +54,16 @@
 - **M4.1 — Deterministic Approval Gate:** Risk seviyeleri, `PendingApproval`, Viewport HUD onay kartı ve `Y`/`N` klavye kısayolları.
   *(Not: Onay UX iyileştirmeleri zorunlu bir milestone değil, bağımsız bir UI backlog maddesidir).*
 
-### Gelecek Fazlar
-- **M5 — Verification + Change Sets:** Mutasyon sonrası sahne durumunu otomatik doğrulama ve raporlama.
-- **M6 — Materials + Shader Tools:** Shader node ağları, doku yönetimi ve Principled BSDF kontrolleri.
-- **M7 — Vision / Screenshot Grounding:** Viewport ekran görüntüsü alma ve multimodal görsel inceleme.
-- **M8 — Controlled Python:** Korumalı ve parametrik script yürütme katmanı.
-- **M9 — External Text-to-3D Integration:** Harici 3D üretim servislerinin entegrasyonu.
+### Tamamlanan Yeni Fazlar (v1.1, 2026-09-27)
+- **v1.1-A — Vision Completion:** `capture_viewport(max_side)` maliyet kalkanı, Anthropic native provider, stdlib local embedding.
+- **v1.1-B — Check-Only Auto-Update:** `core/update_check.py` + `HttpClient.get()` + `ai_sidebar.check_updates` (indirme yok).
+- **v1.1-C — Local Asset Browser:** `agent/asset_index.py` + `import_asset` + verifier `import` kuralı.
+
+### Gelecek Fazlar (v1.2 — NEW)
+- **v1.2.0 — Blender-Runtime Mühürleme:** headless 25/25 (`test_asset_import`, `test_anthropic_roundtrip`), canlı GUI kabul, 500+ obje performans.
+- **v1.2.1 — Asset Derinleştirme:** Preferences dizin seçici, N-Panel arama, 256px thumbnail, opsiyonel `location`.
+- **v1.2.2 — Update + Topluluk Sürümü:** Diagnostics rozeti, opt-in `auto_check`, Extensions paketi.
+- **v1.3 Adayı (söz yok) — External Text-to-3D:** `generate_3d_asset` araştırması; servis seçimi yok. Controlled Python yok (`exec` yasağı sürüyor).
 
 ---
 
@@ -96,10 +101,10 @@ $$\text{LLM (Orkestratör / Planlayıcı)} \neq \text{3D Model Üreticisi (Gener
 
 ## 6. Test Durumu ve Standartlar
 
-- **Son doğrulanan otomatik test sonucu:**
-  - `252 Pure Python unit test` (Hızlı, Blender bağımsız).
-  - `12 headless Blender test suite` (Blender 5.2.1 LTS runtime içinde).
-  *(Test sayıları proje geliştikçe güncellenecektir).*
+- **Son doğrulanan otomatik test sonucu (2026-09-27):**
+  - `682 Pure Python unit test` — `python tests/run_unit_tests.py` OK (hardening dahil).
+  - `23 headless Blender test suite` korunuyor; v1.2 hedefi 25 (asset import + anthropic roundtrip).
+  - Yeni suite'ler: `test_anthropic_provider`, `test_local_embed`, `test_update_check`, `test_asset_browser`.
 - **Doğrulama Ayrımı:**
   - **AUTOMATED**: Yalnızca Antigravity tarafından scriptler ile koşturulabilen birim ve headless entegrasyon testleridir.
   - **MANUAL**: Gerçek Blender GUI, canlı 3D Viewport HUD, canlı 9Router/Model gecikmesi ve kullanıcı klavye/fare etkileşimlerini içerir. Bu testler yalnızca **Kullanıcı** tarafından gerçek arayüzde bizzat icra edildiğinde "Doğrulandı" statüsü kazanır.

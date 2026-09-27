@@ -60,6 +60,8 @@ class ChangeVerifier:
             return self._verify_assign_material(target, change_set)
         elif op in ("duplicate_object", "duplicate"):
             return self._verify_duplicate_object(target, change_set)
+        elif op in ("import", "import_asset"):
+            return self._verify_import(target, change_set)
         else:
             return VerificationResult(
                 status=VerificationStatus.FAIL,
@@ -68,7 +70,7 @@ class ChangeVerifier:
                 mismatches=[
                     {
                         "property": "operation",
-                        "expected": "One of ['create', 'create_camera', 'create_light', 'set_shading', 'add_modifier', 'duplicate_object', 'transform', 'delete', 'set_material', 'assign_material']",
+                        "expected": "One of ['create', 'create_camera', 'create_light', 'set_shading', 'add_modifier', 'duplicate_object', 'import', 'transform', 'delete', 'set_material', 'assign_material']",
                         "actual": op,
                         "diff": None,
                     }
@@ -654,6 +656,31 @@ class ChangeVerifier:
             )
 
         return self._build_result("duplicate_object", target, mismatches)
+
+    def _verify_import(self, target: str, change_set: ChangeSet) -> VerificationResult:
+        """Verification rules for asset import (v1.1 C)."""
+        mismatches: List[Dict[str, Any]] = []
+        expected = change_set.expected_after or {}
+        actual = change_set.actual_after or {}
+        if not actual.get("imported", False):
+            mismatches.append({"property": "imported", "expected": True,
+                               "actual": actual.get("imported", False), "diff": None})
+            return self._build_result("import", target, mismatches)
+        exp_name = str(expected.get("object_name", "") or "").strip()
+        act_name = str(actual.get("object_name", "") or "").strip()
+        if exp_name and exp_name != act_name:
+            mismatches.append({"property": "object_name", "expected": exp_name,
+                               "actual": act_name, "diff": None})
+        if not act_name:
+            mismatches.append({"property": "object_name", "expected": "non-empty",
+                               "actual": act_name, "diff": None})
+        before_count = (change_set.before or {}).get("object_count")
+        after_count = actual.get("object_count")
+        if isinstance(before_count, int) and isinstance(after_count, int):
+            if after_count < before_count + 1:
+                mismatches.append({"property": "object_count", "expected": f">= {before_count + 1}",
+                                   "actual": after_count, "diff": after_count - before_count})
+        return self._build_result("import", target, mismatches)
 
     def _verify_transform(self, target: str, change_set: ChangeSet) -> VerificationResult:
         """Verification rules for object transformation."""
@@ -1257,6 +1284,22 @@ def build_change_set_from_result(
         return ChangeSet(
             operation="duplicate_object",
             target_name=new_name,
+            before=result_data.get("before"),
+            expected_after=expected_after,
+            actual_after=dict(actual_snap) if isinstance(actual_snap, dict) else {},
+        )
+
+    elif name == "import_asset":
+        obj_name = str(result_data.get("object_name") or arguments.get("name") or "Imported")
+        expected_after = {"imported": True}
+        if arguments.get("name"):
+            expected_after["object_name"] = str(arguments["name"])
+        elif result_data.get("object_name"):
+            expected_after["object_name"] = str(result_data["object_name"])
+        actual_snap = result_data.get("actual") or result_data
+        return ChangeSet(
+            operation="import",
+            target_name=obj_name,
             before=result_data.get("before"),
             expected_after=expected_after,
             actual_after=dict(actual_snap) if isinstance(actual_snap, dict) else {},

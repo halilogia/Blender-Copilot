@@ -24,8 +24,12 @@ Blender AI Copilot is designed around seven non-negotiable principles:
    - Every mutating tool invocation is verified deterministically by `ChangeVerifier` before results reach the LLM.
    - The expected state is derived strictly from tool call arguments, while the actual state is read directly from live Blender RNA datablocks.
    - If actual Blender state diverges from expected values beyond strict epsilon tolerances, the runtime halts with `VERIFICATION_FAILED`. The verification engine is 100% pure Python and completely free of `bpy` dependencies.
-7. **OpenAI Chat Completions Protocol Standardization**:
-   - The provider layer targets the standardized Chat Completions streaming protocol (`POST /v1/chat/completions`). Any OpenAI-compatible backend (9Router, LM Studio, Ollama, OpenRouter, OpenAI) is natively supported without proprietary hacks.
+7. **Dual-Dialect Provider Standardization (v1.1)**:
+   - OpenAI Chat Completions streaming (`POST /v1/chat/completions`) remains the default dialect; any OpenAI-compatible backend (9Router, LM Studio, Ollama, OpenRouter, OpenAI) is natively supported without proprietary hacks.
+   - Anthropic Messages (`POST /v1/messages`, `anthropic-version: 2023-06-01`, `x-api-key`) is the second blessed dialect (`agent/anthropic_provider.py`). Both dialects share `SSEParser` + `ToolCallAccumulator` and the identical multimodal capability gate (`PROVIDER_UNSUPPORTED`). Selection is deterministic via `Config.provider` (`BLENDER_AI_PROVIDER`), never guessed by the LLM.
+8. **Check-Only Updates & Local Assets (v1.1)**:
+   - Network stays isolated in `agent/http_client.py` (now with `get()`/`get_json()`); `core/update_check.py` performs version compare only and never downloads.
+   - `import_asset` is a `LOW`-risk semantic tool with traversal guard, main-thread execution, `push_undo_step()`, and a dedicated `ChangeVerifier` `import` rule. Semantic asset/scene ranking uses stdlib-only `agent/local_embed.py` (no numpy, no network).
 
 ---
 
@@ -205,6 +209,7 @@ Plan Execution Summary
 - **`set_shading` (M9)**: Sets `SMOOTH` or `FLAT` polygon shading directly on mesh datablocks via Data API without operator dependencies.
 - **`add_modifier` (M9)**: Adds and configures `BEVEL` (width, segments), `SUBSURF` (levels), and `BOOLEAN` (DIFFERENCE, UNION, target object) modifiers via Data API with target existence validation.
 - **`duplicate_object` (M9)**: Clones existing objects and creates independent data datablocks via Data API while preserving material slots. Features deterministic name collision prevention (fail-closed if provided name exists, `{source}_copy_{n}` if omitted) and optional transform application.
+- **`import_asset` (v1.1)**: Library-relative `.blend` (append) / `.glb` / `.obj` / `.fbx` import on the main thread only, with `push_undo_step()` and verifier `import` rule (`imported=True`, non-empty `object_name`, `object_count >= before+1`). Unconfigured library -> `ASSET_LIBRARY_UNCONFIGURED`; missing file -> `ASSET_NOT_FOUND`; `..` -> `INVALID_ARGUMENT`.
 - **`set_material` (M6)**: Mutates Principled BSDF shader socket properties (`base_color`, `metallic`, `roughness`, `emission_color`, `emission_strength`, `alpha`). Automatically normalizes 3-element RGB to 4-element RGBA and clamps inputs outside [0, 1].
 - **`assign_material` (M6)**: Binds an existing or newly created material to an object's material slot. Features automatic slot expansion when targeting higher slot indices.
 - **`push_undo_step(description)`**: Invokes `bpy.ops.ed.undo_push()` after every successful mutation, integrating seamlessly into Blender's history.
@@ -217,11 +222,17 @@ Plan Execution Summary
   - `inspect_object`: Object metadata, transform matrices, modifier stack, material slots.
   - `inspect_material`: Principled BSDF shader parameters and material slots.
   - `inspect_mesh`: Topology diagnostics, vertex/edge/face counts, UV channels, world bounds.
-- **`capture_viewport` (M7 Task 1)**:
+- **`capture_viewport` (M7 Task 1, v1.1 hardened)**:
   - Captures active 3D Viewport rendered state via `gpu.types.GPUOffScreen` with `do_color_management=True`.
   - In-memory pure Python PNG encoder (`encode_png_rgba`) using `zlib` and `struct`.
+  - v1.1 cost guard: optional `max_side` with aspect-preserving `compute_fit_size` + `downscale_rgba_nearest` before encode (e.g. 256px thumbnails); metadata reports real size plus `downscaled`/`requested` flags.
   - Zero scene mutation (no datablocks created, selection preserved).
   - Bounded in-memory LRU cache (max 10 images) returning machine-readable metadata (`image_id`, `width`, `height`, `format`, `mime_type`, `byte_size`) without polluting conversation logs.
+
+### 3.6b. Local Semantic Layer (v1.1: `agent/local_embed.py`, `agent/asset_index.py`, `core/update_check.py`)
+- **`local_embed`**: Deterministic hashed char-trigram + token TF vectors (dim 256, `hashlib.md5`, L2 + cosine), Turkish-aware tokenizer, `top_k()` + `LocalIndex` (add/remove/query, `to_dict`/`from_dict`). Zero deps, zero network, zero `bpy`.
+- **`asset_index`**: `scan_library()` (`.blend/.glb/.obj/.fbx`, cap 500), `is_safe_path()` traversal guard, `AssetLibrary.search()` (substring-first, embedding re-rank with deterministic tie-break), `resolve()` (safe absolute path or `None`).
+- **`update_check`**: `parse_version`/`is_newer`/`check_for_updates()` returning frozen `UpdateStatus`; transport exclusively via `HttpClient.get_json()`; every failure folds into `status.error`, never raises to UI.
 
 ### 3.6. Deterministic Mutation Verification Subsystem (`core/change_set.py`, `agent/verifier.py`)
 - **Decoupled Pure Python Engine**: The verification engine has **zero `bpy` imports** and runs identically in unit tests and live Blender sessions.
@@ -245,8 +256,9 @@ Plan Execution Summary
 - **`VisualVerifyTool`**: Semantic read-only tool (`RiskLevel.READ_ONLY`) allowing the agent to capture the active viewport and request visual verification on demand.
 - **Zero Byte/Base64 Leaks**: History and serializations (`VisualVerificationResult.to_dict()`) store only `image_id` references, never raw bytes or base64 dumps.
 
-### 3.8. Provider Protocol Engine (`agent/openai_provider.py`, `agent/sse_parser.py`, `agent/http_client.py`)
-- **`HttpClient`**: Pure Python streaming HTTP client using `urllib.request`. Reads responses in arbitrary byte chunks supporting immediate abort via `cancel_event`.
+### 3.8. Provider Protocol Engine (`agent/openai_provider.py`, `agent/anthropic_provider.py`, `agent/sse_parser.py`, `agent/http_client.py`)
+- **`HttpClient`**: Pure Python streaming HTTP client using `urllib.request`. Reads responses in arbitrary byte chunks supporting immediate abort via `cancel_event`. v1.1 adds `get()`/`get_json()` for small metadata calls (update check) under the same TLS/timeout/cancel discipline; it remains the SOLE module allowed to import `urllib`/`socket` (hardening-enforced).
+- **`AnthropicCompatibleProvider` (v1.1)**: Native Messages API adapter reusing `SSEParser` (`content_block_delta`: `text_delta` -> `TextDelta`, `input_json_delta` -> `ToolCallDelta`) and `ToolCallAccumulator` (`tool_use` blocks -> `ToolCall`). Maps `system` separately, images to `{"type":"image","source":{"type":"base64",...}}`, internal tools to `{"name","description","input_schema"}`.
 - **`SSEParser`**: Deterministic byte-level Server-Sent Events parser adhering to the W3C EventSource specification. Handles arbitrary chunk fragmentation across character boundaries with strict event size guards.
 - **`ToolCallAccumulator`**: Reassembles fragmented streaming tool-call deltas into complete, validated `ToolCall` objects.
 - **`ContextBuilder`**: Assembles system prompt, conversation history, and tool schemas into an immutable `ProviderRequestContext` while enforcing character safety caps (`MAX_CONTEXT_CHARS=15000`). Resolves in-memory PNG bytes from `adapter.get_viewport_screenshot` strictly on the main thread.

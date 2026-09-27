@@ -9,7 +9,7 @@ from typing import Optional
 import os
 import bpy
 from bpy.types import AddonPreferences, Operator
-from bpy.props import StringProperty, IntProperty
+from bpy.props import StringProperty, IntProperty, EnumProperty
 
 from core.config import (
     Config,
@@ -77,6 +77,7 @@ def _on_preference_updated(self, context):
         api_key=self.api_key,
         model=self.model,
         timeout_seconds=float(self.timeout_seconds),
+        provider=getattr(self, "provider", "openai_compatible"),
     )
     save_config(cfg, get_config_path())
     try:
@@ -163,6 +164,17 @@ class AISidebarPreferences(AddonPreferences):
         update=_on_preference_updated,
     )
 
+    provider: EnumProperty(
+        name="Provider",
+        description="LLM provider API dialect",
+        items=[
+            ("openai_compatible", "OpenAI-Compatible", "Chat Completions /v1/chat/completions (9Router, Ollama, OpenAI)"),
+            ("anthropic", "Anthropic Native", "Messages /v1/messages (Claude)"),
+        ],
+        default="openai_compatible",
+        update=_on_preference_updated,
+    )
+
     def load_from_disk(self):
         """Populate preference properties from file and environment."""
         global _is_updating_from_disk
@@ -173,6 +185,7 @@ class AISidebarPreferences(AddonPreferences):
             self.api_key = cfg.api_key
             self.model = cfg.model
             self.timeout_seconds = int(cfg.timeout_seconds)
+            self.provider = getattr(cfg, "provider", "openai_compatible")
         finally:
             _is_updating_from_disk = False
 
@@ -204,6 +217,7 @@ class AISidebarPreferences(AddonPreferences):
 
         # Input fields
         col = layout.column(align=True)
+        col.prop(self, "provider")
         col.prop(self, "base_url")
         col.prop(self, "api_key")
         col.prop(self, "model")

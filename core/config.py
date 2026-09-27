@@ -66,6 +66,8 @@ class Config:
     api_key: str = ""
     model: str = DEFAULT_MODEL
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS
+    provider: str = "openai_compatible"
+    supports_multimodal: Optional[bool] = None
 
     def to_dict(self, mask_key: bool = False) -> Dict[str, Any]:
         """Convert config to dictionary, optionally masking the API key."""
@@ -95,12 +97,21 @@ class Config:
         except (ValueError, TypeError):
             timeout_seconds = DEFAULT_TIMEOUT_SECONDS
 
+        provider = str(data.get("provider", "openai_compatible")).strip() or "openai_compatible"
+        if provider not in ("openai_compatible", "anthropic"):
+            provider = "openai_compatible"
+        supports_multimodal = data.get("supports_multimodal", None)
+        if supports_multimodal is not None:
+            supports_multimodal = bool(supports_multimodal)
+
         return cls(
             version=version,
             base_url=base_url,
             api_key=api_key,
             model=model,
             timeout_seconds=timeout_seconds,
+            provider=provider,
+            supports_multimodal=supports_multimodal,
         )
 
 
@@ -146,6 +157,10 @@ def load_config(config_path: Optional[Path] = None) -> Tuple[Config, Optional[st
                 config.timeout_seconds = parsed_timeout
         except ValueError:
             pass
+
+    env_provider = os.environ.get("BLENDER_AI_PROVIDER")
+    if env_provider and env_provider.strip() in ("openai_compatible", "anthropic"):
+        config.provider = env_provider.strip()
 
     return config, warning
 

@@ -31,6 +31,12 @@ class CaptureViewportTool(BaseTool):
                 "minimum": 64,
                 "maximum": 2048,
             },
+            "max_side": {
+                "type": "integer",
+                "description": "Optional cost-guard: downscale longest side to fit (64-2048, e.g. 256 thumbnail).",
+                "minimum": 64,
+                "maximum": 2048,
+            },
         },
         "additionalProperties": False,
     }
@@ -40,4 +46,11 @@ class CaptureViewportTool(BaseTool):
         """Execute viewport capture via the adapter."""
         width = kwargs.get("width", 512)
         height = kwargs.get("height", 512)
-        return adapter.capture_viewport(width=width, height=height)
+        max_side = kwargs.get("max_side", None)
+        if max_side is None:
+            return adapter.capture_viewport(width=width, height=height)
+        try:
+            return adapter.capture_viewport(width=width, height=height, max_side=max_side)
+        except TypeError:
+            # Backward compat with adapters lacking max_side support
+            return adapter.capture_viewport(width=width, height=height)

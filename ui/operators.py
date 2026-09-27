@@ -331,6 +331,44 @@ class AISIDEBAR_OT_copy_tool_details(Operator):
 
 
 
+class AISIDEBAR_OT_check_updates(Operator):
+    """Check GitHub for a newer release (check-only, never downloads)."""
+
+    bl_idname = "ai_sidebar.check_updates"
+    bl_label = "Check for Updates"
+    bl_description = "Check GitHub releases for a newer Blender Copilot version"
+
+    def execute(self, context):
+        from core.update_check import check_for_updates
+        from core.config import is_network_allowed
+        import bpy as _bpy
+
+        from .. import get_runtime  # noqa: F401 (keeps import pattern consistent)
+        try:
+            from ..blender_manifest import __version__ as _v  # type: ignore
+            current = _v
+        except Exception:
+            try:
+                current = context.preferences.addons[__package__.split(".")[0]].bl_info.get("version", (1, 0, 0))
+                current = ".".join(str(x) for x in current)
+            except Exception:
+                current = "1.0.0"
+        online = getattr(_bpy.app, "online_access", True)
+        allowed, reason = is_network_allowed("https://api.github.com", online)
+        if not allowed:
+            self.report({"WARNING"}, reason)
+            return {"CANCELLED"}
+        status = check_for_updates(current)
+        if status.error:
+            self.report({"WARNING"}, f"Update check failed: {status.error}")
+            return {"CANCELLED"}
+        if status.update_available:
+            self.report({"INFO"}, f"Update available: {status.latest} (current {status.current}).")
+        else:
+            self.report({"INFO"}, f"Up to date ({status.current}).")
+        return {"FINISHED"}
+
+
 CLASSES = (
     AISIDEBAR_OT_send_prompt,
     AISIDEBAR_OT_cancel_turn,
@@ -341,6 +379,7 @@ CLASSES = (
     AISIDEBAR_OT_copy_turn_response,
     AISIDEBAR_OT_copy_plan,
     AISIDEBAR_OT_copy_tool_details,
+    AISIDEBAR_OT_check_updates,
 )
 
 

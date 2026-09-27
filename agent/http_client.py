@@ -292,3 +292,73 @@ class HttpClient:
             chunk_size=self.chunk_size,
             cancel_event=cancel_event,
         )
+
+    def get(
+        self,
+        endpoint: str,
+        headers: Optional[Mapping[str, str]] = None,
+        cancel_event: Optional[threading.Event] = None,
+        timeout: Optional[float] = None,
+    ) -> HttpResponse:
+        """Execute HTTP GET with streaming response (stdlib only)."""
+        if endpoint.startswith("http://") or endpoint.startswith("https://"):
+            full_url = endpoint
+        else:
+            full_url = self.join_url(self.base_url, endpoint)
+        req_headers: Dict[str, str] = {"Accept": "application/json"}
+        if headers:
+            req_headers.update(dict(headers))
+        req = urllib.request.Request(url=full_url, headers=req_headers, method="GET")
+        effective_timeout = timeout if timeout is not None else self.timeout
+        ssl_context: Optional[ssl.SSLContext] = None
+        if full_url.startswith("https://"):
+            ssl_context = ssl.create_default_context()
+        try:
+            raw_response = urllib.request.urlopen(req, timeout=effective_timeout, context=ssl_context)
+        except urllib.error.HTTPError as err:
+            snippet = ""
+            try:
+                snippet = err.read(MAX_ERROR_SNIPPET_LENGTH).decode("utf-8", errors="replace").strip()
+            except Exception:
+                pass
+            finally:
+                try:
+                    err.close()
+                except Exception:
+                    pass
+            raise HttpError(status_code=err.code, message=str(err.reason),
+                            headers=dict(err.headers) if err.headers else {}, body_snippet=snippet) from err
+        except urllib.error.URLError as err:
+            reason_str = str(err.reason)
+            if isinstance(err.reason, (socket.timeout, TimeoutError)) or "timed out" in reason_str.lower():
+                raise HttpTimeoutError(message=f"Request to {full_url} timed out after {effective_timeout}s.",
+                                       details=reason_str) from err
+            raise HttpConnectionError(message=f"Failed to connect to {full_url}: {reason_str}",
+                                      details=reason_str) from err
+        except (socket.timeout, TimeoutError) as err:
+            raise HttpTimeoutError(message=f"Request to {full_url} timed out after {effective_timeout}s.",
+                                   details=str(err)) from err
+        except OSError as err:
+            err_str = str(err)
+            if "timed out" in err_str.lower():
+                raise HttpTimeoutError(message=f"Request to {full_url} timed out after {effective_timeout}s.",
+                                       details=err_str) from err
+            raise HttpConnectionError(message=f"Network error connecting to {full_url}: {err_str}",
+                                      details=err_str) from err
+        status_code = getattr(raw_response, "status", 200)
+        resp_headers = dict(raw_response.headers) if raw_response.headers else {}
+        return HttpResponse(raw_response=raw_response, status_code=status_code, headers=resp_headers,
+                            url=full_url, chunk_size=self.chunk_size, cancel_event=cancel_event)
+
+    def get_json(
+        self,
+        endpoint: str,
+        headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Dict:
+        """GET + read full body as JSON dict (for small metadata calls)."""
+        import json as _json
+        resp = self.get(endpoint=endpoint, headers=headers, timeout=timeout)
+        with resp:
+            raw = b"".join(bytes(c) for c in resp)
+        return _json.loads(raw.decode("utf-8"))

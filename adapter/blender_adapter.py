@@ -51,13 +51,14 @@ def assert_main_thread() -> None:
 class BlenderAdapter:
     """Centralized adapter for interacting with the Blender runtime."""
 
-    def __init__(self):
+    def __init__(self, asset_library_root=None):
         self._scene_reader = SceneReader()
         self._selection_reader = SelectionReader()
         self._object_reader = ObjectReader()
         self._material_reader = MaterialReader()
         self._mesh_reader = MeshReader()
         self._viewport_reader = ViewportReader()
+        self.asset_library_root = asset_library_root
 
     def inspect_scene(self) -> ToolResult:
         """Inspect the active scene summary.
@@ -568,6 +569,94 @@ class BlenderAdapter:
                 details={"exception": type(exc).__name__},
             )
 
+    def import_asset(self, path: str, name: Optional[str] = None) -> ToolResult:
+        """Import a library asset file into the scene (v1.1 C, main thread only)."""
+        assert_main_thread()
+        tool_name = "import_asset"
+        try:
+            import os as _os
+            from pathlib import Path as _Path
+            from agent.asset_index import is_safe_path as _safe
+            root = getattr(self, "asset_library_root", None) or _os.environ.get("BLENDER_AI_ASSET_DIR", "")
+            if not root:
+                return ToolResult.fail(tool=tool_name, error_type="ASSET_LIBRARY_UNCONFIGURED",
+                                       message="Asset library root is not configured.",
+                                       details={"path": path})
+            if ".." in str(path).replace("\\", "/").split("/"):
+                return ToolResult.fail(tool=tool_name, error_type="INVALID_ARGUMENT",
+                                       message="Path traversal '..' is not allowed.",
+                                       details={"path": path})
+            if not _safe(root, path):
+                return ToolResult.fail(tool=tool_name, error_type="INVALID_ARGUMENT",
+                                       message="Asset path escapes library root.",
+                                       details={"path": path})
+            abs_p = str((_Path(root) / path).resolve())
+            if not _safe(root, abs_p) or not _Path(abs_p).is_file():
+                return ToolResult.fail(tool=tool_name, error_type="ASSET_NOT_FOUND",
+                                       message=f"Asset not found: {path}",
+                                       details={"path": path})
+            try:
+                import bpy as _bpy
+            except ImportError:
+                return ToolResult.fail(tool=tool_name, error_type="BLENDER_RUNTIME_UNAVAILABLE",
+                                       message="Blender runtime (bpy) is not available.",
+                                       details={"path": path})
+            from adapter.mutators import push_undo_step as _push
+            before = set(_bpy.data.objects.keys()) if hasattr(_bpy.data.objects, "keys") else {o.name for o in _bpy.data.objects}
+            before_count = len(list(_bpy.data.objects))
+            ext = _Path(abs_p).suffix.lower()
+            if ext == ".blend":
+                # v1.1 convention: appended Object datablock is named by file stem
+                # (single-object libraries). If caller passes `name`, try it first
+                # as the datablock name, then fall back to the file stem.
+                _candidates = [name, _Path(abs_p).stem] if name else [_Path(abs_p).stem]
+                _appended = False
+                for _cand in _candidates:
+                    try:
+                        _bpy.ops.wm.append(filepath=_Path(abs_p).name, directory=str(abs_p) + "\\Object\\",
+                                           filename=_cand)
+                    except Exception:
+                        continue
+                    _after_try = {o.name for o in _bpy.data.objects}
+                    if len(_after_try - before) > 0:
+                        _appended = True
+                        break
+                if not _appended:
+                    return ToolResult.fail(tool=tool_name, error_type="ASSET_NOT_FOUND",
+                                           message=f"No appendable object datablock in '{path}' (tried { _candidates}).",
+                                           details={"path": path})
+            elif ext in (".glb", ".obj", ".fbx"):
+                if ext == ".glb":
+                    _bpy.ops.import_scene.gltf(filepath=abs_p)
+                elif ext == ".obj":
+                    _bpy.ops.wm.obj_import(filepath=abs_p)
+                else:
+                    _bpy.ops.import_scene.fbx(filepath=abs_p)
+            else:
+                return ToolResult.fail(tool=tool_name, error_type="INVALID_ARGUMENT",
+                                       message=f"Unsupported asset extension '{ext}'.",
+                                       details={"path": path})
+            after = list(_bpy.data.objects)
+            new_objs = [o for o in after if o.name not in before]
+            obj_name = new_objs[0].name if new_objs else (name or _Path(abs_p).stem)
+            if name and new_objs:
+                try:
+                    new_objs[0].name = name
+                    obj_name = name
+                except Exception:
+                    pass
+            _push(f"AI: Import Asset ({obj_name})")
+            data: Dict[str, Any] = {"imported": True, "object_name": obj_name,
+                                    "object_count": len(after),
+                                    "before": {"object_count": before_count},
+                                    "actual": {"imported": True, "object_name": obj_name,
+                                               "object_count": len(after)}}
+            return ToolResult.ok(tool_name, data)
+        except Exception as exc:
+            return ToolResult.fail(tool=tool_name, error_type="ADAPTER_INTERNAL_ERROR",
+                                   message=f"Unexpected error importing asset '{path}': {exc}",
+                                   details={"exception": type(exc).__name__})
+
     def set_material(
         self,
         object_name: Optional[str] = None,
@@ -670,12 +759,14 @@ class BlenderAdapter:
         self,
         width: int = 512,
         height: int = 512,
+        max_side=None,
     ) -> ToolResult:
         """Capture active 3D Viewport screenshot.
 
         Args:
             width: Desired image width in pixels (default 512).
             height: Desired image height in pixels (default 512).
+            max_side: Optional cost-guard downscale bound (64-2048).
 
         Returns:
             ToolResult containing image metadata and in-memory reference.
@@ -683,14 +774,14 @@ class BlenderAdapter:
         assert_main_thread()
         tool_name = "capture_viewport"
         try:
-            data = self._viewport_reader.capture(width=width, height=height)
+            data = self._viewport_reader.capture(width=width, height=height, max_side=max_side)
             return ToolResult.ok(tool_name, data)
         except ValueError as val_err:
             return ToolResult.fail(
                 tool=tool_name,
                 error_type="INVALID_ARGUMENT",
                 message=str(val_err),
-                details={"width": width, "height": height},
+                details={"width": width, "height": height, "max_side": max_side},
             )
         except Exception as exc:
             return ToolResult.fail(

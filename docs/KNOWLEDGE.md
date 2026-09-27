@@ -22,11 +22,14 @@ This document serves as the persistent engineering knowledge repository for **Bl
 - Return values must be structured, deterministic `ToolResult` instances with serializable dictionaries.
 - Missing entities (e.g. object not found, material slot empty) must return structured `ToolResult.fail(...)` rather than raising uncaught exceptions.
 
-### 1.4. OpenAI-Compatible Protocol Standardization
-- Target the standardized `POST /v1/chat/completions` API (`stream=True`).
-- Do NOT introduce vendor-specific adapters or special cases (e.g. do not write custom code for 9Router, LM Studio, or Ollama). The system works through standardized OpenAI Chat Completions formatting.
-- `OpenAIRequestMapper` normalizes `ProviderRequestContext` into OpenAI's payload format with `tools` and `parallel_tool_calls: False`.
-- In streaming, `ToolCallAccumulator` aggregates fragmented deltas indexed by `index` and finalizes them upon `ProviderCompleted`.
+### 1.4. Dual-Dialect Provider Standardization (v1.1)
+- Default dialect: standardized `POST /v1/chat/completions` API (`stream=True`).
+- Second blessed dialect (v1.1): Anthropic Messages `POST /v1/messages` (`agent/anthropic_provider.py`, `anthropic-version: 2023-06-01`, `x-api-key`). No other vendor-specific adapters (e.g. no custom code for 9Router, LM Studio, or Ollama beyond the OpenAI dialect).
+- `OpenAIRequestMapper` normalizes `ProviderRequestContext` into OpenAI's payload format with `tools` and `parallel_tool_calls: False`. `AnthropicRequestMapper` maps to `{model, max_tokens, system, messages, tools[{name, description, input_schema}]}` with base64 image sources.
+- In streaming, `ToolCallAccumulator` aggregates fragmented deltas indexed by `index` and finalizes them upon `ProviderCompleted` (OpenAI `tool_calls` deltas AND Anthropic `input_json_delta` fragments share this path).
+- **Rule**: provider selection is deterministic (`Config.provider`, `BLENDER_AI_PROVIDER`, Preferences enum). The LLM never selects the transport.
+- **Rule**: network I/O lives ONLY in `agent/http_client.py` (`post` + v1.1 `get`/`get_json`). `core/update_check.py` and providers must use it; direct `urllib`/`socket` elsewhere fails `test_hardening.py`.
+- **Rule**: local semantic ranking uses `agent/local_embed.py` (stdlib hashed trigram+token, dim 256). No numpy/torch, no network embeddings, no image bytes in history.
 
 ---
 
@@ -80,7 +83,7 @@ This document serves as the persistent engineering knowledge repository for **Bl
 ### 3.1. Manifest Configuration (`blender_manifest.toml`)
 - Requires `schema_version = "1.0.0"`.
 - Must specify `type = "add-on"`.
-- Uses `id = "blender_ai_sidebar"` and `version = "0.2.0"`.
+- Uses `id = "blender_ai_sidebar"` and `version = "1.1.0"` (bump on every release; keep `bl_info` in sync).
 - Tagged with `"3D View"`, `"AI"`, `"Pipeline"`.
 
 ### 3.2. Addon Preferences & Security
@@ -88,7 +91,8 @@ This document serves as the persistent engineering knowledge repository for **Bl
 - `bl_idname` must match the top-level addon package name.
 - `api_key` property uses `subtype='PASSWORD'` to prevent shoulder-surfing in the Blender interface.
 - Configuration is saved to `bpy.utils.user_resource('CONFIG') / 'blender_ai_sidebar' / 'config.json'`.
-- Environment variables (`OPENAI_BASE_URL`, `BLENDER_AI_API_KEY`, etc.) override file settings.
+ - Environment variables (`OPENAI_BASE_URL`, `BLENDER_AI_API_KEY`, etc.) override file settings. v1.1 adds `BLENDER_AI_PROVIDER` (`openai_compatible`|`anthropic`) and `BLENDER_AI_ASSET_DIR` (asset library root).
+- **v1.1 asset lesson**: every new mutation tool needs 4 touchpoints or verification fails closed — (1) `BlenderAdapter` method + `push_undo_step()`, (2) `ChangeVerifier` rule + `build_change_set_from_result` branch, (3) `MUTATION_TOOLS` entry in `agent/memory.py`, (4) registry in `__init__.py`. `import_asset` is the reference implementation.
 
 ---
 

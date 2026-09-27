@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-09-27
+
+### Added
+- **Vision completion (A1–A3)**:
+  - `capture_viewport` cost guard: optional `max_side` downscale (pure-Python nearest-neighbor, `downscaled` metadata).
+  - Native Anthropic Messages provider (`agent/anthropic_provider.py`): `/v1/messages`, `x-api-key`, SSE `content_block_delta` -> shared `ToolCallAccumulator`; `Config.provider` + `BLENDER_AI_PROVIDER` + Preferences dropdown.
+  - Stdlib local embedding (`agent/local_embed.py`): hashed trigram+token TF (dim 256), cosine `top_k` + `LocalIndex`, Turkish tokenizer.
+- **Auto-update (B, check-only)**:
+  - `core/update_check.py` (parse/compare/fold errors) strictly via `HttpClient.get()`/`get_json()`; `ai_sidebar.check_updates` operator gated by `online_access`.
+- **Asset browser (C, local)**:
+  - `agent/asset_index.py` (scan `.blend/.glb/.obj/.fbx`, traversal guard, substring + embedding search); `import_asset` tool (`LOW` risk, main-thread, `push_undo_step`); `ChangeVerifier` `import` rule.
+- **Transport**: `HttpClient.get()` + `get_json()` with identical TLS/timeout/cancel discipline (network stays isolated in `http_client`).
+
+### Verified
+- 682 pure-Python unit tests passing (`python tests/run_unit_tests.py` OK, hardening green).
+- New unit suites: `test_anthropic_provider`, `test_local_embed`, `test_update_check`, `test_asset_browser`.
+- New headless suites (Blender 5.2.2 LTS): `test_asset_import.py` (6/6), `test_anthropic_roundtrip.py` — master runner 25/25 SUITES PASS.
+- Pending: live GUI pass (moved to v1.2).
+
 ## [1.0.0] - 2026-09-14
 
 ### Added
