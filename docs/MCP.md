@@ -73,6 +73,10 @@ MCP **2026-07-28** (stateless requests, `server/discover`, `_meta` protocol vers
 
 Run two MCP servers in Claude Code: `blender` (this bridge) and `godot` ([Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar)). Model and export a prop with the Blender tools, copy the `.glb` under `res://assets/models/`, call the Godot tool `sync_project`, instantiate the model in the game, and check it with the Godot runtime screenshot. The `blender-to-godot` skill spells out every step, including collision shapes and scale.
 
+## Verified with a real Claude Code client
+
+A fresh `claude -p` process connected through `--mcp-config` (HTTP, bearer token) to a headless Blender, was asked for "a low-poly wooden water bucket, verify it in the viewport, export bucket.glb" and used only the tools above: 40 calls (`create_primitive`, `mesh_edit`, `set_material`, `frame_view`, `capture_viewport` ...), noticed from its own viewport captures that the sides were straight and the bands hidden, rebuilt the body, then joined, set the origin and exported a 1,204-triangle `.glb` and reported honestly what it left behind. It worked without any client-specific handling.
+
 ## Tests
 
 ```bash
