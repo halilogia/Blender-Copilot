@@ -290,6 +290,26 @@ def test_shape_modifiers():
     print("[PASS] Test 8")
 
 
+def test_frame_view():
+    print("Test 9: frame_view aims the viewport...")
+    clean_scene()
+    adapter = BlenderAdapter()
+    adapter.create_primitive("CUBE", name="Target", size=2.0, location=[10, 20, 3])
+    r = adapter.frame_view(object_names=["Target"], direction="FRONT", shading="MATERIAL", overlays=False)
+    assert r.success, r.error
+    assert r.data["direction"] == "FRONT" and near(r.data["center"][0], 10.0) and near(r.data["center"][2], 3.0), r.data
+    from adapter.readers.viewport_reader import ViewportReader
+    space, _ = ViewportReader()._resolve_view3d_context()
+    assert near(space.region_3d.view_location.x, 10.0) and space.region_3d.view_distance > 2.0
+    assert space.shading.type == "MATERIAL" and space.overlay.show_overlays is False
+    shot = adapter.capture_viewport(width=128, height=128)
+    assert shot.success and shot.data["byte_size"] > 300, shot
+    for bad in (dict(direction="UNDER"), dict(object_names=["Nope"]), dict(shading="XRAY")):
+        res = adapter.frame_view(**bad)
+        assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+    print("[PASS] Test 9")
+
+
 def main():
     test_new_primitives()
     test_create_mesh()
@@ -299,6 +319,7 @@ def main():
     test_crate_acceptance()
     test_registry_and_thread_safety()
     test_shape_modifiers()
+    test_frame_view()
     print("\nALL MODELING TOOL INTEGRATION TESTS PASSED")
 
 

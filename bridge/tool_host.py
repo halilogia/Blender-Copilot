@@ -14,11 +14,12 @@ from tools.registry import ToolRegistry
 
 INSTRUCTIONS = (
     "Blender Copilot tools for Blender 5.2. Units are meters, +Z is up. "
-    "Look before you change: inspect_scene, inspect_object, inspect_mesh; verify with capture_viewport "
-    "(returns an image) after every few edits. Every mutation is one Ctrl+Z step. "
-    "Model game assets without Python: create_primitive (cube, sphere, plane, cylinder, cone, icosphere, capsule), "
-    "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide faces picked by normal), "
-    "add_modifier, set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. "
+    "Look before you change: inspect_scene, inspect_object, inspect_mesh; verify by frame_view (aim the viewport: ISO / FRONT / TOP, "
+    "clean overlays off) then capture_viewport (returns an image) after every few edits. Every mutation is one Ctrl+Z step. "
+    "Model game assets without Python: create_primitive (cube, sphere, plane, cylinder, cone, icosphere, torus), "
+    "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide / taper faces picked by normal), "
+    "add_modifier (bevel, subsurf, boolean), add_shape_modifier (mirror, array, solidify, decimate, triangulate), "
+    "set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. "
     "Finish with export_gltf (a .glb in the export folder, Y-up, modifiers applied) and hand the file path to the game "
     "engine (Godot: copy it under res:// and call sync_project). Keep low-poly game assets under ~3000 triangles, "
     "origin at the bottom centre, real-world scale. "

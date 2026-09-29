@@ -845,3 +845,6 @@ class BlenderAdapter:
 
     def add_shape_modifier(self, **kwargs) -> ToolResult:
         return self._modeling("add_shape_modifier", ModelingMutator.add_shape_modifier, **kwargs)
+
+    def frame_view(self, **kwargs) -> ToolResult:
+        return self._modeling("frame_view", ModelingMutator.frame_view, **kwargs)

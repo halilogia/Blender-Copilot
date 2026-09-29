@@ -519,3 +519,57 @@ class ModelingMutator:
         out["evaluated_triangle_count"] = len(mesh.loop_triangles)
         evaluated.to_mesh_clear()
         return out
+
+    # ------------------------------------------------------------------ view
+    VIEW_DIRECTIONS = {
+        "FRONT": (math.pi / 2, 0.0, 0.0),
+        "BACK": (math.pi / 2, 0.0, math.pi),
+        "RIGHT": (math.pi / 2, 0.0, math.pi / 2),
+        "LEFT": (math.pi / 2, 0.0, -math.pi / 2),
+        "TOP": (0.0, 0.0, 0.0),
+        "ISO": (math.radians(62), 0.0, math.radians(38)),
+    }
+
+    @classmethod
+    def frame_view(cls, object_names: Any = None, direction: str = "ISO", shading: Optional[str] = None,
+                   overlays: Optional[bool] = None) -> Dict[str, Any]:
+        from adapter.readers.viewport_reader import ViewportReader
+
+        key = str(direction or "ISO").strip().upper()
+        if key not in cls.VIEW_DIRECTIONS:
+            raise ModelingError(f"direction must be one of {sorted(cls.VIEW_DIRECTIONS)}.")
+        if object_names:
+            if not isinstance(object_names, list):
+                raise ModelingError("object_names must be a list of names.")
+            objs = []
+            for n in object_names:
+                o = bpy.data.objects.get(str(n).strip())
+                if o is None:
+                    raise ModelingError(f"Object '{n}' not found.")
+                objs.append(o)
+        else:
+            objs = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+        space, _region = ViewportReader()._resolve_view3d_context()
+        r3d = space.region_3d
+        points = [o.matrix_world @ Vector(c) for o in objs for c in o.bound_box]
+        if points:
+            lo = Vector((min(p.x for p in points), min(p.y for p in points), min(p.z for p in points)))
+            hi = Vector((max(p.x for p in points), max(p.y for p in points), max(p.z for p in points)))
+            center = (lo + hi) / 2
+            radius = max((hi - lo).length / 2, 0.25)
+        else:
+            center, radius = Vector((0, 0, 0)), 3.0
+        rx, ry, rz = cls.VIEW_DIRECTIONS[key]
+        r3d.view_perspective = "PERSP"
+        r3d.view_location = center
+        r3d.view_rotation = Euler((rx, ry, rz), "XYZ").to_quaternion()
+        r3d.view_distance = radius * 3.2
+        if shading is not None:
+            mode = str(shading).strip().upper()
+            if mode not in ("SOLID", "MATERIAL", "WIREFRAME"):
+                raise ModelingError("shading must be SOLID, MATERIAL or WIREFRAME.")
+            space.shading.type = mode
+        if overlays is not None:
+            space.overlay.show_overlays = bool(overlays)
+        return {"direction": key, "objects": [o.name for o in objs][:50], "center": [round(v, 3) for v in center],
+                "radius": round(radius, 3), "shading": space.shading.type, "overlays": bool(space.overlay.show_overlays)}

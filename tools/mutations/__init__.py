@@ -18,6 +18,7 @@ from .apply_transform import ApplyTransformTool
 from .set_origin import SetOriginTool
 from .export_gltf import ExportGltfTool
 from .add_shape_modifier import AddShapeModifierTool
+from .frame_view import FrameViewTool
 
 __all__ = [
     "CreatePrimitiveTool",
@@ -38,4 +39,5 @@ __all__ = [
     "SetOriginTool",
     "ExportGltfTool",
     "AddShapeModifierTool",
+    "FrameViewTool",
 ]
