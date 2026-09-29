@@ -1,0 +1,22 @@
+{
+  "name": "crate",
+  "date": "20260930-010632",
+  "status": "ok",
+  "seconds": 64.5,
+  "model": "claude-opus-5-5",
+  "tool_calls": 37,
+  "tool_errors": 0,
+  "agent_shots": 1,
+  "triangles": 156,
+  "materials": 2,
+  "nodes": 1,
+  "size_m": [
+    0.82,
+    0.8,
+    0.82
+  ],
+  "bytes": 10280,
+  "final_message": "Sandık hazır ve `crate.glb` olarak dışa aktarıldı: `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010632-crate\\crate.glb`\n\n**Üçgen sayısı: 156.** Düşük poligonlu bir obje için ~3000 üçgen sınırının çok altında.\n\n**Ne yaptım:**\n- Varsayılan Cube'u sildim.\n- Sandığın gövdesini 0,76 m'lik bir küp olarak yaptım. Üstüne 4 dikey köşe dikmesi ile üstte ve altta etrafı saran 8 yatay tahta ekledim. Çerçeve gövdeden biraz dışarı taşıyor.\n- İki mat ahşap malzeme kullandım: gövdede açık kahve \"WoodPlank\", çerçevede koyu kahve \"WoodFrame\".\n- Bütün parçaları tek bir `Crate` objesinde birleştirdim ve ölçeği modele işledim. Orijini alt ortaya koydum, böylece sandık oyunda zeminin üstünde duruyor.\n- Toplam boyut 0,82 × 0,82 × 0,80 m, yani gerçek bir sandık ölçüsünde.\n- Viewport'ta ISO açıdan ve malzeme görünümünde kendim baktım. Çerçeve ve paneller düzgün görünüyor.\n- Dosya Y-up (Y ekseni yukarı) olarak ve modelin orijini dünya merkezine alınarak kaydedildi.\n\nModelde UV açılmadı, sadece düz renkler var. Ahşap dokusu eklemek isterseniz önce UV açmak gerekecek.",
+  "turns": 38,
+  "cost_usd": 0.3723152
+}

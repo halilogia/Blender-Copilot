@@ -1,0 +1,22 @@
+{
+  "name": "lamp",
+  "date": "20260930-011232",
+  "status": "ok",
+  "seconds": 43.3,
+  "model": "claude-opus-5-5",
+  "tool_calls": 20,
+  "tool_errors": 0,
+  "agent_shots": 1,
+  "triangles": 402,
+  "materials": 2,
+  "nodes": 1,
+  "size_m": [
+    1.375,
+    4,
+    0.55
+  ],
+  "bytes": 23044,
+  "final_message": "Sokak lambası hazır ve `lamp.glb` olarak dışa aktarıldı: **402 üçgen**, 23 KB.\n\n**Ne yaptım:**\n- Varsayılan Cube'u sildim.\n- **Direk:** 4 m boyunda, 12 cm çapında bir silindir. Tabanına 30 cm çapında kısa bir kaide ekledim.\n- **Kol:** Direğin tepesinden yatay uzanan 1 m'lik ince bir kutu.\n- **Abajur:** Kolun ucunda 55 cm çapında bir koni. Altına yerleştirdiğim küçük ampul (icosphere) sıcak sarı renkte ışık yayıyor.\n- **Malzemeler:** Lambada iki malzeme var. Direk, kaide, kol ve abajurda koyu yeşilimsi metal; ampulde parlayan malzeme.\n- Viewport'ta ISO açıdan baktım. Kol direğe bağlı, abajur kolun ucunda ve ampul abajurun altında duruyor.\n- **Export öncesi:** Parçaları `StreetLamp` adlı tek bir mesh'te birleştirdim. Ölçeği mesh'e işledim (scale 1) ve orijini tabanın altına aldım. Dosya Y-up ve orijine ortalanmış olarak çıktı. Toplam ölçü 1.375 × 0.55 × 4 m.\n\n**Dikkat edilecek bir nokta:** Orijin tabanın altında ama yatayda direğin değil, lambanın tamamının ortasında. Kol yüzünden direkten yaklaşık 54 cm yana kayık. Oyunda lambayı konumlandırırken direk bu kadar kenarda durur. Orijinin tam direk ekseninde olmasını istersen düzeltebilirim.\n\nDosya: `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011232-lamp\\lamp.glb`",
+  "turns": 21,
+  "cost_usd": 0.2613628
+}

@@ -1,0 +1,22 @@
+{
+  "name": "tank",
+  "date": "20260930-011420",
+  "status": "ok",
+  "seconds": 40.9,
+  "model": "claude-opus-5-5",
+  "tool_calls": 17,
+  "tool_errors": 0,
+  "agent_shots": 1,
+  "triangles": 380,
+  "materials": 2,
+  "nodes": 5,
+  "size_m": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "bytes": 19340,
+  "final_message": "Tank hazır ve `tank.glb` olarak dışa aktarıldı: `archives\\bench-runs\\20260930-011420-tank\\tank.glb`. Toplam **380 üçgen**, yani ~3000'lik sınırın çok altında. Modeli ISO açıdan viewport'ta kontrol ettim; tüm parçalar doğru yerde duruyor.\n\n**Yaptıklarım:**\n- Varsayılan Cube'u sildim.\n- **Gövde:** 4.2 × 2.2 × 0.6 m bir kutu.\n- **Paletler:** 4.6 × 0.6 × 0.9 m iki kutu, gövdenin iki yanında. Köşelerini pahladım ki palet şekline yaklaşsın. Sağ paleti soldakinden kopyaladım.\n- **Kule:** Gövdenin üstünde, yukarı doğru hafifçe daralan 1.8 m çaplı bir silindir.\n- **Namlu:** 3 m uzunluğunda, ileri bakan ince bir silindir.\n- **Malzemeler:** Gövde, kule ve namlu mat askeri yeşil (`TankGreen`), paletler koyu gri (`TrackDark`).\n\nParçalar birleştirilmedi; dosyada 5 ayrı obje var. Bu sayede kuleyi ve namluyu oyunda ayrı ayrı döndürebilirsiniz.\n\n**Dikkat:** Dışa aktarma gövdenin merkezini sıfır noktası olarak aldı. Gövdenin merkezi yerden 0.75 m yüksekte olduğu için oyun motorunda tankın alt yüzü y = -0.75'te kalıyor. Oyunda tankı 0.75 m yukarı taşımanız ya da orijini alt merkeze alıp yeniden dışa aktarmam gerekiyor.",
+  "turns": 18,
+  "cost_usd": 0.262662
+}

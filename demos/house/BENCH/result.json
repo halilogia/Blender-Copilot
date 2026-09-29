@@ -1,0 +1,22 @@
+{
+  "name": "house",
+  "date": "20260930-011124",
+  "status": "ok",
+  "seconds": 65.9,
+  "model": "claude-opus-5-5",
+  "tool_calls": 23,
+  "tool_errors": 0,
+  "agent_shots": 1,
+  "triangles": 100,
+  "materials": 5,
+  "nodes": 1,
+  "size_m": [
+    4.6,
+    4.2,
+    3.795
+  ],
+  "bytes": 9188,
+  "final_message": "Köy evi hazır ve `house.glb` olarak dışa aktarıldı. Toplam **100 üçgen**, yani ~3000'lik sınırın çok altında.\n\n**Ne yaptım:**\n- Varsayılan Cube'u sildim.\n- **Duvarlar:** 4 × 3 m taban, 2,5 m duvar yüksekliği. Yan duvarların üstü, çatının altını kapatan üçgen alınlıklar; tepe noktası 3,6 m. Tek parça, kendi köşe ve yüzeylerimle kurduğum bir mesh.\n- **Çatı:** İki eğimli, 12 cm kalınlığında levha. Her yönde yaklaşık 30 cm saçak payı var.\n- **Kapı ve pencereler:** Duvardan hafif çıkıntılı ince kutular. Ön cephede kapı ve bir pencere, iki yan duvarda birer pencere var.\n- **Baca:** Çatının arka yarısından yükselen 0,45 × 0,45 m bir kutu.\n- **Malzemeler:** Duvar krem, çatı kiremit kırmızısı, kapı ahşap kahvesi, pencereler mavi cam, baca gri taş.\n- Parçaları tek bir `House` objesinde birleştirdim. Obje merkezi zeminin ortasında, yani ev kendi merkezinin üstünde duruyor. Boyutlar 4,6 × 3,8 × 4,2 m.\n\n**Kontrol:** Modeli ISO açıdan, malzemeli görünümde viewport'ta inceledim. Çatı, kapı, pencereler ve baca yerinde duruyor, belirgin bir hata görmedim. Yalnızca bu tek açıdan baktım; arka ve yandan ayrıca kontrol etmedim.\n\n**Dosya:** `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011124-house\\house.glb` (9 KB, Y-up)",
+  "turns": 24,
+  "cost_usd": 0.3271216
+}

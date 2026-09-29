@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), dışa aktar.

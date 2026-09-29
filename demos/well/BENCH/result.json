@@ -1,0 +1,22 @@
+{
+  "name": "well",
+  "date": "20260930-012148",
+  "status": "ok",
+  "seconds": 66.4,
+  "model": "claude-opus-5-5",
+  "tool_calls": 23,
+  "tool_errors": 0,
+  "agent_shots": 1,
+  "triangles": 652,
+  "materials": 6,
+  "nodes": 8,
+  "size_m": [
+    2.4,
+    3.3,
+    1.6
+  ],
+  "bytes": 31632,
+  "final_message": "Taş kuyu hazır ve `well.glb` olarak dışa aktarıldı. Toplam **652 üçgen**, yani ~3000 sınırının çok altında.\n\n**Ne yaptım:**\n- Varsayılan Cube'u sildim.\n- **Taş halka (`Ring`):** 1.8 m çapında, 0.8 m yüksekliğinde gri taş silindir. Halka içi boş değil, dolu bir silindir. Üst yüzeyine koyu mavi, ince bir **su diski (`Water`)** oturttum.\n- **İki direk (`PostL`, `PostR`):** 0.15×0.15×2.2 m, ahşap renginde.\n- **Çatı (`Roof`):** 2.4×1.6 m'lik, 0.6 m yüksekliğinde kendi yaptığım üçgen prizma, kiremit renginde. Çatının pivotu dünya merkezinde, bu yüzden export'ta onu ilk nesne yaptım. Böylece modelin pivotu taban ortasına denk geliyor.\n- **Makara, ip, kova:** İki direk arasında yatay bir ahşap makara (`Axle`), ondan sarkan ince bir ip (`Rope`) ve ucunda küçük bir ahşap kova (`Bucket`).\n- Viewport'ta ISO açıdan kendim kontrol ettim; parçalar yerli yerinde ve oranlar tutarlı görünüyor.\n\n**Bilmen gerekenler:**\n- Su diski halkanın üst kenarıyla aynı hizada. Bu yüzden kuyu derin değil, ağzına kadar dolu görünüyor.\n- Parçalar birleştirilmedi (join yapmadım). Dosyada 8 ayrı mesh var ama tek bir `.glb` içinde, Y-up olarak export edildi.\n\n**Dosya:** `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012148-well\\well.glb`",
+  "turns": 24,
+  "cost_usd": 0.34353959999999995
+}

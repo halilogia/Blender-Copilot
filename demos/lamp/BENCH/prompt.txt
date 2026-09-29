@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu bir sokak lambası modelle (direk, kol, abajur), dışa aktar.

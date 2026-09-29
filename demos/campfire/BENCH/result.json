@@ -1,0 +1,22 @@
+{
+  "name": "campfire",
+  "date": "20260930-011502",
+  "status": "ok",
+  "seconds": 87.6,
+  "model": "claude-opus-5-5",
+  "tool_calls": 42,
+  "tool_errors": 0,
+  "agent_shots": 3,
+  "triangles": 1384,
+  "materials": 4,
+  "nodes": 1,
+  "size_m": [
+    1.197,
+    0.917,
+    1.195
+  ],
+  "bytes": 87292,
+  "final_message": "Kamp ateşi hazır ve `campfire.glb` olarak dışa aktarıldı.\n\n**Dosya:** `...\\archives\\bench-runs\\20260930-011502-campfire\\campfire.glb` (Y-up, 87 KB)\n\n**Yaptıklarım:**\n- Varsayılan Cube'u sildim.\n- **Taş halka:** 0,5 m yarıçaplı bir çembere 8 düşük poligonlu taş dizdim. Her taşın boyutu ve açısı biraz farklı olsun diye basıklıklarını ve dönüşlerini değiştirdim. Malzeme: gri, mat \"Stone\".\n- **Odunlar:** 5 silindiri merkeze doğru eğerek çadır (tipi) biçiminde dizdim. Malzeme: kahverengi \"Wood\".\n- **Alev:** İç içe iki koni kullandım. Dıştaki turuncu, içteki sarı ve ikisi de ışık saçıyor (emission). Kısa kesim yüzeyler (flat shading) low-poly görünüme uyuyor.\n- İlk ISO görüntüde odunlar fazla yatıktı ve alev içlerinde kayboluyordu. Odunları dikleştirdim, alevi uzattım ve daralttım.\n- Önden bir görüntü daha alıp kontrol ettim. Taşlar, odunlar ve alev net seçiliyor.\n- Bütün parçaları tek bir **Campfire** objesinde birleştirdim. Dönüş ve ölçeği geometriye işledim, orijini alt merkeze aldım.\n\n**Sonuç:** Ölçüleri yaklaşık 1,2 × 1,2 × 0,92 m. **Toplam 1384 üçgen**, yani önerilen ~3000 üçgen sınırının oldukça altında. 4 malzeme dosyanın içinde.\n\nAlevin ışık saçması yalnızca malzemede var. Oyun motorunda etrafı gerçekten aydınlatması için yanına ayrıca bir nokta ışığı (OmniLight) eklemeniz gerekir.",
+  "turns": 43,
+  "cost_usd": 0.490113
+}
