@@ -28,12 +28,14 @@ from .ui.keymap import register_keymaps, unregister_keymaps
 from .ui.header import register_header, unregister_header
 from .ui.gpu_overlay import register as register_gpu_overlay, unregister as unregister_gpu_overlay
 from .ui.timer_bridge import TimerBridge
+from .ui.mcp_panel import register_mcp_ui, unregister_mcp_ui
 from .adapter.blender_adapter import BlenderAdapter
 # The rest of the agent imports the top-level ``tools`` package after adding
 # the addon directory to sys.path above.  Importing the registry relatively
 # here creates a second class identity (``blender_ai_sidebar.tools.registry``)
 # and makes isinstance checks in plan validation fail inside Blender.
 from tools.registry import ToolRegistry
+from bridge import control as mcp_control
 from .tools.read_only.inspect_scene import InspectSceneTool
 from .tools.read_only.inspect_selection import InspectSelectionTool
 from .tools.read_only.inspect_object import InspectObjectTool
@@ -166,6 +168,14 @@ def register(provider: Optional[BaseProvider] = None):
     _timer_bridge = TimerBridge(runtime=_runtime, event_queue=_runtime.event_queue)
     _timer_bridge.register()
 
+    # 5b. MCP bridge (Claude Code / other MCP clients). Starts only if enabled in its settings or by env.
+    register_mcp_ui()
+    try:
+        from .ui.preferences import get_config_path
+        mcp_control.attach(registry, adapter, get_config_path().parent / "mcp_bridge.json", version=".".join(str(v) for v in bl_info["version"]))
+    except Exception as exc:  # the bridge must never stop the add-on from loading
+        print(f"[Blender Copilot] MCP bridge unavailable: {exc}")
+
     # 6. Session Persistence (.blend save_pre and load_post handlers)
     set_runtime_getter(get_runtime)
     register_session_handlers()
@@ -182,6 +192,10 @@ def unregister():
     # 0. Unregister session persistence handlers
     unregister_session_handlers()
     set_runtime_getter(None)
+
+    # 0b. Stop the MCP bridge
+    mcp_control.detach()
+    unregister_mcp_ui()
 
     # 1. Stop timer bridge
     if _timer_bridge is not None:
