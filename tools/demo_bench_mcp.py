@@ -1,0 +1,294 @@
+"""Demo bench: a fresh Claude Code agent models one asset through the Blender Copilot MCP bridge.
+
+    python tools/demo_bench_mcp.py --only crate               # one default prompt
+    python tools/demo_bench_mcp.py --name lamp --prompt "model a street lamp"
+    python tools/demo_bench_mcp.py                            # every default prompt, one after another
+
+Per run it starts a headless Blender bridge (scratch scene, gated tools allowed), lets `claude -p` work with
+only the `blender` MCP server, and writes ``archives/bench-runs/<date>-<name>/`` (git-ignored):
+
+    prompt.txt   chat.jsonl (raw stream)   chat.md (readable chat)   <name>.glb
+    shots/       every capture_viewport the agent made + four final views (iso, front, right, top)
+    sheet.png    the four final views in one picture      result.json   measurements
+
+Promote the best runs into ``demos/`` with ``tools/demo_promote.py``.
+"""
+
+import argparse
+import base64
+import json
+import os
+import re
+import secrets
+import socket
+import struct
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+RUNS = ROOT / "archives" / "bench-runs"
+BLENDER = os.environ.get("BLENDER_BIN", r"C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe")
+
+# Short prompts, like a person would type them. The agent gets no recipe beyond the bridge's own instructions.
+DEFAULTS = {
+    "crate": "Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar.",
+    "barrel": "Oyun için düşük poligonlu metal varil modelle (bantlı, kapaklı), dışa aktar.",
+    "tree": "Oyun için düşük poligonlu bir çam ağacı modelle, dışa aktar.",
+    "rock": "Oyun için düşük poligonlu bir kaya modelle (köşeli, düzensiz), dışa aktar.",
+    "sword": "Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar.",
+    "house": "Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar.",
+    "lamp": "Oyun için düşük poligonlu bir sokak lambası modelle (direk, kol, abajur), dışa aktar.",
+    "car": "Oyun için düşük poligonlu basit bir araba modelle (gövde, kabin, dört tekerlek), dışa aktar.",
+    "tank": "Oyun için düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), dışa aktar.",
+    "campfire": "Oyun için düşük poligonlu bir kamp ateşi modelle (taş halka, odunlar, alev), dışa aktar.",
+}
+
+SUFFIX = (
+    "\n\nÇalışma sahnesi bir deneme sahnesi: varsayılan Cube'u silebilirsin. Modeli viewport'ta kendi gözünle "
+    "kontrol et (frame_view + capture_viewport), sonunda `{name}.glb` olarak export_gltf ile dışa aktar ve "
+    "kısaca ne yaptığını ve üçgen sayısını yaz."
+)
+
+
+def free_port():
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+class Bridge:
+    """A headless Blender serving the MCP bridge for the duration of one run."""
+
+    def __init__(self, export_dir):
+        self.export_dir = export_dir
+        self.port = free_port()
+        self.token = secrets.token_hex(24)
+        self.info_path = Path(tempfile.gettempdir()) / "blender_copilot_mcp.json"
+        self.stop_path = Path(tempfile.gettempdir()) / "blender_copilot_mcp.stop"
+        self.proc = None
+        self._id = 0
+
+    def start(self):
+        if self.info_path.exists():
+            self.info_path.unlink()
+        if self.stop_path.exists():
+            self.stop_path.unlink()
+        self.proc = subprocess.Popen(
+            [BLENDER, "--background", "--python", str(ROOT / "tools" / "serve_mcp_headless.py"), "--",
+             "--port", str(self.port), "--token", self.token, "--export-dir", str(self.export_dir), "--allow-gated"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(120):
+            if self.info_path.exists():
+                return
+            time.sleep(0.5)
+        raise RuntimeError("the Blender bridge did not start")
+
+    def stop(self):
+        if self.proc is None:
+            return
+        self.stop_path.write_text("stop", encoding="utf-8")
+        try:
+            self.proc.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+        if self.stop_path.exists():
+            self.stop_path.unlink()
+
+    def endpoint(self):
+        return f"http://127.0.0.1:{self.port}/mcp"
+
+    def call(self, tool, **args):
+        self._id += 1
+        body = {"jsonrpc": "2.0", "id": self._id, "method": "tools/call", "params": {"name": tool, "arguments": args}}
+        req = urllib.request.Request(self.endpoint(), data=json.dumps(body).encode(), method="POST")
+        req.add_header("Content-Type", "application/json")
+        req.add_header("Authorization", "Bearer " + self.token)
+        req.add_header("MCP-Protocol-Version", "2026-07-28")
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return json.loads(r.read())["result"]
+
+
+def glb_summary(path):
+    """Triangles, materials and size (meters, Y-up) read from the .glb JSON chunk."""
+    data = Path(path).read_bytes()
+    length = struct.unpack_from("<I", data, 12)[0]
+    doc = json.loads(data[20:20 + length])
+    tris = 0
+    lo, hi = [1e9] * 3, [-1e9] * 3
+    for mesh in doc.get("meshes", []):
+        for prim in mesh.get("primitives", []):
+            if "indices" in prim:
+                tris += doc["accessors"][prim["indices"]]["count"] // 3
+            acc = doc["accessors"][prim["attributes"]["POSITION"]]
+            for i in range(3):
+                lo[i] = min(lo[i], acc["min"][i])
+                hi[i] = max(hi[i], acc["max"][i])
+    size = [round(hi[i] - lo[i], 3) for i in range(3)] if tris else [0, 0, 0]
+    return {"triangles": tris, "materials": len(doc.get("materials", [])), "nodes": len(doc.get("nodes", [])),
+            "size_m": size, "bytes": len(data)}
+
+
+def clean_text(value, limit=1500):
+    text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+    return text if len(text) <= limit else text[:limit] + f" ... [{len(text) - limit} more characters]"
+
+
+def write_chat(events, run_dir, shots_dir):
+    """chat.md from the stream-json events; agent captures are saved as shots/agent-NN.png."""
+    lines, shot_n, tools, errors, model = [], 0, 0, 0, ""
+    names = {}
+    for ev in events:
+        kind = ev.get("type")
+        if kind == "system" and ev.get("subtype") == "init":
+            model = ev.get("model", "")
+        elif kind == "assistant":
+            for block in ev["message"]["content"]:
+                if block.get("type") == "text" and block["text"].strip():
+                    lines.append("**Ajan:** " + block["text"].strip() + "\n")
+                elif block.get("type") == "tool_use":
+                    tools += 1
+                    names[block["id"]] = block["name"]
+                    lines.append(f"- `{block['name']}` {clean_text(block['input'], 400)}")
+        elif kind == "user":
+            content = ev["message"]["content"]
+            if not isinstance(content, list):
+                continue
+            for block in content:
+                if block.get("type") != "tool_result":
+                    continue
+                if block.get("is_error"):
+                    errors += 1
+                parts = block.get("content")
+                if isinstance(parts, str):
+                    parts = [{"type": "text", "text": parts}]
+                for part in parts or []:
+                    if part.get("type") == "image":
+                        shot_n += 1
+                        name = f"agent-{shot_n:02d}.png"
+                        (shots_dir / name).write_bytes(base64.b64decode(part["source"]["data"]))
+                        lines.append(f"  ![]({'shots/' + name})")
+                    elif part.get("type") == "text":
+                        lines.append("  > " + clean_text(part["text"], 300).replace("\n", " "))
+        elif kind == "result":
+            lines.append("\n---\n**Sonuç:** " + str(ev.get("result", "")).strip())
+    (run_dir / "chat.md").write_text("# Sohbet\n\n" + "\n".join(lines) + "\n", encoding="utf-8")
+    return {"model": model, "tool_calls": tools, "tool_errors": errors, "agent_shots": shot_n}
+
+
+def final_views(bridge, shots_dir):
+    """Four clean views of whatever the scene holds when the agent finished."""
+    made = []
+    for direction in ("ISO", "FRONT", "RIGHT", "TOP"):
+        bridge.call("frame_view", direction=direction, shading="MATERIAL", overlays=False)
+        res = bridge.call("capture_viewport", width=800, height=600)
+        for block in res["content"]:
+            if block["type"] == "image":
+                path = shots_dir / f"final-{direction.lower()}.png"
+                path.write_bytes(base64.b64decode(block["data"]))
+                made.append(path)
+    return made
+
+
+def make_sheet(paths, out):
+    try:
+        from PIL import Image
+    except ImportError:
+        return False
+    if len(paths) != 4:
+        return False
+    images = [Image.open(p).convert("RGB") for p in paths]
+    w, h = images[0].size
+    sheet = Image.new("RGB", (w * 2, h * 2))
+    for i, img in enumerate(images):
+        sheet.paste(img, ((i % 2) * w, (i // 2) * h))
+    sheet.save(out)
+    return True
+
+
+def run_one(name, prompt, timeout_min, max_turns, model):
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    run_dir = RUNS / f"{stamp}-{name}"
+    shots_dir = run_dir / "shots"
+    shots_dir.mkdir(parents=True)
+    full_prompt = prompt + SUFFIX.format(name=name)
+    (run_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
+    bridge = Bridge(run_dir)
+    started = time.time()
+    events, status = [], "ok"
+    try:
+        bridge.start()
+        cfg = run_dir / "mcp.json"
+        cfg.write_text(json.dumps({"mcpServers": {"blender": {
+            "type": "http", "url": bridge.endpoint(), "headers": {"Authorization": "Bearer " + bridge.token}}}}),
+            encoding="utf-8")
+        cmd = ["claude", "-p", full_prompt, "--mcp-config", str(cfg), "--strict-mcp-config",
+               "--allowedTools", "mcp__blender__*", "--max-turns", str(max_turns),
+               "--output-format", "stream-json", "--verbose"]
+        if model:
+            cmd += ["--model", model]
+        try:
+            proc = subprocess.run(cmd, cwd=run_dir, capture_output=True, text=True, encoding="utf-8",
+                                  timeout=timeout_min * 60)
+            raw = proc.stdout
+        except subprocess.TimeoutExpired as exc:
+            status = "timeout"
+            raw = (exc.stdout or b"").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
+        (run_dir / "chat.jsonl").write_text(raw, encoding="utf-8")
+        for line in raw.splitlines():
+            try:
+                events.append(json.loads(line))
+            except ValueError:
+                pass
+        duration = time.time() - started
+        stats = write_chat(events, run_dir, shots_dir)
+        try:
+            finals = final_views(bridge, shots_dir)
+            make_sheet(finals, run_dir / "sheet.png")
+        except Exception as exc:  # the scene may be empty when the agent failed
+            status = status if status != "ok" else f"no-final-views: {exc}"
+    finally:
+        bridge.stop()
+        (run_dir / "mcp.json").unlink(missing_ok=True)  # holds the one-run token
+    result = {"name": name, "date": stamp, "status": status, "seconds": round(duration or time.time() - started, 1)}
+    result.update(stats if events else {})
+    glb = run_dir / f"{name}.glb"
+    if glb.exists():
+        result.update(glb_summary(glb))
+    else:
+        result["status"] = "no-glb" if result["status"] == "ok" else result["status"]
+    for ev in events:
+        if ev.get("type") == "result":
+            result["final_message"] = str(ev.get("result", ""))[:2000]
+            result["turns"] = ev.get("num_turns")
+            result["cost_usd"] = ev.get("total_cost_usd")
+    (run_dir / "result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"[bench] {name}: {result['status']} {result.get('triangles', '-')} tris, "
+          f"{result.get('tool_calls', '-')} calls, {result['seconds']}s -> {run_dir}", flush=True)
+    return run_dir
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--only", help="comma separated names from the default prompts")
+    ap.add_argument("--name")
+    ap.add_argument("--prompt")
+    ap.add_argument("--timeout-min", type=int, default=20)
+    ap.add_argument("--max-turns", type=int, default=90)
+    ap.add_argument("--model", default="")
+    args = ap.parse_args()
+    if args.name and args.prompt:
+        jobs = [(re.sub(r"[^A-Za-z0-9_-]", "-", args.name), args.prompt)]
+    else:
+        names = args.only.split(",") if args.only else list(DEFAULTS)
+        jobs = [(n, DEFAULTS[n]) for n in names]
+    for name, prompt in jobs:
+        run_one(name, prompt, args.timeout_min, args.max_turns, args.model)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

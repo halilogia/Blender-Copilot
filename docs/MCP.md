@@ -77,6 +77,10 @@ Run two MCP servers in Claude Code: `blender` (this bridge) and `godot` ([Godot 
 
 A fresh `claude -p` process connected through `--mcp-config` (HTTP, bearer token) to a headless Blender, was asked for "a low-poly wooden water bucket, verify it in the viewport, export bucket.glb" and used only the tools above: 40 calls (`create_primitive`, `mesh_edit`, `set_material`, `frame_view`, `capture_viewport` ...), noticed from its own viewport captures that the sides were straight and the bands hidden, rebuilt the body, then joined, set the origin and exported a 1,204-triangle `.glb` and reported honestly what it left behind. It worked without any client-specific handling.
 
+## Demo bench
+
+`tools/demo_bench_mcp.py` gives a fresh Claude Code agent one short prompt ("model a low-poly barrel") and only the `blender` MCP server, then keeps everything in `archives/bench-runs/<date>-<name>/` (git-ignored): the prompt, the raw and readable chat, every viewport capture the agent made, four final views (`sheet.png`), the `.glb` and `result.json` (calls, triangles, size, time). `tools/demo_history.py` builds `archives/history/index.html` (zoom, chat links, "demos'a koy" picks) and `tools/demo_promote.py <run>` copies the best runs into the tracked [`demos/`](../demos/README.md) library.
+
 ## Tests
 
 ```bash
