@@ -1,9 +1,9 @@
 """Build archives/history/index.html: every bench run, newest first, with zoom, chat link and picks.
 
-    python tools/demo_history.py
+    python scripts/demo_history.py
 
 Open the page, tick "demos'a koy" on the best run of each model, download secim.txt, then
-``python tools/demo_promote.py --from-file secim.txt``. Runs already in demos/ carry a star.
+``python scripts/demo_promote.py --from-file secim.txt``. Runs already in demos/ carry a star.
 """
 
 import html

@@ -1,6 +1,6 @@
 # Demo kütüphanesi
 
-Her model, boş bir Blender sahnesinde tek bir istemle **Claude Code ajanının** Blender Copilot MCP köprüsü üzerinden (yalnız izin listeli araçlar, rastgele Python yok) modellediği bir `.glb` dosyasıdır (`tools/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: izometrik, ön, sağ, üst.
+Her model, boş bir Blender sahnesinde tek bir istemle **Claude Code ajanının** Blender Copilot MCP köprüsü üzerinden (yalnız izin listeli araçlar, rastgele Python yok) modellediği bir `.glb` dosyasıdır (`scripts/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: izometrik, ön, sağ, üst.
 
 Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: `res://assets/models/` altına at).
 

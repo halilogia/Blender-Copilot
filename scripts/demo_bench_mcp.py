@@ -1,8 +1,8 @@
 """Demo bench: a fresh Claude Code agent models one asset through the Blender Copilot MCP bridge.
 
-    python tools/demo_bench_mcp.py --only crate               # one default prompt
-    python tools/demo_bench_mcp.py --name lamp --prompt "model a street lamp"
-    python tools/demo_bench_mcp.py                            # every default prompt, one after another
+    python scripts/demo_bench_mcp.py --only crate               # one default prompt
+    python scripts/demo_bench_mcp.py --name lamp --prompt "model a street lamp"
+    python scripts/demo_bench_mcp.py                            # every default prompt, one after another
 
 Per run it starts a headless Blender bridge (scratch scene, gated tools allowed), lets `claude -p` work with
 only the `blender` MCP server, and writes ``archives/bench-runs/<date>-<name>/`` (git-ignored):
@@ -11,7 +11,7 @@ only the `blender` MCP server, and writes ``archives/bench-runs/<date>-<name>/``
     shots/       every capture_viewport the agent made + four final views (iso, front, right, top)
     sheet.png    the four final views in one picture      result.json   measurements
 
-Promote the best runs into ``demos/`` with ``tools/demo_promote.py``.
+Promote the best runs into ``demos/`` with ``scripts/demo_promote.py``.
 """
 
 import argparse

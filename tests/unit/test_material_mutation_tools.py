@@ -272,6 +272,16 @@ class TestMaterialMutatorValidation(unittest.TestCase):
             MaterialMutator.set_material(object_name="Cube")
         self.assertIn("At least one material property", str(ctx.exception))
 
+    def test_set_material_object_and_material_name_alone_is_allowed(self):
+        # passes validation (it only assigns the material); bpy is not available in unit tests, so any
+        # later failure must not be the "at least one property" error
+        try:
+            MaterialMutator.set_material(object_name="Cube", material_name="Red")
+        except ValueError as exc:
+            self.assertNotIn("At least one material property", str(exc))
+        except Exception:
+            pass
+
     def test_set_material_requires_target(self):
         with self.assertRaises(ValueError) as ctx:
             MaterialMutator.set_material(base_color=[1.0, 0.0, 0.0])

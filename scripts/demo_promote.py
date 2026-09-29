@@ -1,7 +1,7 @@
 """Put chosen bench runs into demos/ (the git-tracked library) and rebuild demos/README.md.
 
-    python tools/demo_promote.py 20260930-010632-crate 20260930-011500-barrel
-    python tools/demo_promote.py --rebuild            # only regenerate demos/README.md
+    python scripts/demo_promote.py 20260930-010632-crate 20260930-011500-barrel
+    python scripts/demo_promote.py --rebuild            # only regenerate demos/README.md
 
 A run folder name comes from archives/bench-runs/. Copies the .glb, the picture sheet, the readable chat and the
 measurements; the raw stream (chat.jsonl) stays in the archive. Promoting a name again replaces the old demo and
@@ -57,7 +57,7 @@ def rebuild():
         "# Demo kütüphanesi\n\n"
         "Her model, boş bir Blender sahnesinde tek bir istemle **Claude Code ajanının** Blender Copilot MCP "
         "köprüsü üzerinden (yalnız izin listeli araçlar, rastgele Python yok) modellediği bir `.glb` dosyasıdır "
-        "(`tools/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: "
+        "(`scripts/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: "
         "izometrik, ön, sağ, üst.\n\n"
         "Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: "
         "`res://assets/models/` altına at).\n\n"

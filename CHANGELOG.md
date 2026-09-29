@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `capture_viewport` derives its view and projection matrices from the viewport parameters (`RegionView3D.view_matrix` is stale in background mode, so `frame_view` had no effect on captures).
+- `set_material` with `object_name` and `material_name` and no property now just assigns the existing material to the slot (before it needed a property change).
+- Demo bench (`scripts/demo_bench_mcp.py`, `demo_history.py`, `demo_promote.py`) and the `demos/` library: 17 props modeled by an agent through the bridge.
 
 ### Verified
 - Pure-Python unit suites `test_mcp_bridge` (protocol, gating, executor, real loopback HTTP) and `test_mcp_settings`; headless Blender suites `test_mcp_bridge_blender.py` and `test_modeling_tools.py` (a real `.glb` is written and read back); full master runner 27/27 suites.

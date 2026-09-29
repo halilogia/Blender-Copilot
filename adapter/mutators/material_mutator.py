@@ -155,7 +155,8 @@ class MaterialMutator:
         has_property = any(
             v is not None for v in [base_color, metallic, roughness, emission_color, emission_strength, alpha]
         )
-        if not has_property:
+        # object + material name with no property just assigns the (existing) material to the slot
+        if not has_property and not (object_name and material_name):
             raise ValueError(
                 "At least one material property ('base_color', 'metallic', 'roughness', "
                 "'emission_color', 'emission_strength', 'alpha') must be provided."
