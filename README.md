@@ -69,6 +69,16 @@
 
 ---
 
+## MCP bridge and modeling tools
+
+External agents (Claude Code, Codex) can use this add-on through a local, token-protected MCP server, and the new modeling tools build low-poly game assets without running arbitrary Python (`create_mesh`, `mesh_edit`, `add_shape_modifier`, `frame_view`, `export_gltf` ...). Start it from the N-panel section **MCP bridge (Claude Code)** or headless with `blender --background --python tools/serve_mcp_headless.py`. Claude Code plugin (skills and `/blender-connect`):
+
+```bash
+claude plugin marketplace add halilogia/Blender-Copilot && claude plugin install blender-copilot@blender-copilot
+```
+
+Details, security model and tool list: [docs/MCP.md](docs/MCP.md).
+
 ## Architecture Overview
 
 ```text

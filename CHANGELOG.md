@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **MCP bridge** (`bridge/`): local MCP server so Claude Code and other agents can use Blender Copilot's tools. Loopback only, bearer token, browser `Origin` refused, off by default; speaks MCP 2026-07-28 (`server/discover`, `_meta` version, `resultType`, cacheable `tools/list`, `structuredContent`, header checks) and the older `initialize` handshake; tool `annotations`; ANSI/control characters scrubbed from results; `capture_viewport` returned as an MCP image. MEDIUM+ risk tools (`delete_object`) are refused unless the user allows gated tools. N-panel section "MCP bridge (Claude Code)" and `tools/serve_mcp_headless.py` for headless use. See `docs/MCP.md`.
+- **Modeling tools without Python** (no exec/eval): `create_mesh`, `mesh_edit` (extrude / inset / bevel / subdivide / taper faces picked by normal), `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier` (MIRROR, ARRAY, SOLIDIFY, DECIMATE, TRIANGULATE), `frame_view`, `export_gltf` (writes a `.glb`, recenters the prop at the origin); primitives CYLINDER, CONE, ICOSPHERE, TORUS.
+- **Claude Code plugin** (`plugin/`, marketplace in `.claude-plugin/`): skills `blender-game-assets` (with tested recipes: crate, barrel, tree, rock, sandbags, rifle, soldier) and `blender-to-godot`, plus `/blender-connect`.
+- Manifest: `files` permission and updated `network` text; build excludes the plugin folder.
+
+### Fixed
+- `capture_viewport` derives its view and projection matrices from the viewport parameters (`RegionView3D.view_matrix` is stale in background mode, so `frame_view` had no effect on captures).
+
+### Verified
+- Pure-Python unit suites `test_mcp_bridge` (protocol, gating, executor, real loopback HTTP) and `test_mcp_settings`; headless Blender suites `test_mcp_bridge_blender.py` and `test_modeling_tools.py` (a real `.glb` is written and read back); full master runner 27/27 suites.
+
+---
+
 ## [1.1.0] - 2026-09-27
 
 ### Added
