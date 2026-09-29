@@ -842,3 +842,6 @@ class BlenderAdapter:
     def export_gltf(self, **kwargs) -> ToolResult:
         kwargs.setdefault("export_dir", self.export_dir)
         return self._modeling("export_gltf", ModelingMutator.export_gltf, **kwargs)
+
+    def add_shape_modifier(self, **kwargs) -> ToolResult:
+        return self._modeling("add_shape_modifier", ModelingMutator.add_shape_modifier, **kwargs)

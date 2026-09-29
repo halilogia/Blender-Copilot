@@ -448,3 +448,74 @@ class ModelingMutator:
         if tris > 5000:
             out["warning"] = f"{tris} triangles is heavy for a game prop; consider a lower-poly version."
         return out
+
+
+    # ------------------------------------------------------------------ shape modifiers
+    SHAPE_MODIFIERS = ("MIRROR", "ARRAY", "SOLIDIFY", "DECIMATE", "TRIANGULATE")
+
+    @classmethod
+    def add_shape_modifier(cls, name: str, modifier_type: str, axes: Any = None, count: Optional[int] = None,
+                           relative_offset: Any = None, thickness: Optional[float] = None,
+                           ratio: Optional[float] = None, modifier_name: Optional[str] = None) -> Dict[str, Any]:
+        kind = str(modifier_type or "").strip().upper()
+        if kind not in cls.SHAPE_MODIFIERS:
+            raise ModelingError(f"modifier_type must be one of {list(cls.SHAPE_MODIFIERS)}.")
+        obj = _mesh_object(name)
+        # Validate everything before touching the modifier stack (a bad call must change nothing).
+        info: Dict[str, Any] = {}
+        wanted: List[str] = []
+        offset = Vector((1.0, 0.0, 0.0))
+        n = 2
+        t = 0.02
+        r = 0.5
+        if kind == "MIRROR":
+            wanted = [str(a).strip().upper() for a in (axes if isinstance(axes, list) and axes else ["X"])]
+            if any(a not in ("X", "Y", "Z") for a in wanted):
+                raise ModelingError("axes must be a list of X, Y and/or Z.")
+            info["axes"] = wanted
+        elif kind == "ARRAY":
+            n = int(count if count is not None else 2)
+            if not 2 <= n <= 64:
+                raise ModelingError("count must be between 2 and 64.")
+            if relative_offset is not None:
+                offset = _vec3(relative_offset, "relative_offset")
+            info.update({"count": n, "relative_offset": [round(v, 4) for v in offset]})
+        elif kind == "SOLIDIFY":
+            t = float(thickness if thickness is not None else 0.02)
+            if t == 0 or not math.isfinite(t):
+                raise ModelingError("thickness must be a non-zero number (meters).")
+            info["thickness"] = t
+        elif kind == "DECIMATE":
+            r = float(ratio if ratio is not None else 0.5)
+            if not 0.02 <= r <= 1.0:
+                raise ModelingError("ratio must be between 0.02 and 1.0.")
+            info["ratio"] = r
+        label = modifier_name.strip()[:MAX_NAME_LEN] if isinstance(modifier_name, str) and modifier_name.strip() else kind.capitalize()
+        existing = obj.modifiers.get(label)
+        mod = existing if existing is not None and existing.type == kind else obj.modifiers.new(name=label, type=kind)
+        if kind == "MIRROR":
+            for i, letter in enumerate(("X", "Y", "Z")):
+                mod.use_axis[i] = letter in wanted
+            mod.use_clip = True
+            mod.use_mirror_merge = True
+            mod.merge_threshold = 0.001
+        elif kind == "ARRAY":
+            mod.count = n
+            mod.use_relative_offset = True
+            mod.relative_offset_displace = offset
+        elif kind == "SOLIDIFY":
+            mod.thickness = t
+        elif kind == "DECIMATE":
+            mod.decimate_type = "COLLAPSE"
+            mod.ratio = r
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Add {kind} modifier on {obj.name}")
+        out = {"object_name": obj.name, "modifier_name": mod.name, "modifier_type": kind, "exists": True}
+        out.update(info)
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        evaluated = obj.evaluated_get(depsgraph)
+        mesh = evaluated.to_mesh()
+        mesh.calc_loop_triangles()
+        out["evaluated_triangle_count"] = len(mesh.loop_triangles)
+        evaluated.to_mesh_clear()
+        return out

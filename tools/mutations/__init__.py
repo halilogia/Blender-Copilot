@@ -17,6 +17,7 @@ from .parent_object import ParentObjectTool
 from .apply_transform import ApplyTransformTool
 from .set_origin import SetOriginTool
 from .export_gltf import ExportGltfTool
+from .add_shape_modifier import AddShapeModifierTool
 
 __all__ = [
     "CreatePrimitiveTool",
@@ -36,4 +37,5 @@ __all__ = [
     "ApplyTransformTool",
     "SetOriginTool",
     "ExportGltfTool",
+    "AddShapeModifierTool",
 ]

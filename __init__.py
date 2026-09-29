@@ -59,6 +59,7 @@ from .tools.mutations.parent_object import ParentObjectTool
 from .tools.mutations.apply_transform import ApplyTransformTool
 from .tools.mutations.set_origin import SetOriginTool
 from .tools.mutations.export_gltf import ExportGltfTool
+from .tools.mutations.add_shape_modifier import AddShapeModifierTool
 from .tools.read_only.capture_viewport import CaptureViewportTool
 from .tools.read_only.visual_verify import VisualVerifyTool
 from .tools.propose_plan import ProposePlanTool
@@ -156,6 +157,7 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(ApplyTransformTool())
     registry.register(SetOriginTool())
     registry.register(ExportGltfTool())
+    registry.register(AddShapeModifierTool())
     registry.register(CaptureViewportTool())
     registry.register(VisualVerifyTool())
     registry.register(ProposePlanTool())

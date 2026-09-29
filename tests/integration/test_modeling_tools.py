@@ -259,6 +259,37 @@ def test_registry_and_thread_safety():
     print("[PASS] Test 7")
 
 
+def test_shape_modifiers():
+    print("Test 8: add_shape_modifier...")
+    clean_scene()
+    adapter = BlenderAdapter()
+    adapter.create_primitive("CUBE", name="Half", size=1.0, location=[0.5, 0, 0])
+    adapter.apply_transform(object_name="Half", location=True)
+    r = adapter.add_shape_modifier(name="Half", modifier_type="MIRROR", axes=["X"])
+    assert r.success, r.error
+    assert r.data["axes"] == ["X"] and r.data["evaluated_triangle_count"] >= 12, r.data
+    adapter.create_primitive("CUBE", name="Post", size=1.0, location=[0, 5, 0])
+    r = adapter.add_shape_modifier(name="Post", modifier_type="ARRAY", count=4, relative_offset=[1.5, 0, 0])
+    assert r.success and r.data["count"] == 4 and r.data["evaluated_triangle_count"] == 4 * 12, r.data
+    adapter.create_primitive("PLANE", name="Slab", size=2.0, location=[0, 10, 0])
+    r = adapter.add_shape_modifier(name="Slab", modifier_type="SOLIDIFY", thickness=0.1)
+    assert r.success and r.data["thickness"] == 0.1
+    adapter.create_primitive("ICOSPHERE", name="Rock", size=1.0, location=[0, 15, 0])
+    before = bpy.data.objects["Rock"].data
+    before.calc_loop_triangles()
+    tris_before = len(before.loop_triangles)
+    r = adapter.add_shape_modifier(name="Rock", modifier_type="DECIMATE", ratio=0.3)
+    assert r.success and r.data["evaluated_triangle_count"] < tris_before * 0.6, (r.data, tris_before)
+    assert adapter.add_shape_modifier(name="Rock", modifier_type="TRIANGULATE").success
+    for bad in (dict(name="Half", modifier_type="WIGGLE"), dict(name="Half", modifier_type="MIRROR", axes=["W"]),
+                dict(name="Post", modifier_type="ARRAY", count=1), dict(name="Slab", modifier_type="SOLIDIFY", thickness=0),
+                dict(name="Rock", modifier_type="DECIMATE", ratio=0.0), dict(name="Nope", modifier_type="MIRROR")):
+        res = adapter.add_shape_modifier(**bad)
+        assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+    assert [m.type for m in bpy.data.objects["Post"].modifiers] == ["ARRAY"], "failed calls must not leave modifiers behind"
+    print("[PASS] Test 8")
+
+
 def main():
     test_new_primitives()
     test_create_mesh()
@@ -267,6 +298,7 @@ def main():
     test_export_gltf()
     test_crate_acceptance()
     test_registry_and_thread_safety()
+    test_shape_modifiers()
     print("\nALL MODELING TOOL INTEGRATION TESTS PASSED")
 
 
