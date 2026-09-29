@@ -563,7 +563,7 @@ class ModelingMutator:
         r3d.view_perspective = "PERSP"
         r3d.view_location = center
         r3d.view_rotation = Euler((rx, ry, rz), "XYZ").to_quaternion()
-        r3d.view_distance = radius * 3.2
+        r3d.view_distance = radius * 2.3
         if shading is not None:
             mode = str(shading).strip().upper()
             if mode not in ("SOLID", "MATERIAL", "WIREFRAME"):
