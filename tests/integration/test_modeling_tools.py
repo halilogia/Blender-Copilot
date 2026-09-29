@@ -217,6 +217,35 @@ def test_export_gltf():
     print("[PASS] Test 5")
 
 
+def _glb_json(path):
+    import json
+    import struct
+    with open(path, "rb") as fh:
+        data = fh.read()
+    length, kind = struct.unpack("<II", data[12:20])
+    assert kind == 0x4E4F534A, "first chunk is not JSON"
+    return json.loads(data[20:20 + length].decode("utf-8"))
+
+
+def test_export_recenter():
+    print("Test 5b: export_gltf recenters the prop and restores the scene...")
+    clean_scene()
+    adapter = BlenderAdapter()
+    adapter.export_dir = tempfile.mkdtemp(prefix="bc_recenter_")
+    adapter.create_primitive("CUBE", name="Far", size=1.0, location=[12, 30, 4])
+    res = adapter.export_gltf(object_names=["Far"], filename="far")
+    assert res.success, res.error
+    node = _glb_json(res.data["path"])["nodes"][0]
+    translation = node.get("translation", [0, 0, 0])
+    assert all(abs(v) < 1e-4 for v in translation), f"exported node is offset: {translation}"
+    far = bpy.data.objects["Far"]
+    assert list(far.location) == [12.0, 30.0, 4.0], "the scene must be restored after export"
+    keep = adapter.export_gltf(object_names=["Far"], filename="far_keep", recenter=False)
+    moved = _glb_json(keep.data["path"])["nodes"][0].get("translation", [0, 0, 0])
+    assert any(abs(v) > 1.0 for v in moved), moved
+    print("[PASS] Test 5b")
+
+
 def test_crate_acceptance():
     print("Test 6: build a game crate the way an agent would...")
     clean_scene()
@@ -306,14 +335,15 @@ def test_frame_view():
     assert shot.success and shot.data["byte_size"] > 300, shot
     # The capture must follow the new view (view_matrix is stale in background mode, so it is derived from the
     # view parameters): different directions and different targets give different pictures.
-    adapter.create_primitive("CUBE", name="Far", size=2.0, location=[-40, -40, 0])
+    adapter.create_primitive("CYLINDER", name="Tall", size=1.0, scale=[0.4, 0.4, 3.0], location=[-37.3, -41.7, 1.5])
+    adapter.apply_transform(object_name="Tall")
     adapter.frame_view(object_names=["Target"], direction="ISO")
     iso_target = adapter.capture_viewport(width=160, height=120).data["image_id"]
     adapter.frame_view(object_names=["Target"], direction="TOP")
     top_target = adapter.capture_viewport(width=160, height=120).data["image_id"]
-    adapter.frame_view(object_names=["Far"], direction="ISO")
-    iso_far = adapter.capture_viewport(width=160, height=120).data["image_id"]
-    assert len({iso_target, top_target, iso_far}) == 3, "capture_viewport ignores frame_view"
+    adapter.frame_view(object_names=["Tall"], direction="ISO")
+    iso_tall = adapter.capture_viewport(width=160, height=120).data["image_id"]
+    assert len({iso_target, top_target, iso_tall}) == 3, "capture_viewport ignores frame_view"
     for bad in (dict(direction="UNDER"), dict(object_names=["Nope"]), dict(shading="XRAY")):
         res = adapter.frame_view(**bad)
         assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
@@ -326,6 +356,7 @@ def main():
     test_mesh_edit()
     test_join_parent_transform_origin()
     test_export_gltf()
+    test_export_recenter()
     test_crate_acceptance()
     test_registry_and_thread_safety()
     test_shape_modifiers()

@@ -392,7 +392,7 @@ class ModelingMutator:
     # ------------------------------------------------------------------ export
     @classmethod
     def export_gltf(cls, object_names: Any, filename: str, export_dir: str, apply_modifiers: bool = True,
-                    include_materials: bool = True, y_up: bool = True) -> Dict[str, Any]:
+                    include_materials: bool = True, y_up: bool = True, recenter: bool = True) -> Dict[str, Any]:
         if not isinstance(object_names, list) or not object_names:
             raise ModelingError("object_names must be a non-empty list of object names.")
         name = str(filename or "").strip()
@@ -409,6 +409,17 @@ class ModelingMutator:
         folder = Path(export_dir).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / name
+        # Game engines place the file's root node at its position in the Blender scene, so a prop modelled at
+        # (12, 0, 0) would sit 12 m away from its collision body. recenter shifts the exported objects so the first
+        # object's origin lands on (0, 0, 0) and puts everything back afterwards.
+        shifted = []
+        if recenter:
+            delta = -Vector(objs[0].matrix_world.translation)
+            for o in objs:
+                if o.parent is None or o.parent not in objs:
+                    shifted.append((o, Vector(o.location)))
+                    o.location = Vector(o.location) + delta
+            bpy.context.view_layer.update()
         # Selection drives the exporter; restore it afterwards.
         view_layer = bpy.context.view_layer
         previous = [(o, o.select_get()) for o in view_layer.objects]
@@ -424,6 +435,10 @@ class ModelingMutator:
                 export_yup=bool(y_up), export_materials="EXPORT" if include_materials else "NONE",
             )
         finally:
+            for o, loc in shifted:
+                o.location = loc
+            if shifted:
+                bpy.context.view_layer.update()
             for o, was in previous:
                 try:
                     o.select_set(was)
@@ -443,7 +458,7 @@ class ModelingMutator:
                 ev.to_mesh_clear()
         out = {
             "path": str(path), "filename": name, "bytes": path.stat().st_size, "objects": [o.name for o in objs],
-            "triangle_count": tris, "format": "GLB", "y_up": bool(y_up),
+            "triangle_count": tris, "format": "GLB", "y_up": bool(y_up), "recentered": bool(recenter),
         }
         if tris > 5000:
             out["warning"] = f"{tris} triangles is heavy for a game prop; consider a lower-poly version."
