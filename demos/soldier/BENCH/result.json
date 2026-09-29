@@ -1,0 +1,22 @@
+{
+  "name": "soldier",
+  "date": "20260930-013510",
+  "status": "ok",
+  "seconds": 107.9,
+  "model": "claude-opus-5-5",
+  "tool_calls": 55,
+  "tool_errors": 0,
+  "agent_shots": 2,
+  "triangles": 1504,
+  "materials": 6,
+  "nodes": 1,
+  "size_m": [
+    1.562,
+    3.627,
+    4.804
+  ],
+  "bytes": 87084,
+  "final_message": "I built a low-poly soldier in a light walking pose holding a rifle and exported it as `soldier.glb`. The model is **1,504 triangles** (796 vertices).\n\n**What I did:**\n- Deleted the default Cube and built the soldier from 22 simple shapes.\n- **Body:** pelvis, torso, neck, head and helmet, and a backpack on the back.\n- **Walking pose:** the left leg steps forward and the right leg swings back, each with a thigh, shin and boot.\n- **Rifle hold:** the right hand holds the grip and the left hand holds the front of the rifle. The rifle has a body, stock, magazine and barrel.\n- **Materials:** olive green uniform, dark helmet, separate skin tone for the face, neck and hands, brown boots, a slightly lighter canvas backpack and a dark metal rifle.\n- **Checked it by eye:** I looked at it from the ISO and side views. The walking pose, the rifle hold and the backpack looked right.\n- **Finished:** joined everything into one object called `Soldier`, put the origin at the bottom and exported it with Y-up.\n\n**Size:** 1.81 m tall, 0.66 m wide, and 1.25 m deep including the rifle.\n\n**File:** `...\\archives\\bench-runs\\20260930-013510-soldier\\soldier.glb` (87 KB)\n\n**Things to know before using it in a game:**\n- **No UVs:** only plain colours are used, so you can't add textures until it's unwrapped.\n- **The origin isn't under the feet:** it sits at the centre of the whole model's footprint. Because the rifle sticks out in front, that point is about 30 cm in front of the body. Each export setting (bottom centre, bounds centre) takes the rifle into account, so to put it between the feet I'd have to move the origin by hand.\n- **Scale not applied:** the object still has its non-uniform scale (0.42, 0.26, 0.5). This carries into the glTF file, so it looks fine, but I can run `apply_transform` before the next export if you want a clean transform.\n- **The helmet uses most of the triangles:** it's a smooth sphere of about 960 triangles. Making it simpler would bring the model down to about 700 tri",
+  "turns": 56,
+  "cost_usd": 0.5581388
+}

@@ -1,0 +1,22 @@
+{
+  "name": "windmill",
+  "date": "20260930-013939",
+  "status": "ok",
+  "seconds": 95.6,
+  "model": "claude-opus-5-5",
+  "tool_calls": 35,
+  "tool_errors": 2,
+  "agent_shots": 2,
+  "triangles": 574,
+  "materials": 5,
+  "nodes": 9,
+  "size_m": [
+    7.581,
+    26.333,
+    3.696
+  ],
+  "bytes": 35036,
+  "final_message": "You've hit your session limit · resets 5am (Europe/Istanbul)",
+  "turns": 36,
+  "cost_usd": 0.49478700000000003
+}

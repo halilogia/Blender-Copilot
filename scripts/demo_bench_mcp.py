@@ -266,6 +266,11 @@ def run_one(name, prompt, timeout_min, max_turns, model):
             result["final_message"] = str(ev.get("result", ""))[:2000]
             result["turns"] = ev.get("num_turns")
             result["cost_usd"] = ev.get("total_cost_usd")
+    if any(ev.get("type") == "result" and ev.get("api_error_status") for ev in events):
+        # the API refused (rate or session limit): nothing was modelled, keep no archive and stop the queue
+        import shutil
+        shutil.rmtree(run_dir, ignore_errors=True)
+        raise SystemExit(f"[bench] {name}: API limit reached ({events[-1].get('result', '')}); run discarded")
     (run_dir / "result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"[bench] {name}: {result['status']} {result.get('triangles', '-')} tris, "
           f"{result.get('tool_calls', '-')} calls, {result['seconds']}s -> {run_dir}", flush=True)

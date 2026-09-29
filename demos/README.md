@@ -16,13 +16,17 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [house](house/) | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 1.1 dk | 23 | 100 | 4.60x4.20x3.79 m | 20260930 |
 | [lamp](lamp/) | Oyun için düşük poligonlu bir sokak lambası modelle (direk, kol, abajur), dışa aktar. | 0.7 dk | 20 | 402 | 1.38x4.00x0.55 m | 20260930 |
 | [mushroom](mushroom/) | Oyun için düşük poligonlu büyük bir mantar modelle: kırmızı şapka, beyaz benekler, krem gövde. | 1.0 dk | 27 | 1644 | 2.00x1.84x2.00 m | 20260930 |
+| [rifle](rifle/) | Oyun için düşük poligonlu bir savaş dönemi tüfeği modelle: ahşap dipçik, metal namlu, sürgü, tetik koruması, nişangah, kayış. Namlu ileri (+Y) baksın, 1.1 m uzunlukta. | 1.6 dk | 34 | 1196 | 0.13x0.24x1.10 m | 20260930 |
+| [robot](robot/) | Oyun için düşük poligonlu sevimli bir robot karakter modelle: kutu kafa, anten, iki göz, gövde, kollar, bacaklar, göğüste bir panel. | 1.0 dk | 29 | 536 | 1.00x1.00x1.00 m | 20260930 |
 | [rock](rock/) | Oyun için düşük poligonlu bir kaya kümesi modelle: 3 farklı boyda düzensiz, köşeli kaya, birbirine yaslı, gri tonları ve üstünde biraz yosun yeşili. Zemine oturuyor olsun (alt yüz düz). | 1.1 dk | 23 | 114 | 1.82x1.04x1.76 m | 20260930 |
+| [soldier](soldier/) | Oyun için düşük poligonlu bir asker karakteri modelle: kask, gövde, kollar, bacaklar, botlar, sırt çantası, elinde tüfek tutma pozunda kollar. Yaklaşık 1.8 m boyunda, T-pozu değil, hafif yürüyüş duruşu olsun; üniforma zeytin yeşili, kask koyu, cilt tonu ayrı. | 1.8 dk | 55 | 1504 | 1.56x3.63x4.80 m | 20260930 |
 | [sword](sword/) | Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar. | 0.9 dk | 17 | 230 | 0.16x0.98x0.05 m | 20260930 |
 | [tank](tank/) | Oyun için düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), dışa aktar. | 0.7 dk | 17 | 380 | 1.00x1.00x1.00 m | 20260930 |
 | [tent](tent/) | Oyun için düşük poligonlu bir kamp çadırı modelle: üçgen çadır, giriş açıklığı, iki kazık ve ip. | 1.2 dk | 21 | 294 | 1.80x1.35x3.54 m | 20260930 |
 | [tree](tree/) | Oyun için düşük poligonlu bir çam ağacı modelle, dışa aktar. | 1.2 dk | 28 | 310 | 5.33x2.65x5.33 m | 20260930 |
 | [watchtower](watchtower/) | Oyun için düşük poligonlu ahşap bir gözetleme kulesi modelle: dört ayak, çapraz destekler, platform, korkuluk, çatı, merdiven. | 2.0 dk | 44 | 386 | 3.20x7.50x3.20 m | 20260930 |
 | [well](well/) | Oyun için düşük poligonlu bir taş kuyu modelle: yuvarlak taş halka, iki direk, küçük çatı, kova ve ip. | 1.1 dk | 23 | 652 | 2.40x3.30x1.60 m | 20260930 |
+| [windmill](windmill/) | Oyun için düşük poligonlu bir yel değirmeni modelle: konik taş gövde, çatı, dört kanatlı pervane (çapraz çıtalı), kapı ve pencere. | 1.6 dk | 35 | 574 | 7.58x26.33x3.70 m | 20260930 |
 
 ## Galeri
 
@@ -66,9 +70,21 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 
 ![mushroom](mushroom/sheet.png)
 
+**rifle**
+
+![rifle](rifle/sheet.png)
+
+**robot**
+
+![robot](robot/sheet.png)
+
 **rock**
 
 ![rock](rock/sheet.png)
+
+**soldier**
+
+![soldier](soldier/sheet.png)
 
 **sword**
 
@@ -93,3 +109,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **well**
 
 ![well](well/sheet.png)
+
+**windmill**
+
+![windmill](windmill/sheet.png)
