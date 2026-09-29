@@ -304,6 +304,16 @@ def test_frame_view():
     assert space.shading.type == "MATERIAL" and space.overlay.show_overlays is False
     shot = adapter.capture_viewport(width=128, height=128)
     assert shot.success and shot.data["byte_size"] > 300, shot
+    # The capture must follow the new view (view_matrix is stale in background mode, so it is derived from the
+    # view parameters): different directions and different targets give different pictures.
+    adapter.create_primitive("CUBE", name="Far", size=2.0, location=[-40, -40, 0])
+    adapter.frame_view(object_names=["Target"], direction="ISO")
+    iso_target = adapter.capture_viewport(width=160, height=120).data["image_id"]
+    adapter.frame_view(object_names=["Target"], direction="TOP")
+    top_target = adapter.capture_viewport(width=160, height=120).data["image_id"]
+    adapter.frame_view(object_names=["Far"], direction="ISO")
+    iso_far = adapter.capture_viewport(width=160, height=120).data["image_id"]
+    assert len({iso_target, top_target, iso_far}) == 3, "capture_viewport ignores frame_view"
     for bad in (dict(direction="UNDER"), dict(object_names=["Nope"]), dict(shading="XRAY")):
         res = adapter.frame_view(**bad)
         assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)

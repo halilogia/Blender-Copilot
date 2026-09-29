@@ -20,6 +20,39 @@ except ImportError:
     gpu = None
 
 
+def perspective_matrices(r3d: Any, space: Any, width: int, height: int):
+    """View and projection matrices computed from the viewport's own parameters.
+
+    ``RegionView3D.view_matrix`` is only refreshed by a redraw, so after ``view_location`` / ``view_rotation`` /
+    ``view_distance`` change (frame_view) it is stale in background mode. This derives both matrices directly:
+    view = inverse(T(location) @ R(rotation) @ T(0, 0, distance)); projection from the viewport lens (Blender's
+    viewport sensor is 72 mm on the longer side) and the requested aspect. Perspective views only; returns
+    None for orthographic and camera views (the caller keeps Blender's own matrices there).
+    """
+    if getattr(r3d, "view_perspective", "PERSP") != "PERSP":
+        return None
+    from mathutils import Matrix
+
+    view = (
+        Matrix.Translation(r3d.view_location)
+        @ r3d.view_rotation.to_matrix().to_4x4()
+        @ Matrix.Translation((0.0, 0.0, r3d.view_distance))
+    ).inverted()
+    near, far = float(space.clip_start), float(space.clip_end)
+    half_long = near * 36.0 / float(space.lens)
+    if width >= height:
+        half_x, half_y = half_long, half_long * height / width
+    else:
+        half_x, half_y = half_long * width / height, half_long
+    projection = Matrix((
+        (near / half_x, 0.0, 0.0, 0.0),
+        (0.0, near / half_y, 0.0, 0.0),
+        (0.0, 0.0, -(far + near) / (far - near), -2.0 * far * near / (far - near)),
+        (0.0, 0.0, -1.0, 0.0),
+    ))
+    return view, projection
+
+
 def encode_png_rgba(width: int, height: int, rgba_bytes: bytes) -> bytes:
     """Encode raw RGBA bytes into standard PNG bytes in-memory.
 
@@ -197,14 +230,16 @@ class ViewportReader:
 
         # Create offscreen surface and render viewport
         off = gpu.types.GPUOffScreen(width, height)
+        matrices = perspective_matrices(r3d, space, width, height)
+        view_matrix, projection_matrix = matrices if matrices is not None else (r3d.view_matrix, r3d.window_matrix)
         try:
             off.draw_view3d(
                 scene=bpy.context.scene,
                 view_layer=bpy.context.view_layer,
                 view3d=space,
                 region=region,
-                view_matrix=r3d.view_matrix,
-                projection_matrix=r3d.window_matrix,
+                view_matrix=view_matrix,
+                projection_matrix=projection_matrix,
                 do_color_management=True,
                 draw_background=True,
             )
