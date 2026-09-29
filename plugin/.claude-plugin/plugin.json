@@ -1,0 +1,13 @@
+{
+  "name": "blender-copilot",
+  "version": "1.2.0",
+  "description": "Model low-poly game assets in Blender 5.2 through Blender Copilot's MCP tools (no Python), verify them in the viewport and export .glb files for Godot, Unity or Unreal. Skills for the asset workflow and the Blender-to-Godot pipeline, plus /blender-connect.",
+  "author": {
+    "name": "Halil Emre",
+    "url": "https://github.com/halilogia"
+  },
+  "homepage": "https://github.com/halilogia/Blender-Copilot",
+  "repository": "https://github.com/halilogia/Blender-Copilot",
+  "license": "GPL-3.0-or-later",
+  "keywords": ["blender", "3d", "modeling", "game-assets", "gltf", "godot", "mcp", "low-poly"]
+}

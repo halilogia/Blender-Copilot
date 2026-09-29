@@ -24,4 +24,13 @@ copyright = [
 ]
 
 [permissions]
-network = "Allows communication with the configured LLM provider"
+network = "LLM provider access and a local-only MCP bridge (127.0.0.1)"
+files = "Writes exported .glb files and the MCP bridge settings"
+
+[build]
+paths_exclude_pattern = [
+  "/plugin/",
+  "/.claude-plugin/",
+  "/archives/",
+  "/brain/",
+]

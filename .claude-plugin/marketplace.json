@@ -1,0 +1,15 @@
+{
+  "name": "blender-copilot",
+  "description": "Blender Copilot for coding agents: game-asset modeling skills and a connector to the add-on's MCP bridge.",
+  "owner": {
+    "name": "Halil Emre",
+    "url": "https://github.com/halilogia"
+  },
+  "plugins": [
+    {
+      "name": "blender-copilot",
+      "source": "./plugin",
+      "description": "Low-poly game-asset modeling in Blender through MCP (create_mesh, mesh_edit, export_gltf ...), the Blender-to-Godot pipeline, and /blender-connect."
+    }
+  ]
+}
