@@ -1,5 +1,6 @@
 """Primitive mutator for creating geometric meshes via Blender Data API & BMesh."""
 
+import math
 from typing import Any, Dict, Optional, Sequence
 import bmesh
 import bpy
@@ -15,7 +16,7 @@ class InvalidPrimitiveTypeError(ValueError):
 class PrimitiveMutator:
     """Creates geometric primitives directly via Data API without operator context dependencies."""
 
-    SUPPORTED_TYPES = {"CUBE", "SPHERE", "PLANE"}
+    SUPPORTED_TYPES = {"CUBE", "SPHERE", "PLANE", "CYLINDER", "CONE", "ICOSPHERE", "TORUS"}
 
     @classmethod
     def create(
@@ -30,7 +31,7 @@ class PrimitiveMutator:
         """Create a new geometric primitive object in the active collection.
 
         Args:
-            primitive_type: One of 'CUBE', 'SPHERE', 'PLANE' (case-insensitive).
+            primitive_type: One of 'CUBE', 'SPHERE', 'PLANE', 'CYLINDER', 'CONE', 'ICOSPHERE', 'TORUS' (case-insensitive).
             name: Optional custom name. If not provided, defaults to primitive type title.
             location: Optional [X, Y, Z] world coordinates. Default is [0.0, 0.0, 0.0].
             rotation: Optional [rx, ry, rz] Euler angles in radians. Default is [0.0, 0.0, 0.0].
@@ -65,6 +66,33 @@ class PrimitiveMutator:
             elif p_type == "PLANE":
                 # In bmesh create_grid, size is half-extent (radius), so size/2 produces extent=size
                 bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=effective_size / 2.0)
+            elif p_type == "CYLINDER":
+                # Diameter = height = size, standing on Z, centred on the origin.
+                bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=32,
+                                      radius1=effective_size / 2.0, radius2=effective_size / 2.0, depth=effective_size)
+            elif p_type == "CONE":
+                bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=32,
+                                      radius1=effective_size / 2.0, radius2=0.0, depth=effective_size)
+            elif p_type == "ICOSPHERE":
+                bmesh.ops.create_icosphere(bm, subdivisions=2, radius=effective_size / 2.0)
+            elif p_type == "TORUS":
+                # Ring of outer diameter = size in the XY plane: major radius 0.35*size, minor radius 0.15*size.
+                major, minor = effective_size * 0.35, effective_size * 0.15
+                ring_segments, tube_segments = 32, 12
+                verts = []
+                for i in range(ring_segments):
+                    a = 2.0 * math.pi * i / ring_segments
+                    for j in range(tube_segments):
+                        b = 2.0 * math.pi * j / tube_segments
+                        r = major + minor * math.cos(b)
+                        verts.append(bm.verts.new((r * math.cos(a), r * math.sin(a), minor * math.sin(b))))
+                for i in range(ring_segments):
+                    for j in range(tube_segments):
+                        bm.faces.new((verts[i * tube_segments + j],
+                                      verts[((i + 1) % ring_segments) * tube_segments + j],
+                                      verts[((i + 1) % ring_segments) * tube_segments + (j + 1) % tube_segments],
+                                      verts[i * tube_segments + (j + 1) % tube_segments]))
+                bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
 
             bm.to_mesh(mesh)
         finally:

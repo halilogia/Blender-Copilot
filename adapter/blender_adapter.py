@@ -5,6 +5,7 @@ Blender exceptions into standardized ToolResult objects.
 """
 
 import threading
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 from core.types import ToolResult
@@ -21,6 +22,7 @@ from adapter.readers.mesh_reader import (
     InvalidMeshDataTypeError,
 )
 from adapter.readers.viewport_reader import ViewportReader
+from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
 from adapter.mutators import (
     PrimitiveMutator,
     InvalidPrimitiveTypeError,
@@ -59,6 +61,7 @@ class BlenderAdapter:
         self._mesh_reader = MeshReader()
         self._viewport_reader = ViewportReader()
         self.asset_library_root = asset_library_root
+        self.export_dir = str(Path.home() / "Documents" / "BlenderCopilot" / "exports")
 
     def inspect_scene(self) -> ToolResult:
         """Inspect the active scene summary.
@@ -803,3 +806,39 @@ class BlenderAdapter:
         assert_main_thread()
         return self._viewport_reader.get_image_bytes(image_id)
 
+    # ------------------------------------------------------------------
+    # Modeling (v1.2): allow-listed mesh building and editing, no arbitrary Python
+    # ------------------------------------------------------------------
+    def _modeling(self, tool_name: str, fn, **kwargs) -> ToolResult:
+        assert_main_thread()
+        try:
+            return ToolResult.ok(tool_name, fn(**kwargs))
+        except ModelingError as err:
+            return ToolResult.fail(tool=tool_name, error_type="INVALID_ARGUMENT", message=str(err), details={"error": str(err)})
+        except (TypeError, ValueError) as err:
+            return ToolResult.fail(tool=tool_name, error_type="INVALID_ARGUMENT", message=str(err), details={"error": str(err)})
+        except Exception as exc:
+            return ToolResult.fail(tool=tool_name, error_type="MODELING_FAILED",
+                                   message=f"{tool_name} failed: {exc}", details={"exception": type(exc).__name__})
+
+    def create_mesh(self, **kwargs) -> ToolResult:
+        return self._modeling("create_mesh", ModelingMutator.create_mesh, **kwargs)
+
+    def mesh_edit(self, **kwargs) -> ToolResult:
+        return self._modeling("mesh_edit", ModelingMutator.mesh_edit, **kwargs)
+
+    def join_objects(self, **kwargs) -> ToolResult:
+        return self._modeling("join_objects", ModelingMutator.join_objects, **kwargs)
+
+    def parent_object(self, **kwargs) -> ToolResult:
+        return self._modeling("parent_object", ModelingMutator.parent_object, **kwargs)
+
+    def apply_transform(self, **kwargs) -> ToolResult:
+        return self._modeling("apply_transform", ModelingMutator.apply_transform, **kwargs)
+
+    def set_origin(self, **kwargs) -> ToolResult:
+        return self._modeling("set_origin", ModelingMutator.set_origin, **kwargs)
+
+    def export_gltf(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._modeling("export_gltf", ModelingMutator.export_gltf, **kwargs)

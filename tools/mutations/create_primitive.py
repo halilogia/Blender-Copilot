@@ -6,11 +6,11 @@ from tools.base import BaseTool
 
 
 class CreatePrimitiveTool(BaseTool):
-    """Creates a basic geometric primitive (Cube, Sphere, Plane) in the scene."""
+    """Creates a basic geometric primitive (Cube, Sphere, Plane, Cylinder, Cone, Icosphere, Torus) in the scene."""
 
     name = "create_primitive"
     description = (
-        "Create a new geometric mesh primitive (CUBE, SPHERE, PLANE) in the Blender scene "
+        "Create a new geometric mesh primitive (CUBE, SPHERE, PLANE, CYLINDER, CONE, ICOSPHERE, TORUS) in the Blender scene "
         "at an optional position, rotation, and scale. Every creation records an atomic undo point."
     )
     input_schema = {
@@ -18,8 +18,8 @@ class CreatePrimitiveTool(BaseTool):
         "properties": {
             "primitive_type": {
                 "type": "string",
-                "enum": ["CUBE", "SPHERE", "PLANE"],
-                "description": "The type of mesh primitive to create. Allowed: CUBE, SPHERE, PLANE.",
+                "enum": ["CUBE", "SPHERE", "PLANE", "CYLINDER", "CONE", "ICOSPHERE", "TORUS"],
+                "description": "The type of mesh primitive to create. CYLINDER and CONE stand on Z with diameter = height = size; TORUS lies in the XY plane.",
             },
             "name": {
                 "type": "string",

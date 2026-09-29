@@ -257,7 +257,7 @@ class TestPlanValidator(unittest.TestCase):
                 {
                     "step_id": "s1",
                     "tool_name": "create_primitive",
-                    "arguments": {"primitive_type": "CYLINDER"},  # Allowed: CUBE, SPHERE, PLANE
+                    "arguments": {"primitive_type": "DONUT"},  # not an allowed primitive type
                 }
             ],
         }

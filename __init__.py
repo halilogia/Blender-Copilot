@@ -52,6 +52,13 @@ from .tools.mutations.delete_object import DeleteObjectTool
 from .tools.mutations.set_material import SetMaterialTool
 from .tools.mutations.assign_material import AssignMaterialTool
 from .tools.mutations.import_asset import ImportAssetTool
+from .tools.mutations.create_mesh import CreateMeshTool
+from .tools.mutations.mesh_edit import MeshEditTool
+from .tools.mutations.join_objects import JoinObjectsTool
+from .tools.mutations.parent_object import ParentObjectTool
+from .tools.mutations.apply_transform import ApplyTransformTool
+from .tools.mutations.set_origin import SetOriginTool
+from .tools.mutations.export_gltf import ExportGltfTool
 from .tools.read_only.capture_viewport import CaptureViewportTool
 from .tools.read_only.visual_verify import VisualVerifyTool
 from .tools.propose_plan import ProposePlanTool
@@ -142,6 +149,13 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(SetMaterialTool())
     registry.register(AssignMaterialTool())
     registry.register(ImportAssetTool())
+    registry.register(CreateMeshTool())
+    registry.register(MeshEditTool())
+    registry.register(JoinObjectsTool())
+    registry.register(ParentObjectTool())
+    registry.register(ApplyTransformTool())
+    registry.register(SetOriginTool())
+    registry.register(ExportGltfTool())
     registry.register(CaptureViewportTool())
     registry.register(VisualVerifyTool())
     registry.register(ProposePlanTool())

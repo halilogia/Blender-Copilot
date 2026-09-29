@@ -122,7 +122,7 @@ class RegistryToolHost:
         result = ToolDispatcher(self.registry, self.adapter).dispatch(call).to_dict()
         data = result.get("data")
         if result.get("success") and isinstance(data, dict) and data.get("image_id"):
-            getter = getattr(self.adapter, "get_image_bytes", None)
+            getter = getattr(self.adapter, "get_viewport_screenshot", None) or getattr(self.adapter, "get_image_bytes", None)
             png = getter(data["image_id"]) if callable(getter) else None
             if png:
                 data["image_base64"] = base64.b64encode(png).decode("ascii")
