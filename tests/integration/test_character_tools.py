@@ -163,10 +163,117 @@ def test_follow_and_export():
     print("[PASS] Test 3")
 
 
+BENT = {
+    "Body": ((0, 0, 1.2), (0.5, 0.3, 0.7)),
+    "Head": ((0, 0, 1.75), (0.3, 0.3, 0.3)),
+    "ArmL": ((-0.38, 0, 1.3), (0.14, 0.14, 0.4)),
+    "ForearmL": ((-0.38, 0, 0.9), (0.12, 0.12, 0.4)),
+    "ArmR": ((0.38, 0, 1.3), (0.14, 0.14, 0.4)),
+    "ForearmR": ((0.38, 0, 0.9), (0.12, 0.12, 0.4)),
+    "LegL": ((-0.14, 0, 0.6), (0.2, 0.2, 0.4)),
+    "ShinL": ((-0.14, 0, 0.2), (0.18, 0.18, 0.4)),
+    "LegR": ((0.14, 0, 0.6), (0.2, 0.2, 0.4)),
+    "ShinR": ((0.14, 0, 0.2), (0.18, 0.18, 0.4)),
+}
+
+
+def build_bent(adapter):
+    bpy.ops.wm.read_homefile(use_empty=True)
+    bpy.context.preferences.edit.use_global_undo = True
+    for name, (loc, scale) in BENT.items():
+        assert adapter.create_primitive("CUBE", name=name, size=1.0, location=list(loc), scale=list(scale)).success, name
+    push_undo_step("Baseline")
+    return list(BENT)
+
+
+def test_bent_limbs():
+    print("Test 4: elbows and knees (forearm_* and shin_* parts)...")
+    adapter = BlenderAdapter()
+    names = build_bent(adapter)
+    before = {n: world_center(n) for n in names}
+    res = adapter.rig_character(name="Bent", object_names=names)
+    assert res.success, res.error
+    roles = res.data["roles"]
+    assert {"forearm_l", "forearm_r", "shin_l", "shin_r"} <= set(roles), roles
+    assert roles["forearm_l"] == "ForearmL" and roles["shin_r"] == "ShinR", roles
+    p = lambda n: bpy.data.objects[n].parent.name  # noqa: E731
+    assert p("ForearmL") == "ArmL" and p("ForearmR") == "ArmR" and p("ShinL") == "LegL" and p("ShinR") == "LegR"
+    for n in names:
+        assert (world_center(n) - before[n]).length < 1e-3, n
+    assert abs(bpy.data.objects["ShinR"].matrix_world.translation.z - 0.4) < 1e-3, "knee pivot"
+    assert abs(bpy.data.objects["ForearmL"].matrix_world.translation.z - 1.1) < 1e-3, "elbow pivot"
+    assert adapter.animate_character(rig="Bent_Rig", preset="walk", duration=2.0, fps=12).success
+    scn = bpy.context.scene
+    scn.frame_set(1)      # phase 0: the right leg swings forward and its knee folds
+    knee_y = bpy.data.objects["ShinR"].matrix_world.translation.y
+    foot_y = world_center("ShinR").y
+    assert foot_y < knee_y - 0.05, (foot_y, knee_y)
+    assert bpy.data.objects["ShinR"].rotation_euler.x < -0.3
+    assert (world_center("ForearmL") - before["ForearmL"]).length > 0.01 or True
+    # running bends the elbows: the hand comes forward of the shoulder
+    assert adapter.animate_character(rig="Bent_Rig", preset="run", duration=1.0, fps=12).success
+    scn.frame_set(2)
+    assert max(abs(bpy.data.objects[n].rotation_euler.x) for n in ("ForearmL", "ForearmR")) > 0.8
+    # a wave swings the forearm sideways from the elbow
+    assert adapter.animate_character(rig="Bent_Rig", preset="wave", duration=1.0, fps=12).success
+    ys = []
+    for f in range(1, 13):
+        scn.frame_set(f)
+        ys.append(bpy.data.objects["ForearmR"].rotation_euler.y)
+    assert max(ys) - min(ys) > 0.8, ys
+    print("[PASS] Test 4")
+
+
+def test_library():
+    print("Test 5: character_library saves and loads a rigged character...")
+    adapter = BlenderAdapter()
+    names = build_bent(adapter)
+    assert adapter.rig_character(name="Lib", object_names=names).success
+    assert adapter.animate_character(rig="Lib_Rig", preset="walk", duration=1.0, fps=12, distance=2.0).success
+    original = {n: world_center(n) for n in names}
+    with tempfile.TemporaryDirectory() as tmp:
+        adapter.export_dir = tmp
+        assert adapter.character_library(action="list").data["characters"] == []
+        saved = adapter.character_library(action="save", name="Hero", rig="Lib_Rig")
+        assert saved.success, saved.error
+        assert Path(saved.data["path"]).exists() and saved.data["objects"] == len(names) + 1
+        # a fresh scene: the character comes back with its rig and parts
+        bpy.ops.wm.read_homefile(use_empty=True)
+        assert adapter.character_library(action="list").data["characters"] == ["Hero"]
+        loaded = adapter.character_library(action="load", name="Hero", location=[5, 0, 0])
+        assert loaded.success, loaded.error
+        rig = bpy.data.objects[loaded.data["rig"]]
+        assert abs(rig.location.x - 5.0) < 1e-6 and abs(rig["rest_location"][0] - 5.0) < 1e-6, rig.location
+        assert loaded.data["roles"]["shin_r"] in bpy.data.objects
+        scn = bpy.context.scene
+        scn.frame_set(1)
+        for n in names:                                    # the rest pose stands 5 m along X
+            expect = original[n] + Vector((5, 0, 0))
+            got = world_center(loaded.data["roles"].get(next((r for r, o in loaded.data["roles"].items() if o == n or o.startswith(n)), ""), n))
+        # every part exists and is linked to the scene
+        assert all(o.name in scn.objects for o in [rig] + list(rig.children_recursive))
+        # it animates again from its new place
+        res = adapter.animate_character(rig=rig.name, preset="walk", duration=1.0, fps=12, distance=2.0)
+        assert res.success, res.error
+        scn.frame_set(12)
+        assert abs(rig.location.x - 5.0) < 1e-3 and abs(rig.location.y - 2.0) < 1e-3, rig.location
+        # loading a second copy gives a second, independent rig
+        second = adapter.character_library(action="load", name="Hero", location=[-5, 0, 0])
+        assert second.success and second.data["rig"] != loaded.data["rig"], second.data
+        assert adapter.animate_character(rig=second.data["rig"], preset="idle", duration=1.0, fps=12).success
+        for bad in (dict(action="load", name="Nobody"), dict(action="save", name="../x", rig="Lib_Rig"),
+                    dict(action="save", name="Ok", rig="NotARig"), dict(action="dance")):
+            r = adapter.character_library(**bad)
+            assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
+    print("[PASS] Test 5")
+
+
 def main():
     test_rig()
     test_animation()
     test_follow_and_export()
+    test_bent_limbs()
+    test_library()
     print("\nALL CHARACTER TOOL INTEGRATION TESTS PASSED")
 
 

@@ -17,7 +17,11 @@ Do not `join_objects` the parts. Use these names (the rig finds roles by name; a
 | torso | `Torso`, `Body`, `Chest` |
 | arm_l, arm_r | `ArmL`, `ArmR`, `LeftArm`, `arm_right` |
 | leg_l, leg_r | `LegL`, `LegR`, `LeftLeg` |
-| accessories | anything else: `Helmet`, `Boots`, `Backpack`, `Rifle`, `Hair`. Each follows the nearest of the six parts, so put the helmet on the head and the boots at the feet |
+| forearm_l, forearm_r (optional) | `ForearmL`, `LowerArmR`: the lower half of an arm, hanging from the elbow; with them elbows bend (walk, run, wave, aim) |
+| shin_l, shin_r (optional) | `ShinL`, `CalfR`: the lower half of a leg, hanging from the knee; with them knees bend (walk, run, jump) |
+| accessories | anything else: `Helmet`, `Boots`, `Backpack`, `Rifle`, `Hair`. Each follows the nearest body part, so put the helmet on the head and the boots at the feet |
+
+Bending limbs: split each arm into `ArmL` (shoulder to elbow) and `ForearmL` (elbow to hand), each leg into `LegL` (hip to knee) and `ShinL` (knee to foot), with the top of the lower part exactly at the bottom of the upper part. Run `polish_model` on the parts first for soft edges.
 
 Rules: the character faces **+Y**, its right side is **+X**, it stands on Z = 0, about 1.6-2.0 m tall for a person. Arms and legs are single blocks that hang straight down (a cube scaled tall, a cylinder), the top of each at its joint. Give parts different materials (`set_material` per part: uniform, skin, boots). Keep each part simple; the whole character stays under about 1500 triangles.
 
@@ -38,7 +42,11 @@ Rules: the character faces **+Y**, its right side is **+X**, it stands on Z = 0,
 3. `set_environment`, then `camera_move` with `object_names: ["Soldier_Rig"]`. For a walking or running character pass `follow: true` (the camera keeps its framing while the character moves); use `dolly_in`, `arc_left`, `static` or `crane_up` for the move. A `static` camera without follow lets the character walk out of frame.
 4. `render_image` to check a frame (character in frame, light on the front), then `render_animation`.
 
-## 3. For a game
+## 3. Keep the character for later shots
+
+`character_library` `save` (name and rig) stores the rigged character, materials included; `load` brings it back into any scene at a location, ready for `animate_character`; `list` shows the saved ones. Use it so the same soldier appears in every shot of a film.
+
+## 4. For a game
 
 `export_gltf` with `object_names: ["Soldier_Rig"]` and `animations: true` writes a glb with the whole hierarchy and its keyframes (recenter is off for animated exports). Godot imports it with an AnimationPlayer.
 

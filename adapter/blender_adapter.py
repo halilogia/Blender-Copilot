@@ -26,6 +26,7 @@ from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
 from adapter.mutators.cinema_mutator import CinemaMutator
 from adapter.mutators.character_mutator import CharacterMutator
 from adapter.mutators.look_mutator import LookMutator
+from adapter.mutators.polish_mutator import PolishMutator
 from adapter.mutators.video_mutator import VideoMutator
 from adapter.mutators import (
     PrimitiveMutator,
@@ -856,6 +857,13 @@ class BlenderAdapter:
     # ------------------------------------------------------------------
     # Cinematic (v1.3): environment presets, camera moves, EEVEE renders
     # ------------------------------------------------------------------
+    def polish_model(self, **kwargs) -> ToolResult:
+        return self._modeling("polish_model", PolishMutator.polish_model, **kwargs)
+
+    def character_library(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._modeling("character_library", CharacterMutator.character_library, **kwargs)
+
     def rig_character(self, **kwargs) -> ToolResult:
         return self._modeling("rig_character", CharacterMutator.rig_character, **kwargs)
 

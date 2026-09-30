@@ -1,0 +1,21 @@
+{
+  "name": "shot-runner-bent-deepseekv4flash",
+  "date": "20260930-123734",
+  "seconds": 256.5,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 66,
+  "tool_errors": 25,
+  "approvals": 2,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Her şey yerinde ve doğrulandı. İşte yaptıklarım:\n\n## Yapılanlar\n\n**1. Sahne hazırlığı**\n- Varsayılan `Cube` silindi (deneme sahnesi).\n\n**2. Düşük poligonlu koşucu — 12 AYRI parça (hiç birleştirilmedi)**\n| Parça | Şekil | Rol |\n|---|---|---|\n| Head | ICOSPHERE (80 yüz) | kafa |\n| Torso | CUBE (bevel sonrası 50 yüz) | gövde |\n| UpperArmL / UpperArmR | CYLINDER | üst kollar |\n| **ForearmL / ForearmR** | CYLINDER | ön kollar |\n| UpperLegL / UpperLegR | CYLINDER | üst bacaklar |\n| **ShinL / ShinR** | CYLINDER | alt bacaklar |\n| ShoeL / ShoeR | CUBE | ayakkabılar |\n\n- **Eklem hizalaması:** Ön kolun üst ucu (z=1.10) tam üst kolun alt ucuna (z=1.10), alt bacağın üstü (z=0.44) tam üst bacağın alt ucuna (z=0.44) denk getirildi.\n\n**3. Renklendirme:** ten (kafa/kollar), mavi forma (gövde), lacivert tayt (bacaklar), kırmızı ayakkabılar.\n\n**4. `polish_model`:** tüm parçalara bevel + smooth shading (keskin kenarlar korundu).\n\n**5. `rig_character` → `Runner_Rig`:** height 1.75 m; kafa, gövde, kol/bacak rolleri ve ön kol/alt bacak rolleri doğru atandı; ShoeL/ShoeR otomatik olarak shin_l/shin_r'ye bağlandı.\n\n**6. `character_library save` → \"Runner\"** olarak kaydedildi (`characters/Runner.blend`, 13 nesne).\n\n**7. Animasyon:** `run` preseti, 8 m ileri (+Y), 4 s, 96 kare @ 24 fps.\n\n**8. Işık & look:** `sunset` (ufukta kızıl güneş, uzun gölgeler) + `cinematic` look. Koşu yolu 8 m olduğu için zemin 44 m'ye büyütüldü ki karakter zemin üzerinde kalsın.\n\n**9. Kamera:** `dolly_in` + **follow=true**, 6.5 m mesafe, 50 mm, 12° yükseklik — karakteri takip ediyor.\n\n**10. Kontrol karesi:** `runner_check.png` render edildi, kadraj/ışık doğrulandı.\n\n**11. Final:** `shot-runner-bent-deepseekv4flash.mp4` — 96 kare, 960×540, 24 fps, 4 saniye (10.6 sn render).\n\nÇıktı yolu: `...\\20260930-123734-shot-runner-bent-deepseekv4flash\\shot-runner-bent-deepseekv4flash.mp4`",
+  "video_bytes": 279302,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

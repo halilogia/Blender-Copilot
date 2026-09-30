@@ -14,7 +14,15 @@ Steps 1 to 4 of the proposed order are built: `render_image`, `render_animation`
 
 `rig_character` and `animate_character` (idle, walk, run, aim, wave, jump), camera `follow` and animated glb export were added. The character is built from separate parts (head, torso, arms, legs, accessories); no armature or skinning is needed because pivots sit at the joints and motion presets keyframe part rotations. Chat models (Gemini Pro agent, Space Bunny; Sonnet's Antigravity quota ran out during the runs) built soldiers, a robot, a knight and a zombie from one short prompt, rigged them, made them walk, run, wave or aim, and had the camera follow: `demos/shot-*` (soldier-walk, robot-wave, knight-run, soldier-aim, zombie-walk). Findings: models keep the parts separate when the prompt says so; hierarchy and pivots work on the first try; the visible weakness is still the look of the blocky models and small proportion mistakes (a small soldier in a big frame, washed-out light on white backdrops).
 
-Still missing compared with Higgsfield: a saved character library, bent limbs (elbows and knees; parts are single blocks), facial expressions, text or image to 3D, effects such as slow motion and transitions, audio, a shot list UI. Realistic (diffusion) video is out of scope: this is 3D animation.
+### v1.5 to v1.6: film tools, bent limbs, library, polish
+
+- **Film language** (v1.5): 38 camera presets, 9 lights with a physical sky, `set_look` colour grades and glow, `camera_settings` (depth of field, rack focus, motion blur), `render_contact_sheet`, `edit_video` (crossfade, wipe, slow motion) and `render_shots` (a shot list to one MP4). A three-shot film was made by Space Bunny from one prompt.
+- **Bent limbs** (v1.6): optional `forearm_*` and `shin_*` parts give elbows and knees; run, walk, wave, aim and jump use them. A free model (DeepSeek V4 Flash through 9router) made a runner with bending knees and elbows, polished parts and a sunset look from one prompt (`demos/shot-runner-bent-*`).
+- **Character library** (v1.6): `character_library` saves a rigged character (materials included) and loads it into any later scene, so one character stays the same across shots.
+- **Polish** (v1.6): `polish_model` bevels hard corners and shades smooth with sharp edges kept, the cheapest way to lift the look of blocky models.
+- Weak and free models needed help: lists wrapped as `{"item": [...]}`, numbers as strings and batches of tool calls with an approval in the middle are now handled by the add-on instead of failing.
+
+Still missing compared with Higgsfield: facial expressions and lip sync, text or image to 3D (needs an external generator service, which the project has deliberately not chosen), audio, a shot list UI, and above all the model quality of blocky low-poly assets. Realistic (diffusion) video is out of scope: this is controllable 3D animation.
 
 ## What Higgsfield is (from its own pages)
 

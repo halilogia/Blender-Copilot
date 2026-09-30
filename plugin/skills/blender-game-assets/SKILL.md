@@ -15,7 +15,8 @@ You model with allow-listed tools, not with Python: nothing here can run arbitra
 4. **Detail with edits.** `mesh_edit`: INSET_FACES (with negative `depth` sinks a panel), EXTRUDE_FACES, BEVEL_EDGES (`sharp_angle` bevels only hard edges), SCALE_TO_HEIGHT_TAPER (trunks, chimneys), SUBDIVIDE, MERGE_BY_DISTANCE. Pick faces by direction: `faces: {"direction": "+Z", "threshold": 0.9}`. `add_shape_modifier`: MIRROR (half a prop), ARRAY (fences, rows), SOLIDIFY (thin walls), DECIMATE (budget), TRIANGULATE.
 5. **Colour.** `set_material` with `object_name`, `material_name`, `base_color` [r, g, b, 1], `roughness`, `metallic`. Do it per part BEFORE `join_objects`: the joined mesh keeps one material slot per part. Reuse the same `material_name` for parts that share a colour.
 6. **Check by looking, every few steps.** `frame_view` (`direction` ISO / FRONT / TOP, `shading` MATERIAL, `overlays` false) then `capture_viewport`. Also `inspect_mesh` for dimensions and triangle count. Fix proportions before adding detail.
-7. **Finish.** `join_objects` into one object, `set_origin` BOTTOM_CENTER (props) or BOUNDS_CENTER (weapons), then `export_gltf` (a plain file name such as `crate.glb`; `recenter` is on so the prop lands at the origin whatever its position in the Blender scene). Check `triangle_count` in the result.
+7. **Polish.** `polish_model` on the parts (or the joined prop): bevels every hard corner so light catches the edges and shades smooth with sharp edges kept. It is what makes a blocky model look finished; run it once shapes and proportions are right.
+8. **Finish.** `join_objects` into one object, `set_origin` BOTTOM_CENTER (props) or BOUNDS_CENTER (weapons), then `export_gltf` (a plain file name such as `crate.glb`; `recenter` is on so the prop lands at the origin whatever its position in the Blender scene). Check `triangle_count` in the result.
 
 ## Rules that save time
 

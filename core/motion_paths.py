@@ -9,7 +9,8 @@ character's own frame; ``animate_character`` turns it into a location for the ri
 import math
 from typing import Dict, List, Optional, Tuple
 
-ROLES = ("head", "torso", "arm_l", "arm_r", "leg_l", "leg_r")
+# forearm_* and shin_* are optional lower limb parts (elbow and knee joints)
+ROLES = ("head", "torso", "arm_l", "arm_r", "leg_l", "leg_r", "forearm_l", "forearm_r", "shin_l", "shin_r")
 
 PRESETS: Dict[str, str] = {
     "idle": "standing, slow breathing and a little sway",
@@ -63,6 +64,8 @@ def motion_samples(preset: str, frames: int, fps: int, height: float, intensity:
             rot["head"] = (0.0, 0.0, 0.14 * k * math.sin(2 * math.pi * t / 6.0))
             rot["arm_l"] = (0.05 * k * breath, 0.0, 0.0)
             rot["arm_r"] = (-0.05 * k * breath, 0.0, 0.0)
+            rot["forearm_l"] = (0.12, 0.0, 0.0)
+            rot["forearm_r"] = (0.12, 0.0, 0.0)
             root[2] = 0.004 * h * breath
         elif preset in ("walk", "run"):
             period, amp, arm, lean, bob, stride = (1.0, 0.45, 0.8, 0.05, 0.025, 0.78) if preset == "walk" else (0.62, 0.85, 1.05, 0.2, 0.06, 1.9)
@@ -75,6 +78,13 @@ def motion_samples(preset: str, frames: int, fps: int, height: float, intensity:
             rot["torso"] = (-lean * (1 if preset == "walk" else k), 0.0, 0.08 * k * math.sin(phi))
             rot["head"] = (lean * 0.5, 0.0, -0.05 * k * math.sin(phi))
             root[2] = bob * h * k * (1 - math.cos(2 * phi)) / 2
+            # knees bend while a leg swings forward (the shin folds backward); elbows bend as an arm swings forward
+            knee = (1.1 if preset == "walk" else 1.6) * a
+            rot["shin_r"] = (-knee * max(0.0, math.cos(phi)), 0.0, 0.0)
+            rot["shin_l"] = (-knee * max(0.0, -math.cos(phi)), 0.0, 0.0)
+            elbow = 0.6 if preset == "walk" else 1.3
+            rot["forearm_r"] = (elbow * max(0.0, rot["arm_r"][0]) + (0.15 if preset == "walk" else 0.9), 0.0, 0.0)
+            rot["forearm_l"] = (elbow * max(0.0, rot["arm_l"][0]) + (0.15 if preset == "walk" else 0.9), 0.0, 0.0)
             root[1] = float(distance) * u if distance is not None else stride * h * t / period
         elif preset == "aim":
             breath = math.sin(2 * math.pi * t / 3.6)
@@ -84,12 +94,16 @@ def motion_samples(preset: str, frames: int, fps: int, height: float, intensity:
             rot["leg_r"] = (-0.15, 0.0, 0.0)
             rot["torso"] = (-0.05 + 0.01 * breath, 0.0, 0.0)
             rot["head"] = (0.04, 0.0, 0.05 * k * math.sin(2 * math.pi * t / 5.0))
+            rot["forearm_r"] = (0.12, 0.0, 0.0)
+            rot["forearm_l"] = (0.3, 0.0, 0.0)
         elif preset == "wave":
             breath = math.sin(2 * math.pi * t / 3.6)
             rot["arm_r"] = (math.pi * 0.94, 0.5 * k * math.sin(2 * math.pi * 1.6 * t), 0.0)
             rot["arm_l"] = (0.04 * breath, 0.0, 0.0)
             rot["head"] = (0.0, 0.0, 0.12 * k * math.sin(2 * math.pi * t / 3.0))
             rot["torso"] = (-0.01 * breath, 0.0, 0.0)
+            rot["forearm_r"] = (0.0, 0.7 * k * math.sin(2 * math.pi * 1.6 * t + 0.6), 0.0)
+            rot["forearm_l"] = (0.12, 0.0, 0.0)
         elif preset == "jump":
             lift = 4.0 * u * (1.0 - u)            # 0 -> 1 -> 0
             root[2] = 0.5 * h * k * lift
@@ -99,5 +113,9 @@ def motion_samples(preset: str, frames: int, fps: int, height: float, intensity:
             rot["leg_l"] = (0.5 * math.sin(math.pi * u), 0.0, 0.0)
             rot["leg_r"] = (0.5 * math.sin(math.pi * u), 0.0, 0.0)
             rot["torso"] = (-0.15 * math.sin(math.pi * u), 0.0, 0.0)
+            rot["shin_l"] = (-1.0 * math.sin(math.pi * u), 0.0, 0.0)
+            rot["shin_r"] = (-1.0 * math.sin(math.pi * u), 0.0, 0.0)
+            rot["forearm_l"] = (0.4 * math.sin(math.pi * u), 0.0, 0.0)
+            rot["forearm_r"] = (0.4 * math.sin(math.pi * u), 0.0, 0.0)
         out.append({"rot": rot, "root": (root[0], root[1], root[2])})
     return out

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-09-30
+
+### Added
+- **Bent limbs**: optional `forearm_l/r` and `shin_l/r` parts (found by names such as forearm, lowerarm, shin, calf; parented to the upper limb with the pivot at the elbow or knee). Walk and run fold the knees and bend the elbows, wave swings the forearm from the elbow, aim and jump use them too.
+- **`character_library`**: `save` stores a rigged character (rig, parts, materials) as a .blend in the export folder, `load` brings it into any scene at a location (names remapped, animation cleared, ready for `animate_character`), `list` shows the saved ones.
+- **`polish_model`**: bevels hard corners and shades smooth with sharp edges kept (bevel in meters or about 4 percent of the smallest side, 3 segments, angles adjustable).
+- Skills: `blender-character-animation` (lower limbs, library) and `blender-game-assets` (a polish step); agent prompt and MCP instructions mention them.
+- Tests: motion unit tests for knees and elbows, integration tests for bent limbs and the library (a fresh scene gets the character back and walks), `tests/integration/test_polish_tools.py`.
+
+### Fixed
+- Ground colours of the `day` preset were too bright; exposure and sun retuned.
+
+---
+
 ## [1.5.1] - 2026-09-30
 
 ### Fixed

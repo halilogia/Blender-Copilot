@@ -19,6 +19,8 @@ from .set_origin import SetOriginTool
 from .export_gltf import ExportGltfTool
 from .add_shape_modifier import AddShapeModifierTool
 from .frame_view import FrameViewTool
+from .polish_model import PolishModelTool
+from .character_library import CharacterLibraryTool
 from .set_look import SetLookTool
 from .camera_settings import CameraSettingsTool
 from .render_contact_sheet import RenderContactSheetTool
@@ -51,6 +53,8 @@ __all__ = [
     "ExportGltfTool",
     "AddShapeModifierTool",
     "FrameViewTool",
+    "PolishModelTool",
+    "CharacterLibraryTool",
     "SetLookTool",
     "CameraSettingsTool",
     "RenderContactSheetTool",

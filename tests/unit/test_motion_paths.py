@@ -74,6 +74,37 @@ class TestMotionPaths(unittest.TestCase):
         b = max(abs(f["rot"]["leg_r"][0]) for f in motion_samples("walk", 49, 24, 1.8, intensity=0.5))
         self.assertAlmostEqual(b, a / 2, places=6)
 
+    def test_knees_fold_backward_only_and_alternate_legs(self):
+        for name in ("walk", "run"):
+            s = motion_samples(name, 49, 24, 1.8)
+            for f in s:
+                self.assertLessEqual(f["rot"]["shin_r"][0], 1e-12, name)
+                self.assertLessEqual(f["rot"]["shin_l"][0], 1e-12, name)
+                # a shin bends only while its leg is the one swinging forward, never both at full bend
+                self.assertLess(abs(f["rot"]["shin_r"][0] * f["rot"]["shin_l"][0]), 1e-9, name)
+            self.assertLess(min(f["rot"]["shin_r"][0] for f in s), -0.3, name)
+
+    def test_elbows_bend_forward_only(self):
+        for name in ("walk", "run", "aim", "wave", "idle", "jump"):
+            for f in motion_samples(name, 30, 24, 1.8):
+                self.assertGreaterEqual(f["rot"]["forearm_l"][0], -1e-12, name)
+                self.assertGreaterEqual(f["rot"]["forearm_r"][0], -1e-12, name)
+
+    def test_running_bends_arms_more_than_walking(self):
+        walk = max(f["rot"]["forearm_r"][0] for f in motion_samples("walk", 49, 24, 1.8))
+        run = max(f["rot"]["forearm_r"][0] for f in motion_samples("run", 49, 24, 1.8))
+        self.assertGreater(run, walk + 0.5)
+
+    def test_wave_swings_the_forearm_from_the_elbow(self):
+        s = motion_samples("wave", 48, 24, 1.8)
+        swings = [f["rot"]["forearm_r"][1] for f in s]
+        self.assertGreater(max(swings) - min(swings), 0.8)
+
+    def test_jump_tucks_the_shins(self):
+        s = motion_samples("jump", 25, 24, 1.8)
+        self.assertLess(min(f["rot"]["shin_l"][0] for f in s), -0.8)
+        self.assertAlmostEqual(s[0]["rot"]["shin_l"][0], 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -35,6 +35,7 @@ TESTS = [
     "tests/integration/test_cinema_tools.py",
     "tests/integration/test_character_tools.py",
     "tests/integration/test_film_tools.py",
+    "tests/integration/test_polish_tools.py",
 ]
 
 BLENDER_PATH = r"C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe"

@@ -37,6 +37,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek. | 5.0 dk | 49 | - | 5.0 sn video | 20260930 |
 | [shot-robot-wave-deepseekv4flash](shot-robot-wave-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 6.2 dk | 58 | - | 4.0 sn video | 20260930 |
 | [shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 1.8 dk | 53 | - | 4.0 sn video | 20260930 |
+| [shot-runner-bent-deepseekv4flash](shot-runner-bent-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Düşük poligonlu bir koşucu modelle: kafa, gövde, üst kollar ile ön kollar (ForearmL, ForearmR), üst bacaklar ile alt bacaklar (ShinL, ShinR) ve ayakkabılar AYRI parçalar olsun (birleştirme; ön kolun ve alt bacağın üstü, üst parçanın alt ucuna denk gelsin). polish_model ile parçaları yumuşat, rig_character ile bağla, character_library ile 'Runner' adıyla kaydet, koştur (run, 8 metre), sunset ışığı ve cinematic look kur, kamera takip etsin (follow) ve 4 saniyelik MP4 al. | 4.3 dk | 66 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-aim-geminiproagent](shot-soldier-aim-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al. | 2.5 dk | 46 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek. | 3.7 dk | 36 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al. | 6.6 dk | 58 | - | 5.0 sn video | 20260930 |
@@ -181,6 +182,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-robot-wave-geminiproagent** ([video](shot-robot-wave-geminiproagent/shot-robot-wave-geminiproagent.mp4))
 
 ![shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/sheet.png)
+
+**shot-runner-bent-deepseekv4flash** ([video](shot-runner-bent-deepseekv4flash/shot-runner-bent-deepseekv4flash.mp4))
+
+![shot-runner-bent-deepseekv4flash](shot-runner-bent-deepseekv4flash/sheet.png)
 
 **shot-soldier-aim-geminiproagent** ([video](shot-soldier-aim-geminiproagent/shot-soldier-aim-geminiproagent.mp4))
 

@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.5.1
+# Blender - Copilot — v1.6.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -21,7 +21,9 @@
 
 > v1.4.0 makes characters move: model a character from separate parts, `rig_character` (no armature), `animate_character` (idle, walk, run, aim, wave, jump), `camera_move` with `follow`, and `export_gltf` with `animations` for a game.
 
-> v1.5.0 turns shots into films: 38 camera moves, 9 lights (with a physical sky), `set_look` colour grades and glow, `camera_settings` (depth of field, rack focus, motion blur), `render_contact_sheet`, `edit_video` (crossfades, slow motion) and `render_shots` (a shot list to one MP4 in one call). Verified with 744 passing pure-Python unit tests and 30 headless Blender suites.
+> v1.5.0 turns shots into films: 38 camera moves, 9 lights (with a physical sky), `set_look` colour grades and glow, `camera_settings` (depth of field, rack focus, motion blur), `render_contact_sheet`, `edit_video` (crossfades, slow motion) and `render_shots` (a shot list to one MP4 in one call).
+
+> v1.6.0 finishes the character side: bending elbows and knees (`forearm_*`, `shin_*` parts), `character_library` (save a rigged character and load it in any later scene) and `polish_model` (bevels and smooth shading for blocky models). Verified with 753 passing pure-Python unit tests and 31 headless Blender suites; free chat models (DeepSeek V4 Flash, Space Bunny) drive all of it through 9router.
 
 ---
 
@@ -361,9 +363,9 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.5.1 durumunda 748 pure-Python unit testi ve 30 Blender integration
+v1.6.0 durumunda 753 pure-Python unit testi ve 31 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
-asset import 6/6, anthropic roundtrip). Headless 30/30 Blender 5.2.2 LTS’te
+asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.
 
 ### Tanılama logları

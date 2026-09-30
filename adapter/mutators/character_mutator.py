@@ -9,6 +9,7 @@ animations. Motion math lives in ``core.motion_paths``.
 
 import json
 import math
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 import bpy
@@ -20,7 +21,9 @@ from core.camera_paths import frame_count
 from core.motion_paths import PRESETS, ROLES, motion_samples
 
 RIG_SUFFIX = "_Rig"
-KEYWORDS = {
+KEYWORDS = {                       # order matters: "forearm" contains "arm", so lower limbs are tested first
+    "forearm": ("forearm", "lowerarm", "lower_arm", "elbow"),
+    "shin": ("shin", "calf", "lowerleg", "lower_leg", "knee"),
     "head": ("head", "skull", "face"),
     "torso": ("torso", "chest", "spine", "body", "trunk"),
     "arm": ("arm", "shoulder"),
@@ -107,6 +110,17 @@ def _clear_animation(objs: Sequence["bpy.types.Object"]) -> None:
         obj.rotation_euler = (0.0, 0.0, 0.0)
 
 
+def _vec(value: Any):
+    if isinstance(value, dict) and len(value) == 1:
+        value = next(iter(value.values()))
+    if not isinstance(value, (list, tuple)) or len(value) != 3:
+        raise ModelingError("location must be [x, y, z].")
+    try:
+        return [float(v) for v in value]
+    except (TypeError, ValueError):
+        raise ModelingError("location must be numbers.")
+
+
 class CharacterMutator:
     """Rig and motion operations for characters made of separate parts."""
 
@@ -174,6 +188,12 @@ class CharacterMutator:
         for role in ("leg_l", "leg_r"):
             if role in roles:
                 _parent_keep(roles[role], rig)
+        # lower limbs hang from their upper limb (elbow and knee joints); without one they hang from the body
+        for lower, upper, fallback in (("forearm_l", "arm_l", "torso"), ("forearm_r", "arm_r", "torso"),
+                                       ("shin_l", "leg_l", None), ("shin_r", "leg_r", None)):
+            if lower in roles:
+                parent = roles.get(upper) or (roles[fallback] if fallback else rig)
+                _parent_keep(roles[lower], parent)
         # extras attached to a part that has since been parented keep their world position (parent inverse was taken
         # before, so refresh it now that the parent's own matrix is final)
         bpy.context.view_layer.update()
@@ -234,3 +254,65 @@ class CharacterMutator:
         return {"rig": rig_obj.name, "preset": key, "about": PRESETS[key], "frames": frames, "fps": rate,
                 "seconds": round(frames / rate, 2), "frame_range": [1, frames], "animated_parts": sorted(roles),
                 "travel_m": round(math.hypot(last[0], last[1]), 3), "heading": float(heading)}
+
+    # ------------------------------------------------------------------ library
+    LIBRARY_DIR = "characters"
+
+    @classmethod
+    def character_library(cls, export_dir: str, action: str = "list", name: Any = None, rig: Any = None,
+                          location: Any = None) -> Dict[str, Any]:
+        """Save a rigged character to a .blend in the export folder, list saved ones, or bring one back into the scene.
+
+        The same character can then appear in any later scene or shot with the same look and the same rig.
+        """
+        import re
+
+        kind = str(action or "list").strip().lower()
+        if kind not in ("list", "save", "load"):
+            raise ModelingError("action must be list, save or load.")
+        folder = Path(export_dir).expanduser() / cls.LIBRARY_DIR
+        if kind == "list":
+            files = sorted(folder.glob("*.blend")) if folder.exists() else []
+            return {"characters": [f.stem for f in files], "folder": str(folder)}
+        stem = str(name or "").strip()
+        if not re.match(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}$", stem):
+            raise ModelingError("name must be a plain name (letters, digits, _ -), no folders.")
+        path = folder / f"{stem}.blend"
+        if kind == "save":
+            rig_obj = bpy.data.objects.get(str(rig or "").strip())
+            if rig_obj is None or "character_roles" not in rig_obj:
+                raise ModelingError(f"'{rig}' is not a rig made by rig_character.")
+            parts = [rig_obj] + list(rig_obj.children_recursive)
+            folder.mkdir(parents=True, exist_ok=True)
+            bpy.data.libraries.write(str(path), set(parts), fake_user=True)
+            return {"saved": stem, "path": str(path), "objects": len(parts), "rig": rig_obj.name,
+                    "bytes": path.stat().st_size}
+        # load
+        if not path.exists():
+            have = sorted(f.stem for f in folder.glob("*.blend")) if folder.exists() else []
+            raise ModelingError(f"No saved character '{stem}'. Saved: {have or 'none'}.")
+        where = Vector((0.0, 0.0, 0.0))
+        if location is not None:
+            where = Vector(_vec(location))
+        with bpy.data.libraries.load(str(path), link=False) as (src, dst):
+            original = list(src.objects)
+            dst.objects = original
+        loaded = [o for o in dst.objects if o is not None]
+        mapping = {old: obj.name for old, obj in zip(original, dst.objects) if obj is not None}
+        rig_obj = next((o for o in loaded if "character_roles" in o), None)
+        if rig_obj is None:
+            for obj in loaded:
+                bpy.data.objects.remove(obj, do_unlink=True)
+            raise ModelingError(f"'{stem}' has no rig inside.")
+        for obj in loaded:
+            bpy.context.scene.collection.objects.link(obj)
+        roles = json.loads(rig_obj["character_roles"])
+        rig_obj["character_roles"] = json.dumps({role: mapping.get(n, n) for role, n in roles.items()})
+        _clear_animation(loaded)
+        rig_obj.location = where
+        rig_obj["rest_location"] = list(rig_obj.location)
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Load character {stem}")
+        return {"loaded": stem, "rig": rig_obj.name, "roles": json.loads(rig_obj["character_roles"]),
+                "objects": len(loaded), "location": [round(v, 3) for v in rig_obj.location],
+                "height": round(float(rig_obj.get("character_height", 0.0)), 3)}
