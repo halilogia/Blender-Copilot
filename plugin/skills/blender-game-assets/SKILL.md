@@ -18,10 +18,6 @@ You model with allow-listed tools, not with Python: nothing here can run arbitra
 7. **Polish.** `polish_model` on the parts (or the joined prop): bevels every hard corner so light catches the edges and shades smooth with sharp edges kept. It is what makes a blocky model look finished; run it once shapes and proportions are right.
 8. **Finish.** `join_objects` into one object, `set_origin` BOTTOM_CENTER (props) or BOUNDS_CENTER (weapons), then `export_gltf` (a plain file name such as `crate.glb`; `recenter` is on so the prop lands at the origin whatever its position in the Blender scene). Check `triangle_count` in the result.
 
-## When the user has a 3D generator
-
-`generate_3d` (prompt, height, optional `image_file`) asks the user's trained text-to-3D service for the model and drops it on the ground at the origin, scaled to `height`. Prefer it for organic or detailed things (animals, trees with character, statues, furniture with detail) and for static characters; keep modeling from parts for anything that must move part by part (walking or talking characters) and for simple props where exact shapes matter. If the tool answers that no generator is configured, model from parts as usual. Details: `docs/GENERATE_3D.md`.
-
 ## Rules that save time
 
 - Units are meters, +Z is up, +Y is the model's forward. glTF export converts to Y-up: Blender +Y becomes Godot -Z, the forward direction.

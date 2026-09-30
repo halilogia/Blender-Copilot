@@ -25,7 +25,7 @@ INSTRUCTIONS = (
     "origin at the bottom centre, real-world scale. "
     "Direct a shot like a film: set_environment (studio, golden_hour, overcast, night, neon light), camera_move (dolly, orbit, arc, crane, pan, tilt, "
     "whip_pan, dolly_zoom, crash_zoom_in, handheld; keyframed around the subject, follow=true tracks a moving subject), render_image to check one frame, render_contact_sheet to check the whole move in one picture, render_animation for an MP4; set_look grades colour and glow, camera_settings adds depth of field, rack focus and motion blur; edit_video joins clips with crossfades and slow motion; render_shots turns a shot list into one film in a single call (music: a mood such as calm, epic, tense adds a composed soundtrack; make_soundtrack makes one separately). "
-    "polish_model bevels and smooths a blocky model so it looks finished. generate_3d asks a trained text-to-3D generator, if the user configured one, for organic or detailed props and static characters (one solid mesh, scaled to a height and put on the ground); without it, model from parts. Characters move too: model one from SEPARATE parts (head, torso, arm_l, arm_r, leg_l, leg_r, optional forearm_* and shin_* for bending elbows and knees, accessories; do not join), rig_character (name small parts eye_l, eye_r and mouth for a face that blinks), character_library to save it for later shots, then animate_character (talk with text lip-syncs a spoken line; happy, surprised, angry are expressions) or animate_sequence to act a scene (walk, then wave, then talk on one timeline) (idle, walk, run, aim, wave, jump); export_gltf with animations=true keeps the motion for a game. "
+    "polish_model bevels and smooths a blocky model so it looks finished. Characters move too: model one from SEPARATE parts (head, torso, arm_l, arm_r, leg_l, leg_r, optional forearm_* and shin_* for bending elbows and knees, accessories; do not join), rig_character (name small parts eye_l, eye_r and mouth for a face that blinks), character_library to save it for later shots, then animate_character (talk with text lip-syncs a spoken line; happy, surprised, angry are expressions) or animate_sequence to act a scene (walk, then wave, then talk on one timeline) (idle, walk, run, aim, wave, jump); export_gltf with animations=true keeps the motion for a game. "
     "Tools with risk MEDIUM or higher (delete_object) need the user's approval and are refused over MCP unless the "
     "user enabled 'Allow gated tools' in the add-on preferences; tell the user instead of retrying."
 )
@@ -113,7 +113,7 @@ class RegistryToolHost:
         call = ToolCall(call_id=f"mcp_{self._counter}", tool_name=name, arguments=dict(arguments))
         try:
             # renders keep Blender's main thread busy for a while: give them a longer window
-            wait = max(self.call_timeout, 600.0) if name.startswith(("render_", "generate_")) else self.call_timeout
+            wait = max(self.call_timeout, 600.0) if name.startswith("render_") else self.call_timeout
             result = self.submit(lambda: self._dispatch(call), timeout=wait)
         except TimeoutError:
             return ToolResult.fail(name, "TIMEOUT", f"Blender did not run '{name}' within {self.call_timeout:.0f} s "

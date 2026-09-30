@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.9.0
+# Blender - Copilot — v1.9.1
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -27,9 +27,7 @@
 
 > v1.7.0 gives characters a face and films a soundtrack: eyes that blink, `talk` with lip sync from a line of text, `happy`, `surprised` and `angry` expressions, 50 camera presets, and procedural music (`make_soundtrack`, or `music` on `render_shots`) mixed into the MP4. Quality note: everything is driven by chat models, so results depend on the model; the tools, recipes and checks (contact sheets, renders the model can look at) are what keep weaker models on track.
 
-> v1.8.0 connects a trained 3D generator: `generate_3d` sends a prompt (and optionally an image) to a text-to-3D service you configure (`BLENDER_COPILOT_3D_URL`; a small contract, see [docs/GENERATE_3D.md](docs/GENERATE_3D.md)), imports the model scaled and grounded, and the chat model lights, films and scores it like any other. Shots of a film now carry on where the previous one stopped in a character's animation.
-
-> v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof. Verified with 781 passing pure-Python unit tests and 32 headless Blender suites.
+> v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof. Verified with 781 passing pure-Python unit tests and 31 headless Blender suites.
 
 ---
 
@@ -369,7 +367,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.8.0 durumunda 781 pure-Python unit testi ve 32 Blender integration
+v1.9.1 durumunda 781 pure-Python unit testi ve 31 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.
