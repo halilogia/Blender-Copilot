@@ -1071,6 +1071,14 @@ class AgentRuntime:
             )
             raise RuntimeError("Active turn in progress. Prompt must be queued by submit_prompt.")
 
+        # one chat message = one task: the scene is compared with its state before this message (task_report, Undo AI task)
+        try:
+            begin = getattr(getattr(self.dispatcher, "adapter", None), "task_begin", None)
+            if callable(begin):
+                begin(str(prompt or "")[:60])
+        except Exception:
+            _logger.debug("task_begin failed", exc_info=True)
+
         if self.state_machine.current_state == AgentState.ERROR:
             self.state_machine.reset()
 
@@ -1703,6 +1711,22 @@ class AgentRuntime:
             return err_result
 
         return None
+
+    def task_open_steps(self) -> int:
+        """Undo steps of the open AI task (0 when nothing changed); used by the panel."""
+        fn = getattr(getattr(self.dispatcher, "adapter", None), "task_open_steps", None)
+        try:
+            return int(fn()) if callable(fn) else 0
+        except Exception:
+            return 0
+
+    def task_changes(self) -> Dict[str, Any]:
+        fn = getattr(getattr(self.dispatcher, "adapter", None), "task_peek", None)
+        return fn() if callable(fn) else {"changes": [], "empty": True}
+
+    def task_undo(self) -> Dict[str, Any]:
+        fn = getattr(getattr(self.dispatcher, "adapter", None), "task_undo", None)
+        return fn() if callable(fn) else {"rolled_back": False, "reason": "No task ledger."}
 
     def cancel_current_turn(self) -> None:
         """Cancel the currently active turn, discarding pending events and approvals."""

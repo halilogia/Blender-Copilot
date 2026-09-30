@@ -29,6 +29,7 @@ from adapter.mutators.look_mutator import LookMutator
 from adapter.mutators.model_qa_mutator import ModelQaMutator
 from adapter.mutators.texture_mutator import TextureMutator
 from adapter.mutators.world_mutator import WorldMutator
+from adapter.task_ledger import LEDGER
 from adapter.mutators.polish_mutator import PolishMutator
 from adapter.mutators.prop_mutator import PropMutator
 from adapter.mutators.video_mutator import VideoMutator
@@ -911,6 +912,30 @@ class BlenderAdapter:
 
     def set_look(self, **kwargs) -> ToolResult:
         return self._modeling("set_look", LookMutator.set_look, **kwargs)
+
+    def task_ensure_baseline(self) -> None:
+        """Called by the dispatcher before each tool: the snapshot a task is compared with is taken before its first tool."""
+        LEDGER.ensure_baseline()
+
+    def task_begin(self, label: str = "") -> None:
+        LEDGER.begin(label)
+
+    def task_peek(self) -> Dict[str, Any]:
+        """The open task's changes without closing it (for the panel)."""
+        return LEDGER.report(close=False)
+
+    def task_undo(self) -> Dict[str, Any]:
+        """Undo the open task (the panel's button); the tool task_rollback is the gated version for agents."""
+        return LEDGER.rollback()
+
+    def task_open_steps(self) -> int:
+        return LEDGER._steps() if LEDGER.is_open else 0
+
+    def task_report(self, **kwargs) -> ToolResult:
+        return self._modeling("task_report", lambda close=True: LEDGER.report(bool(close)), **kwargs)
+
+    def task_rollback(self, **kwargs) -> ToolResult:
+        return self._modeling("task_rollback", LEDGER.rollback, **kwargs)
 
     def create_terrain(self, **kwargs) -> ToolResult:
         return self._modeling("create_terrain", WorldMutator.create_terrain, **kwargs)

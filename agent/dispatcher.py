@@ -63,7 +63,13 @@ class ToolDispatcher:
                     details={"unexpected": unexpected, "allowed": list(allowed_properties)},
                 )
 
-        # 4. Execute tool through adapter
+        # 4. Execute tool through adapter (a task's 'before' snapshot is taken ahead of its first tool)
+        try:
+            baseline = getattr(self.adapter, "task_ensure_baseline", None)
+            if callable(baseline) and tool_name not in ("task_report", "task_rollback"):
+                baseline()
+        except Exception:
+            pass
         try:
             return tool.execute(self.adapter, **arguments)
         except Exception as exc:

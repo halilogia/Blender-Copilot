@@ -56,6 +56,19 @@ class AISIDEBAR_PT_main_panel(Panel):
         if is_processing:
             btn_row.operator("ai_sidebar.cancel_turn", text="Cancel", icon="CANCEL")
 
+        # What the last AI task changed, and one undo for all of it (shown only when a task changed something)
+        try:
+            from .. import get_runtime
+
+            runtime = get_runtime()
+            steps = runtime.task_open_steps() if runtime is not None else 0
+            if steps > 0 and not is_processing:
+                task_row = layout.row(align=True)
+                task_row.operator("ai_sidebar.task_changes", text="What changed?", icon="INFO")
+                task_row.operator("ai_sidebar.task_undo", text=f"Undo AI task ({steps})", icon="LOOP_BACK")
+        except Exception:
+            pass
+
         # In-Viewport HUD launcher shortcut
         hud_row = layout.row(align=True)
         hud_row.scale_y = 1.1

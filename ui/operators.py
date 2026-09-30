@@ -369,7 +369,58 @@ class AISIDEBAR_OT_check_updates(Operator):
         return {"FINISHED"}
 
 
+class AISIDEBAR_OT_task_changes(Operator):
+    """Show what the last AI task changed in the scene."""
+
+    bl_idname = "ai_sidebar.task_changes"
+    bl_label = "What did the AI change?"
+    bl_description = "List the objects, materials and settings the last AI task added, removed or changed"
+
+    lines: StringProperty(default="", options={"SKIP_SAVE"})
+
+    def invoke(self, context, event):
+        from .. import get_runtime
+
+        runtime = get_runtime()
+        report = runtime.task_changes() if runtime is not None else {"changes": []}
+        self.lines = "\n".join(report["changes"][:30]) or "Nothing changed yet."
+        return context.window_manager.invoke_props_dialog(self, width=520)
+
+    def draw(self, context):
+        col = self.layout.column(align=True)
+        for line in self.lines.split("\n"):
+            col.label(text=line)
+
+    def execute(self, context):
+        return {"FINISHED"}
+
+
+class AISIDEBAR_OT_task_undo(Operator):
+    """Take back everything the last AI task did (one undo for the whole task)."""
+
+    bl_idname = "ai_sidebar.task_undo"
+    bl_label = "Undo AI task"
+    bl_description = "Undo every step of the last AI task at once and check that the scene is back as it was"
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_confirm(self, event)
+
+    def execute(self, context):
+        from .. import get_runtime
+
+        runtime = get_runtime()
+        result = runtime.task_undo() if runtime is not None else {"rolled_back": False, "reason": "The agent is not running."}
+        if result.get("rolled_back"):
+            self.report({"INFO"}, f"AI task undone ({result['undo_steps_done']} steps), scene verified.")
+        else:
+            note = result.get("reason") or result.get("note") or "Could not undo the task completely."
+            self.report({"WARNING"}, note)
+        return {"FINISHED"}
+
+
 CLASSES = (
+    AISIDEBAR_OT_task_changes,
+    AISIDEBAR_OT_task_undo,
     AISIDEBAR_OT_send_prompt,
     AISIDEBAR_OT_cancel_turn,
     AISIDEBAR_OT_clear_history,

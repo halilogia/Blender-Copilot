@@ -1,6 +1,6 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.17.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 826 unit tests OK, hardening green, headless 37/37 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.18.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 835 unit tests OK, hardening green, headless 38/38 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ## Yön (2026-09-30)
@@ -38,4 +38,4 @@ Kod değişimi gerektirmez; makinede kanıt:
 
 ---
 
-Kabul kapısı (tümü): unit yeşil ✅ + headless 37/37 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.
+Kabul kapısı (tümü): unit yeşil ✅ + headless 38/38 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.

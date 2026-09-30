@@ -8,7 +8,36 @@ from typing import Optional
 import bpy
 
 
+_pushed = 0
+
+
+def undo_counter() -> int:
+    """How many undo steps the add-on has pushed and not taken back (the task ledger counts between two points)."""
+    return _pushed
+
+
 def push_undo_step(message: str) -> bool:
+    """Register an atomic undo step and count it (see ``_push_undo_step``)."""
+    global _pushed
+    ok = _push_undo_step(message)
+    if ok:
+        _pushed += 1
+    return ok
+
+
+def rollback_steps(count: int) -> int:
+    """Undo ``count`` steps, stop at the first failure; returns how many were undone."""
+    global _pushed
+    done = 0
+    for _ in range(max(int(count), 0)):
+        if not perform_undo():
+            break
+        done += 1
+    _pushed = max(_pushed - done, 0)
+    return done
+
+
+def _push_undo_step(message: str) -> bool:
     """Register an atomic undo step in Blender's global undo stack.
 
     Args:

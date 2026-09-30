@@ -11,6 +11,10 @@ You model with allow-listed tools, not with Python: nothing here can run arbitra
 
 Beyond extrude, inset and bevel: `LOOP_CUT` (axis, cuts: evenly spaced cuts, then extrude or inset the new faces for panels and steps), `KNIFE_PLANE` (axis, position, keep above/below: half a shape, capped and closed), `BRIDGE_FACES` (two faces joined by a tunnel: doorways, handles, pipes; pick each face with a selector such as `{"direction": "+Y", "min_area": 0.9}` or `{"near": [x, y, z]}`), `DELETE_FACES`, `FLIP_NORMALS`, `DISSOLVE_PLANAR` (clean up after a boolean), `SEPARATE` (loose parts or materials into objects) and `APPLY_MODIFIERS` (bake bevel, boolean, mirror into the mesh). The selector also takes `material` and `max_area` / `min_area`.
 
+## Check the task as a whole (`task_report`, `task_rollback`)
+
+A task is everything since the last `task_report` (or the user's message). `task_report` says by meaning what changed: `+ crate (MESH)`, `- Cube`, `~ Table: location [0, 0, 0] -> [1, 0, 0]`, new materials, and the undo steps used. Call it after a piece of work and look for things you did not intend: a helper object you forgot to delete, an object moved by accident, a material you did not mean to create. `task_rollback` (needs the user's approval, refused over MCP unless gated tools are allowed) undoes the whole task in one step and verifies the scene is back as it was; use it when the work went wrong beyond a quick fix, instead of deleting things one by one.
+
 ## Check before export
 
 Call `check_model` (with `object_names` of the model) after building and before `export_gltf`. It measures instead of looking: inverted normals, non-manifold edges, doubled vertices, unapplied scale, pivot outside the object, no material, a texture without UVs, sunk into the ground, two objects in the same space, and the triangle count against `max_triangles` (default 3000). FAIL findings block `ok`; each finding names the tool call that fixes it. Fix, call again, repeat until `ok` is true; cheap WARN items (materials, merge by distance) are worth fixing too.

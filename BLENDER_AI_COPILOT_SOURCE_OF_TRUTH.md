@@ -7,7 +7,7 @@
 > Kullanıcı doğal dil talebini sahne bağlamını anlayarak planlayan, semantic Blender tools ve gerektiğinde harici 3D generation servislerini kullanan, yaptığı değişiklikleri doğrulayan ve güvenli onay mekanizmasıyla Blender sahnesinde gerçekleştiren agentic bir copilot olmaktır.
 
 ### Mevcut Durum vs. Hedef Ürün Ayrımı
-- **CURRENT (v1.17.0, 2026-09-30, 826 unit test OK):** M1–M9 + v1.0 + v1.1 tamamlanmış; sahneyi okuyabilen (`inspect_*`), güvenli mutasyon yapabilen (`create_primitive`, `transform_object`, `delete_object`, camera/light/modifier/shading/duplicate, **`import_asset`**), her mutasyonda undo state oluşturan, riskli eylemleri `PendingApproval` ile durduran, `ChangeVerifier` ile doğrulayan, vision (`capture_viewport` + `max_side`, Anthropic native multimodal) + stdlib local embedding + check-only auto-update içeren **semantic Blender assistant**; v1.9.0 ile yerel MCP köprüsü, `animate_sequence` (sahne oynatma), yüz ifadeleri ve dudak senkronu, procedural müzik, karakter kütüphanesi ve bükülen uzuvlar, `polish_model`, film araçları (`set_look`, `camera_settings`, `edit_video`, `render_shots`), karakter araçları (`rig_character`, `animate_character`), sinema araçları (`set_environment`, `camera_move`, `render_image`, `render_animation`) (`bridge/`, Claude Code eklentisi) ve modelleme araçları (`create_mesh`, `mesh_edit`, `export_gltf` ...) eklendi.
+- **CURRENT (v1.18.0, 2026-09-30, 835 unit test OK):** M1–M9 + v1.0 + v1.1 tamamlanmış; sahneyi okuyabilen (`inspect_*`), güvenli mutasyon yapabilen (`create_primitive`, `transform_object`, `delete_object`, camera/light/modifier/shading/duplicate, **`import_asset`**), her mutasyonda undo state oluşturan, riskli eylemleri `PendingApproval` ile durduran, `ChangeVerifier` ile doğrulayan, vision (`capture_viewport` + `max_side`, Anthropic native multimodal) + stdlib local embedding + check-only auto-update içeren **semantic Blender assistant**; v1.9.0 ile yerel MCP köprüsü, `animate_sequence` (sahne oynatma), yüz ifadeleri ve dudak senkronu, procedural müzik, karakter kütüphanesi ve bükülen uzuvlar, `polish_model`, film araçları (`set_look`, `camera_settings`, `edit_video`, `render_shots`), karakter araçları (`rig_character`, `animate_character`), sinema araçları (`set_environment`, `camera_move`, `render_image`, `render_animation`) (`bridge/`, Claude Code eklentisi) ve modelleme araçları (`create_mesh`, `mesh_edit`, `export_gltf` ...) eklendi.
 - **TARGET (Hedeflenen Ürün):** Planning + mutation + verification + vision + materials + asset browser derinleştirme + controlled scripting + opsiyonel external 3D generation yeteneklerine sahip tam kapsamlı **agentic copilot** (v1.2: Blender-runtime mühürleme; v1.3 adayı: text-to-3D araştırması).
 
 ---
@@ -102,7 +102,7 @@ $$\text{LLM (Orkestratör / Planlayıcı)} \neq \text{3D Model Üreticisi (Gener
 ## 6. Test Durumu ve Standartlar
 
 - **Son doğrulanan otomatik test sonucu (2026-09-27):**
-  - `826 Pure Python unit test` — `python tests/run_unit_tests.py` OK (hardening dahil).
+  - `835 Pure Python unit test` — `python tests/run_unit_tests.py` OK (hardening dahil).
   - `25/25 headless Blender suite` PASS (Blender 5.2.2 LTS) — `test_asset_import.py` (6/6) ve `test_anthropic_roundtrip.py` dahil.
   - Yeni suite'ler: `test_anthropic_provider`, `test_local_embed`, `test_update_check`, `test_asset_browser`.
   - Kalan: 1 canlı GUI turu (v1.2.0).

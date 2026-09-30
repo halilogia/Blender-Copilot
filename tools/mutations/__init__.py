@@ -23,6 +23,7 @@ from .check_shot import CheckShotTool
 from .check_model import CheckModelTool
 from .unwrap_uv import UnwrapUvTool
 from .create_terrain import CreateTerrainTool
+from .task_rollback import TaskRollbackTool
 from .scatter import ScatterTool
 from .bake_material import BakeMaterialTool
 from .create_prop import CreatePropTool
@@ -66,6 +67,7 @@ __all__ = [
     "CheckModelTool",
     "UnwrapUvTool",
     "CreateTerrainTool",
+    "TaskRollbackTool",
     "ScatterTool",
     "BakeMaterialTool",
     "CreatePropTool",
