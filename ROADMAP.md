@@ -7,6 +7,8 @@ Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan i�
 
 Çekirdek ürün: **AI’nin Blender sahnesini güvenilir biçimde anlaması, modellemesi, düzenlemesi, malzeme / ışık / kamera vermesi, sonucu doğrulaması** ve gerektiğinde animasyon üretmesi. Film, müzik, karakter animasyonu isteğe bağlı paketlerdir (`core/tool_packs.py`: yalnız istekte yüklenir). **Film tarafı dondurulur:** yeni kamera preset’i, müzik özelliği, prop, film efekti eklenmez; yalnız kalite ve çekirdek boşlukları kapatılır.
 
+**Mimari karşılık (2026-09-30):** Godot'daki "dosya-öncelikli" Blender'da birebir olmaz (`.blend` ikili dosya). Karşılığı: canlı Blender datablock'ları çalışma alanıdır; her AI görevi bir işlem (task) olarak izlenir. ✅ Anlamsal anlık görüntü + fark (`task_report`), ✅ görev çapında geri alma ve doğrulama (`task_rollback`, panelde "Undo AI task"), ✅ doğrulama kapısı olarak `check_model` / `check_shot` (ajan çağırır). Bilerek yapılmadı: her görev için zorunlu Apply / Reject penceresi (geri alma sonradan daha az rahatsız eder), `.blend`'i kendiliğinden kaydetmek (kullanıcının kaydedilmemiş elle değişiklikleri olabilir; Ctrl+S kullanıcıya ait). Dosya tabanlı varlıklar (doku, `.glb`, görüntü, video) zaten dosya-öncelikli: geçici dosyaya yaz, doğrula, taşı.
+
 Sıra (biri bitmeden sonrakine geçilmez; her adımda entegrasyon testi + ücretsiz modelle bir demo):
 
 1. **Belge tutarlılığı** ✅ (rozet, test sayıları, bu dosya).
