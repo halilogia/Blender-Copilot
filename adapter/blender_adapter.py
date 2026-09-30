@@ -905,6 +905,10 @@ class BlenderAdapter:
         kwargs.setdefault("export_dir", self.export_dir)
         return self._attach_image(self._modeling("render_contact_sheet", LookMutator.render_contact_sheet, **kwargs), "path")
 
+    def make_soundtrack(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._modeling("make_soundtrack", VideoMutator.make_soundtrack, **kwargs)
+
     def edit_video(self, **kwargs) -> ToolResult:
         kwargs.setdefault("export_dir", self.export_dir)
         return self._modeling("edit_video", VideoMutator.edit_video, **kwargs)

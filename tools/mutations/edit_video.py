@@ -19,6 +19,8 @@ class EditVideoTool(BaseTool):
             "clips": {"type": "array", "items": {"description": "Clip file name like shot1.mp4, or an object {file, speed}."}, "description": "1 to 12 clips, in order."},
             "transition": {"type": "string", "enum": ["cut", "crossfade", "wipe"], "description": "Transition between clips (default cut)."},
             "transition_seconds": {"type": "number", "description": "Length of each transition, 0.1-3 (default 0.5)."},
+            "soundtrack": {"type": "string", "description": "Audio file in the export folder to lay under the film (make one with make_soundtrack); trimmed to the film, AAC in the MP4."},
+            "music_volume": {"type": "number", "description": "Music volume 0.05-1 (default 0.6)."},
         },
         "required": ["clips"],
         "additionalProperties": False,

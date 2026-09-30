@@ -172,6 +172,53 @@ class TestCameraPaths(unittest.TestCase):
         self.assertGreater(pos[1], aim[1])
         self.assertLess(dist(pos, aim), 1.5)
 
+    def test_there_are_fifty_presets(self):
+        self.assertGreaterEqual(len(PRESETS), 50)
+
+    def test_eyes_in_and_mouth_in_close_in_on_the_upper_body(self):
+        for name in ("eyes_in", "mouth_in"):
+            s = camera_samples(name, 20, C, 1.0)
+            self.assertGreater(s[0][1][2], C[2], name)                       # aims above the centre
+            self.assertLess(dist(s[-1][0], s[-1][1]), dist(s[0][0], s[0][1]) * 0.4, name)
+
+    def test_lazy_susan_stays_close_and_swings_half_a_circle(self):
+        s = camera_samples("lazy_susan", 30, C, 1.0)
+        radii = [dist(p, C) for p, _, _ in s]
+        self.assertLess(max(radii), camera_samples("orbit", 30, C, 1.0)[0][0][1] * 2)
+        self.assertAlmostEqual(min(radii), max(radii), places=6)
+        self.assertGreater(dist(s[0][0], s[-1][0]), 1.0)
+
+    def test_incline_comes_down_and_in(self):
+        s = camera_samples("incline", 20, C, 1.0)
+        self.assertLess(s[-1][0][2], s[0][0][2])
+        self.assertLess(dist(s[-1][0], C), dist(s[0][0], C))
+
+    def test_spiral_in_and_out_change_the_distance_while_circling(self):
+        a = camera_samples("spiral_in", 30, C, 1.0)
+        b = camera_samples("spiral_out", 30, C, 1.0)
+        self.assertLess(dist(a[-1][0], C), dist(a[0][0], C))
+        self.assertGreater(dist(b[-1][0], C), dist(b[0][0], C))
+        self.assertGreater(dist(a[0][0], a[-1][0]), 0.5)
+
+    def test_lens_presets(self):
+        fish = camera_samples("fisheye", 5, C, 1.0)
+        tele = camera_samples("telephoto", 5, C, 1.0)
+        normal = camera_samples("static", 5, C, 1.0)
+        self.assertEqual(fish[0][2], 10.0)
+        self.assertGreater(tele[0][2], normal[0][2] * 2)
+        self.assertGreater(dist(tele[0][0], C), dist(normal[0][0], C) * 2)
+
+    def test_rise_reveal_lifts_and_tilts_down(self):
+        s = camera_samples("rise_reveal", 20, C, 1.0)
+        self.assertGreater(s[-1][0][2], s[0][0][2])
+        self.assertLess(s[-1][1][2], s[0][1][2])
+
+    def test_crane_over_goes_high_and_ends_on_the_other_side(self):
+        s = camera_samples("crane_over", 41, C, 1.0, azimuth=0.0)
+        self.assertGreater(max(p[2] for p, _, _ in s) - C[2], 1.5)
+        self.assertGreater(s[0][0][1], 1.0)
+        self.assertLess(s[-1][0][1], -1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

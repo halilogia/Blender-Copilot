@@ -50,6 +50,18 @@ PRESETS: Dict[str, str] = {
     "robo_arm": "precise multi-axis arc: sweeps around, rises and closes in",
     "hyperlapse": "long fast forward flight toward the subject with a little shake",
     "orbit_360": "a full circle around the subject",
+    "eyes_in": "push in to an extreme close-up of the face",
+    "mouth_in": "push in to the lower face",
+    "lazy_susan": "tight half circle at close range, like a turntable",
+    "incline": "diagonal move: the camera comes down and in while drifting sideways",
+    "road_rush": "low fast tracking run toward the subject with shake, wide lens",
+    "glam": "slow low-angle arc, flattering and heroic",
+    "spiral_in": "orbit while closing in",
+    "spiral_out": "orbit while pulling away",
+    "fisheye": "locked camera with an extreme wide lens",
+    "telephoto": "locked camera far away with a long lens: compressed depth",
+    "rise_reveal": "camera lifts while the view tilts down from the sky to the subject",
+    "crane_over": "camera swings up over the subject's head and down the other side",
 }
 
 FOLLOW_PRESETS = ("snorricam",)
@@ -203,6 +215,38 @@ def camera_samples(preset: str, frames: int, center: Sequence[float], radius: fl
             focal = min(f0, 24.0)
         elif preset == "orbit_360":
             pos = camera_position(c, d, az + 360.0 * t, el)
+        elif preset == "eyes_in":
+            aim = (c[0], c[1], c[2] + r * 0.55)
+            pos = camera_position(aim, d * _mix(0.9, 0.22, e), az * 0.3, el)
+        elif preset == "mouth_in":
+            aim = (c[0], c[1], c[2] + r * 0.45)
+            pos = camera_position(aim, d * _mix(0.7, 0.18, e), az * 0.3, el)
+        elif preset == "lazy_susan":
+            pos = camera_position(c, d * 0.55, az - 100.0 + 200.0 * t, el)
+        elif preset == "incline":
+            pos = camera_position(c, d * _mix(1.4, 0.7, e), az + _mix(0.0, 40.0, e), _mix(45.0, 8.0, e))
+        elif preset == "road_rush":
+            amp = d * 0.01 * k
+            pos = camera_position(c, d * _mix(2.2, 0.7, t), az + 15.0, 4.0)
+            pos = (pos[0] + amp * _noise(t * 10.0, 1.0), pos[1] + amp * _noise(t * 10.0, 2.0), pos[2] + amp * _noise(t * 10.0, 3.0))
+            focal = min(f0, 24.0)
+        elif preset == "glam":
+            pos = camera_position(c, d * 0.85, az + _mix(-25.0, 25.0, e), 6.0)
+            aim = (c[0], c[1], c[2] + r * 0.1)
+            focal = max(f0, 50.0)
+        elif preset in ("spiral_in", "spiral_out"):
+            a, b = (1.6, 0.6) if preset == "spiral_in" else (0.6, 1.6)
+            pos = camera_position(c, d * _mix(a, b, e), az + 270.0 * t, el)
+        elif preset == "fisheye":
+            focal = 10.0
+        elif preset == "telephoto":
+            pos = camera_position(c, d * 2.5, az, el)
+            focal = f0 * 2.5
+        elif preset == "rise_reveal":
+            pos = (base[0], base[1], base[2] + _mix(-1.0, 0.6, e) * r)
+            aim = (c[0], c[1], c[2] + _mix(0.9, 0.0, e) * r)
+        elif preset == "crane_over":
+            pos = camera_position(c, d * 1.1, az + 180.0 * e, 5.0 + 70.0 * math.sin(math.pi * t))
         out.append((pos, aim, max(10.0, min(300.0, focal))))
     return out
 

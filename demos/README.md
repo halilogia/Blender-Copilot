@@ -41,6 +41,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-soldier-aim-geminiproagent](shot-soldier-aim-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al. | 2.5 dk | 46 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek. | 3.7 dk | 36 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al. | 6.6 dk | 58 | - | 5.0 sn video | 20260930 |
+| [shot-talker-music-deepseekv4flash](shot-talker-music-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli düşük poligonlu bir robot karakter modelle: kafa, gövde, kollar, bacaklar ve yüz için EyeL, EyeR, Mouth adlı küçük kutular (ayrı parçalar, birleştirme). rig_character ile bağla ve animate_character ile talk animasyonunu şu metinle ver: 'Merhaba, ben yeni robotunuzum. Bugün birlikte harika şeyler yapacağız!'. Sonra render_shots ile iki planlık film çek: 1) studio ışığında eyes_in (3 sn), 2) studio ışığında dolly_out (3 sn), cinematic look; müzik olarak 'playful' kullan. | 5.6 dk | 63 | - | 5.5 sn video | 20260930 |
 | [shot-tank-crane-claudesonnet46](shot-tank-crane-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 2.8 dk | 29 | - | 4.0 sn video | 20260930 |
 | [shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 1.8 dk | 34 | - | 4.0 sn video | 20260930 |
 | [shot-zombie-walk-geminiproagent](shot-zombie-walk-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Yeşil tenli, yırtık giysili sevimli düşük poligonlu bir zombi modelle (kafa, gövde, kollar, bacaklar ayrı parçalar olsun, birleştirme). rig_character ile bağla, yürüt (3 metre, yavaş), gece ışığı kur, kamera takip etsin (follow) ve 5 saniyelik MP4 al. | 1.7 dk | 36 | - | 5.0 sn video | 20260930 |
@@ -198,6 +199,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-soldier-walk-spacebunnyalpha** ([video](shot-soldier-walk-spacebunnyalpha/shot-soldier-walk-spacebunnyalpha.mp4))
 
 ![shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/sheet.png)
+
+**shot-talker-music-deepseekv4flash** ([video](shot-talker-music-deepseekv4flash/shot-talker-music-deepseekv4flash.mp4))
+
+![shot-talker-music-deepseekv4flash](shot-talker-music-deepseekv4flash/sheet.png)
 
 **shot-tank-crane-claudesonnet46** ([video](shot-tank-crane-claudesonnet46/shot-tank-crane-claudesonnet46.mp4))
 

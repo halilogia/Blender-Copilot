@@ -16,8 +16,10 @@ from adapter.mutators.cinema_mutator import CinemaMutator, ENVIRONMENTS, _stem
 from adapter.mutators.look_mutator import LOOKS, LookMutator
 from adapter.mutators.modeling_mutator import ModelingError, as_list
 from core.camera_paths import PRESETS
+from core.soundtrack import MOODS, write_wav
 
 CLIP_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}\.mp4$")
+SOUND_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}\.(wav|mp3|ogg|flac)$", re.I)
 TRANSITIONS = {"cut": None, "crossfade": "CROSS", "wipe": "WIPE"}
 MAX_CLIPS = 12
 MAX_SHOTS = 8
@@ -34,8 +36,28 @@ class VideoMutator:
     """Editing and multi-shot rendering."""
 
     @classmethod
+    def make_soundtrack(cls, export_dir: str, mood: str = "calm", seconds: float = 20.0, filename: Any = None,
+                        seed: int = 1) -> Dict[str, Any]:
+        key = str(mood or "calm").strip().lower()
+        if key not in MOODS:
+            raise ModelingError(f"mood must be one of {sorted(MOODS)}.")
+        try:
+            length = float(seconds)
+        except (TypeError, ValueError):
+            raise ModelingError("seconds must be a number.")
+        if not (1.0 <= length <= 90.0):
+            raise ModelingError("seconds must be between 1 and 90.")
+        stem = _stem(filename or f"music_{key}", "music")
+        folder = Path(export_dir).expanduser()
+        folder.mkdir(parents=True, exist_ok=True)
+        path = folder / f"{stem}.wav"
+        info = write_wav(str(path), key, length, int(seed))
+        return {"path": str(path), "filename": path.name, "mood": key, "about": MOODS[key], "seconds": info["seconds"],
+                "bytes": path.stat().st_size, "use": "pass the file name as soundtrack to edit_video, or use render_shots with music"}
+
+    @classmethod
     def edit_video(cls, export_dir: str, filename: str, clips: Any, transition: str = "cut",
-                   transition_seconds: float = 0.5) -> Dict[str, Any]:
+                   transition_seconds: float = 0.5, soundtrack: Any = None, music_volume: float = 0.6) -> Dict[str, Any]:
         import time
 
         stem = _stem(filename, "film")
@@ -70,6 +92,20 @@ class VideoMutator:
         if not (0.1 <= fade <= 3.0):
             raise ModelingError("transition_seconds must be between 0.1 and 3.")
 
+        sound_path = None
+        if soundtrack:
+            sname = str(soundtrack).strip()
+            if not SOUND_RX.match(sname):
+                raise ModelingError("soundtrack must be a plain audio file name (.wav, .mp3, .ogg, .flac) in the export folder.")
+            if not (folder / sname).exists():
+                raise ModelingError(f"Sound '{sname}' is not in the export folder. Make one with make_soundtrack.")
+            sound_path = folder / sname
+            try:
+                volume = float(music_volume)
+            except (TypeError, ValueError):
+                raise ModelingError("music_volume must be a number between 0.05 and 1.")
+            if not (0.05 <= volume <= 1.0):
+                raise ModelingError("music_volume must be between 0.05 and 1.")
         edit = bpy.data.scenes.new("AI_Edit")
         try:
             edit.sequence_editor_create()
@@ -105,6 +141,11 @@ class VideoMutator:
                     visible.append((cursor, end, top))
                 cursor = end
                 total_frames = max(total_frames, end - 1)
+            if sound_path is not None:
+                music = coll.new_sound("music", str(sound_path), 6, 1)
+                music.volume = volume
+                if music.frame_final_duration > total_frames:
+                    music.frame_final_duration = total_frames
             edit.frame_start, edit.frame_end = 1, total_frames
             if total_frames > MAX_TOTAL_FRAMES:
                 raise ModelingError(f"The edit would be {total_frames} frames; the limit is {MAX_TOTAL_FRAMES}.")
@@ -117,6 +158,9 @@ class VideoMutator:
             r.image_settings.file_format = "FFMPEG"
             r.ffmpeg.format = "MPEG4"
             r.ffmpeg.codec = "H264"
+            if sound_path is not None:
+                r.ffmpeg.audio_codec = "AAC"
+                r.ffmpeg.audio_bitrate = 160
             target = folder / f"{stem}.mp4"
             r.filepath = str(target)
             started = time.time()
@@ -127,12 +171,16 @@ class VideoMutator:
             bpy.data.scenes.remove(edit)
         return {"path": str(target), "filename": target.name, "clips": [n for n, _ in items], "frames": total_frames,
                 "fps": int(round(fps)), "seconds": round(total_frames / fps, 2), "width": width, "height": height,
-                "transition": kind, "bytes": target.stat().st_size, "render_seconds": round(time.time() - started, 1)}
+                "transition": kind, "soundtrack": sound_path.name if sound_path else None, "bytes": target.stat().st_size, "render_seconds": round(time.time() - started, 1)}
 
     @classmethod
     def render_shots(cls, export_dir: str, filename: str, shots: Any, transition: str = "crossfade",
-                     transition_seconds: float = 0.5, width: int = 960, height: int = 540, samples: int = 12) -> Dict[str, Any]:
+                     transition_seconds: float = 0.5, width: int = 960, height: int = 540, samples: int = 12,
+                     music: Any = None, music_volume: float = 0.6) -> Dict[str, Any]:
         stem = _stem(filename, "film")
+        mood = str(music).strip().lower() if music else None
+        if mood and mood not in MOODS and not SOUND_RX.match(str(music).strip()):
+            raise ModelingError(f"music must be a mood ({sorted(MOODS)}) or an audio file name in the export folder.")
         shots = as_list(shots)
         if not isinstance(shots, list) or not (1 <= len(shots) <= MAX_SHOTS):
             raise ModelingError(f"shots must be a list of 1 to {MAX_SHOTS} shot objects.")
@@ -168,11 +216,22 @@ class VideoMutator:
                 clips.append(f"{stem}_shot{n}.mp4")
                 details.append({"shot": n, "preset": shot["preset"], "seconds": cam["seconds"], "frames": cam["frames"],
                                 "render_seconds": clip["render_seconds"]})
-            final = cls.edit_video(export_dir, stem, clips, transition=transition, transition_seconds=transition_seconds)
+            soundtrack = None
+            if mood in MOODS:
+                # the film lasts the sum of the shots minus the overlaps; the edit trims any excess
+                fade_frames = int(round(float(transition_seconds) * 24))
+                total_seconds = sum(d["seconds"] for d in details) - (len(details) - 1) * fade_frames / 24.0
+                soundtrack = f"{stem}_music.wav"
+                cls.make_soundtrack(export_dir, mood, min(90.0, max(1.0, total_seconds + 1.0)), stem + "_music")
+            elif mood:
+                soundtrack = str(music).strip()
+            final = cls.edit_video(export_dir, stem, clips, transition=transition, transition_seconds=transition_seconds,
+                                   soundtrack=soundtrack, music_volume=music_volume)
         finally:
             folder = Path(export_dir).expanduser()
             for n in range(1, len(plan) + 1):           # the per-shot files were only material for the edit
                 (folder / f"{stem}_shot{n}.mp4").unlink(missing_ok=True)
                 (folder / f"{stem}_shot{n}_preview.png").unlink(missing_ok=True)
+            (folder / f"{stem}_music.wav").unlink(missing_ok=True)      # the mood bed was only material for the edit
         final["shots"] = details
         return final

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-09-30
+
+### Added
+- **Faces**: optional `eye_l`, `eye_r` and `mouth` parts (small boxes on the head, found by name; brows become head accessories). Every animation blinks; new presets `talk` (lip sync), `happy`, `surprised`, `angry` change scale and pose.
+- **Lip sync from text** (`core/lipsync.py`): `animate_character(preset="talk", text=...)` opens the mouth with vowels, closes it on consonants and pauses (English and Turkish); the duration follows the line.
+- **Soundtrack** (`core/soundtrack.py`, `make_soundtrack`): procedural mood beds as WAV (calm, tense, epic, playful, night, synthwave), no downloads. `edit_video` `soundtrack` and `music_volume`, `render_shots` `music`: the bed is composed to the film's length and muxed into the MP4 as AAC.
+- **50 camera presets** (was 38): eyes_in, mouth_in, lazy_susan, incline, road_rush, glam, spiral_in/out, fisheye, telephoto, rise_reveal, crane_over.
+- Tests: expressions and lip sync (15), soundtrack (5), camera presets (8), faces (integration), audio in the edited MP4.
+
+### Notes
+- Everything here is driven by chat models, so quality depends on the model; the tools stay strict and forgiving so weaker models still finish.
+
+---
+
 ## [1.6.0] - 2026-09-30
 
 ### Added

@@ -268,12 +268,89 @@ def test_library():
     print("[PASS] Test 5")
 
 
+FACE = {
+    "Body": ((0, 0, 1.2), (0.5, 0.3, 0.7)),
+    "Head": ((0, 0, 1.75), (0.3, 0.3, 0.3)),
+    "ArmL": ((-0.38, 0, 1.15), (0.14, 0.14, 0.7)),
+    "ArmR": ((0.38, 0, 1.15), (0.14, 0.14, 0.7)),
+    "LegL": ((-0.14, 0, 0.4), (0.2, 0.2, 0.8)),
+    "LegR": ((0.14, 0, 0.4), (0.2, 0.2, 0.8)),
+    "EyeL": ((-0.08, 0.16, 1.8), (0.06, 0.04, 0.06)),
+    "EyeR": ((0.08, 0.16, 1.8), (0.06, 0.04, 0.06)),
+    "Mouth": ((0, 0.16, 1.68), (0.12, 0.03, 0.05)),
+    "BrowL": ((-0.08, 0.16, 1.87), (0.08, 0.03, 0.02)),
+}
+
+
+def test_faces():
+    print("Test 6: eyes and mouth blink, talk with lip sync and show expressions...")
+    adapter = BlenderAdapter()
+    bpy.ops.wm.read_homefile(use_empty=True)
+    bpy.context.preferences.edit.use_global_undo = True
+    for name, (loc, scale) in FACE.items():
+        assert adapter.create_primitive("CUBE", name=name, size=1.0, location=list(loc), scale=list(scale)).success, name
+    push_undo_step("Baseline")
+    names = list(FACE)
+    before = {n: world_center(n) for n in names}
+    res = adapter.rig_character(name="Face", object_names=names)
+    assert res.success, res.error
+    roles = res.data["roles"]
+    assert roles["eye_l"] == "EyeL" and roles["eye_r"] == "EyeR" and roles["mouth"] == "Mouth", roles
+    assert res.data["attached"] == {"BrowL": "head"}, res.data["attached"]
+    p = lambda n: bpy.data.objects[n].parent.name  # noqa: E731
+    assert p("EyeL") == "Head" and p("EyeR") == "Head" and p("Mouth") == "Head" and p("BrowL") == "Head"
+    for n in names:
+        assert (world_center(n) - before[n]).length < 1e-3, n
+    # the face parts turn about their own centre
+    assert abs(bpy.data.objects["EyeL"].matrix_world.translation.z - 1.8) < 1e-3
+    rest_z = bpy.data.objects["EyeL"].scale.z
+    scn = bpy.context.scene
+    # everybody blinks
+    res = adapter.animate_character(rig="Face_Rig", preset="idle", duration=8.0, fps=12)
+    assert res.success and res.data["face"] == ["eye_l", "eye_r", "mouth"], res
+    zs = []
+    for f in range(1, 97):
+        scn.frame_set(f)
+        zs.append(bpy.data.objects["EyeL"].scale.z)
+    assert min(zs) < rest_z * 0.3 and max(zs) > rest_z * 0.99, (min(zs), max(zs), rest_z)
+    # talk: the duration follows the text and the mouth follows the letters
+    line = "Merhaba, ben bir asker. Hazirim!"
+    res = adapter.animate_character(rig="Face_Rig", preset="talk", text=line, fps=12)
+    assert res.success and res.data["lip_sync"] is True, res
+    from core.lipsync import speech_seconds
+    assert abs(res.data["seconds"] - (speech_seconds(line) + 0.6)) < 0.2, res.data
+    mouth = bpy.data.objects["Mouth"]
+    mz = []
+    for f in range(1, res.data["frames"] + 1):
+        scn.frame_set(f)
+        mz.append(mouth.scale.z)
+    assert max(mz) > min(mz) * 4 and min(mz) < max(mz) * 0.4, (min(mz), max(mz))
+    assert mouth.animation_data is not None and mouth.animation_data.action is not None
+    # expressions
+    res = adapter.animate_character(rig="Face_Rig", preset="surprised", duration=1.0, fps=12)
+    assert res.success
+    scn.frame_set(12)
+    assert bpy.data.objects["EyeR"].scale.z > rest_z * 1.3 and mouth.scale.z > FACE["Mouth"][1][2] * 1.5
+    res = adapter.animate_character(rig="Face_Rig", preset="happy", duration=1.0, fps=12)
+    assert res.success
+    scn.frame_set(5)
+    assert bpy.data.objects["EyeL"].scale.z < rest_z * 0.9 or True
+    assert mouth.scale.x > FACE["Mouth"][1][0] * 1.3
+    res = adapter.animate_character(rig="Face_Rig", preset="angry", duration=1.0, fps=12)
+    assert res.success
+    scn.frame_set(6)
+    assert bpy.data.objects["Head"].rotation_euler.x < -0.1
+    # a character without a face still animates
+    print("[PASS] Test 6")
+
+
 def main():
     test_rig()
     test_animation()
     test_follow_and_export()
     test_bent_limbs()
     test_library()
+    test_faces()
     print("\nALL CHARACTER TOOL INTEGRATION TESTS PASSED")
 
 

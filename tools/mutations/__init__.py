@@ -19,6 +19,7 @@ from .set_origin import SetOriginTool
 from .export_gltf import ExportGltfTool
 from .add_shape_modifier import AddShapeModifierTool
 from .frame_view import FrameViewTool
+from .make_soundtrack import MakeSoundtrackTool
 from .polish_model import PolishModelTool
 from .character_library import CharacterLibraryTool
 from .set_look import SetLookTool
@@ -53,6 +54,7 @@ __all__ = [
     "ExportGltfTool",
     "AddShapeModifierTool",
     "FrameViewTool",
+    "MakeSoundtrackTool",
     "PolishModelTool",
     "CharacterLibraryTool",
     "SetLookTool",

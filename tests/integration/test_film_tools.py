@@ -184,6 +184,21 @@ def test_edit_and_shots():
         fast = adapter.edit_video(filename="fast", clips=[{"file": "a.mp4", "speed": 2.0}])
         assert fast.success and 5 <= fast.data["frames"] <= 7, fast.data
         assert Path(fade.data["path"]).read_bytes()[4:8] == b"ftyp"
+        # music: a procedural bed is made, laid under the film and muxed as AAC
+        song = adapter.make_soundtrack(mood="epic", seconds=3, filename="bed")
+        assert song.success and Path(song.data["path"]).exists() and song.data["seconds"] == 3.0, song
+        scored = adapter.edit_video(filename="scored", clips=["a.mp4", "b.mp4"], soundtrack="bed.wav", music_volume=0.5)
+        assert scored.success, scored.error
+        assert scored.data["soundtrack"] == "bed.wav" and scored.data["frames"] == 24, scored.data
+        assert b"mp4a" in Path(scored.data["path"]).read_bytes(), "no AAC audio in the MP4"
+        assert b"mp4a" not in Path(cut.data["path"]).read_bytes(), "a film without music has no audio track"
+        for bad in (dict(soundtrack="nope.wav"), dict(soundtrack="../bed.wav"), dict(soundtrack="bed.exe"),
+                    dict(soundtrack="bed.wav", music_volume=5)):
+            res = adapter.edit_video(filename="x", clips=["a.mp4"], **bad)
+            assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+        for bad in (dict(mood="polka"), dict(seconds=0), dict(seconds=500), dict(filename="a/b")):
+            res = adapter.make_soundtrack(**bad)
+            assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
         for bad in (dict(clips=[]), dict(clips=["nope.mp4"]), dict(clips=["../a.mp4"]), dict(clips=["a.mp4"], transition="spin"),
                     dict(clips=[{"file": "a.mp4", "speed": 9}]), dict(clips=["a.mp4"], filename="a/b")):
             res = adapter.edit_video(**bad)
@@ -196,6 +211,14 @@ def test_edit_and_shots():
         assert res.success, res.error
         assert res.data["frames"] == 24 - 3 and len(res.data["shots"]) == 2, res.data
         assert (Path(tmp) / "film.mp4").exists()
+        res = adapter.render_shots(filename="scoredfilm", width=160, height=90, samples=2, music="tense", shots=[
+            {"preset": "dolly_in", "duration": 1.0, "fps": 12}, {"preset": "orbit", "duration": 1.0, "fps": 12}],
+            transition="cut")
+        assert res.success, res.error
+        assert res.data["soundtrack"] == "scoredfilm_music.wav" and b"mp4a" in Path(res.data["path"]).read_bytes()
+        assert not (Path(tmp) / "scoredfilm_music.wav").exists(), "the generated bed is removed after the edit"
+        bad = adapter.render_shots(filename="x", music="polka", shots=[{"preset": "orbit"}])
+        assert not bad.success and bad.error.type == "INVALID_ARGUMENT", bad
         assert not list(Path(tmp).glob("film_shot*")), "per-shot files must be removed"
         for bad in (dict(shots=[]), dict(shots=[{"preset": "warp"}]), dict(shots=[{"preset": "orbit", "wat": 1}]),
                     dict(shots=[{"preset": "orbit", "environment": "moon"}]), dict(shots=[{"preset": "orbit", "duration": 99}])):

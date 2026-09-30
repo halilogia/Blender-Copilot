@@ -29,7 +29,7 @@ Every step is an allow-listed tool: no code runs, the camera moves are keyframed
 | Documentary, alive | `handheld` (small shake) |
 | Locked frame | `static` |
 
-More presets (38 in all):
+More presets (50 in all):
 
 | Want | Preset |
 |---|---|
@@ -45,6 +45,14 @@ More presets (38 in all):
 | Camera stuck to the character's chest looking at the face | `snorricam` (follows automatically) |
 | Villain or hero looming | `hero_cam` (low angle, slow push-in) |
 | A full circle | `orbit_360` |
+| Face close-up | `eyes_in`, `mouth_in` (push in on the head of a standing character) |
+| Product turntable at close range | `lazy_susan` |
+| Diagonal reveal | `incline`, `rise_reveal` |
+| Orbit while closing in or opening out | `spiral_in`, `spiral_out` |
+| Speed and low chase feel | `road_rush` |
+| Flattering low arc | `glam` |
+| Lens looks | `fisheye` (10 mm), `telephoto` (long lens, compressed depth) |
+| Over the head and down the other side | `crane_over` |
 
 Move length: 2-3 s for whip_pan, crash_zoom_in, dolly_zoom; 4-6 s for dolly, arc, crane; 6-10 s for a full orbit. Slow moves read as expensive.
 
@@ -57,6 +65,10 @@ Move length: 2-3 s for whip_pan, crash_zoom_in, dolly_zoom; 4-6 s for dolly, arc
 ## Several shots, one film
 
 Either call `render_shots` with a shot list (each shot: `preset`, `duration`, optional `environment`, `look`, `object_names`, `azimuth`, `follow` ...; crossfades between them), or render clips one by one with `render_animation` and join them with `edit_video` (`clips` such as `["a.mp4", {"file": "b.mp4", "speed": 0.5}]`, `transition` cut, crossfade or wipe; speed 0.5 is slow motion, 2 is fast forward). A trailer rhythm: an establishing wide shot (aerial_pullback or dolly_in, 4 s), a mid shot with movement (arc or dolly_left, 3 s), a close hero shot (hero_cam or crash_zoom_in, 2 s), crossfade 0.5 s.
+
+## Music
+
+`render_shots` takes `music`: a mood (`calm`, `tense`, `epic`, `playful`, `night`, `synthwave`) is composed to the film's length and mixed in as AAC. For clips you edit yourself: `make_soundtrack` (mood, seconds) then `edit_video` with `soundtrack` (and `music_volume`). Match the mood to the picture: `epic` with a hero shot, `tense` with night and dutch angles, `calm` with golden hour, `playful` with bright cartoon props, `synthwave` with neon.
 
 ## Rules that save time
 

@@ -19,6 +19,8 @@ class RenderShotsTool(BaseTool):
             "shots": {"type": "array", "items": {"type": "object", "description": "One shot: preset, duration, object_names, environment, look, azimuth, elevation, distance, focal_length, follow, intensity, angle, fps."}, "description": "1 to 8 shots, in order."},
             "transition": {"type": "string", "enum": ["cut", "crossfade", "wipe"], "description": "Transition between shots (default crossfade)."},
             "transition_seconds": {"type": "number", "description": "Length of each transition (default 0.5)."},
+            "music": {"type": "string", "description": "Add music: a mood (calm, tense, epic, playful, night, synthwave) composed to the film's length, or an audio file name in the export folder."},
+            "music_volume": {"type": "number", "description": "Music volume 0.05-1 (default 0.6)."},
             "width": {"type": "integer", "description": "Pixels, 64-1920 (default 960)."},
             "height": {"type": "integer", "description": "Pixels, 64-1080 (default 540)."},
             "samples": {"type": "integer", "description": "EEVEE samples (default 12)."},

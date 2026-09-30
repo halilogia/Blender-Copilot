@@ -18,12 +18,15 @@ from mathutils import Euler, Matrix, Vector
 from adapter.mutators.modeling_mutator import ModelingError, as_list, _unique_mesh
 from adapter.mutators.undo_manager import push_undo_step
 from core.camera_paths import frame_count
-from core.motion_paths import PRESETS, ROLES, motion_samples
+from core.lipsync import speech_seconds
+from core.motion_paths import FACE_ROLES, PRESETS, ROLES, motion_samples
 
 RIG_SUFFIX = "_Rig"
 KEYWORDS = {                       # order matters: "forearm" contains "arm", so lower limbs are tested first
     "forearm": ("forearm", "lowerarm", "lower_arm", "elbow"),
     "shin": ("shin", "calf", "lowerleg", "lower_leg", "knee"),
+    "eye": ("eye", "pupil"),
+    "mouth": ("mouth", "lips", "jaw", "teeth"),
     "head": ("head", "skull", "face"),
     "torso": ("torso", "chest", "spine", "body", "trunk"),
     "arm": ("arm", "shoulder"),
@@ -73,9 +76,11 @@ def _detect_roles(objs: Sequence["bpy.types.Object"]) -> Dict[str, "bpy.types.Ob
         low = obj.name.lower()
         lo, hi = los_his[obj.name]
         cx = (lo.x + hi.x) / 2
+        if "brow" in low:                    # eyebrows follow the head like any accessory
+            continue
         for kind, words in KEYWORDS.items():
             if any(w in low for w in words):
-                role = kind if kind in ("head", "torso") else f"{kind}_{_side(obj.name, cx, mid_x)}"
+                role = kind if kind in ("head", "torso", "mouth") else f"{kind}_{_side(obj.name, cx, mid_x)}"
                 # a taller/larger piece wins when two objects claim one role
                 if role not in roles or (hi - lo).length > (_world_bounds(roles[role])[1] - _world_bounds(roles[role])[0]).length:
                     roles[role] = obj
@@ -162,9 +167,12 @@ class CharacterMutator:
         for role, obj in roles.items():
             blo, bhi = _world_bounds(obj)
             cx, cy = (blo.x + bhi.x) / 2, (blo.y + bhi.y) / 2
-            pivots[role] = Vector((cx, cy, blo.z if role in ("head", "torso") else bhi.z))
+            if role in FACE_ROLES:                # eyes and mouth change scale about their own centre
+                pivots[role] = Vector((cx, cy, (blo.z + bhi.z) / 2))
+            else:
+                pivots[role] = Vector((cx, cy, blo.z if role in ("head", "torso") else bhi.z))
         # extras follow the role part whose centre is closest
-        centres = {r: (sum(_world_bounds(o), Vector()) / 2) for r, o in roles.items()}
+        centres = {r: (sum(_world_bounds(o), Vector()) / 2) for r, o in roles.items() if r not in FACE_ROLES}
         attach: Dict[str, str] = {}
         for extra in extras:
             ec = sum(_world_bounds(extra), Vector()) / 2
@@ -194,6 +202,9 @@ class CharacterMutator:
             if lower in roles:
                 parent = roles.get(upper) or (roles[fallback] if fallback else rig)
                 _parent_keep(roles[lower], parent)
+        for role in FACE_ROLES:                  # eyes and mouth ride on the head
+            if role in roles:
+                _parent_keep(roles[role], roles.get("head") or roles["torso"])
         # extras attached to a part that has since been parented keep their world position (parent inverse was taken
         # before, so refresh it now that the parent's own matrix is final)
         bpy.context.view_layer.update()
@@ -202,6 +213,7 @@ class CharacterMutator:
             _parent_keep(extra, roles[attach[extra.name]])
             extra.matrix_world = keep
         rig["character_roles"] = json.dumps({r: o.name for r, o in roles.items()})
+        rig["rest_scales"] = json.dumps({r: list(o.scale) for r, o in roles.items()})
         rig["character_height"] = height
         rig["rest_location"] = list(rig.location)
         push_undo_step(f"AI: Rig character {name}")
@@ -210,14 +222,17 @@ class CharacterMutator:
                 "presets": sorted(PRESETS)}
 
     @classmethod
-    def animate_character(cls, rig: str, preset: str, duration: float = 3.0, fps: int = 24, distance: Any = None,
-                          intensity: float = 1.0, heading: float = 0.0) -> Dict[str, Any]:
+    def animate_character(cls, rig: str, preset: str, duration: Any = None, fps: int = 24, distance: Any = None,
+                          intensity: float = 1.0, heading: float = 0.0, text: Any = None) -> Dict[str, Any]:
         key = str(preset or "").strip().lower()
         if key not in PRESETS:
             raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
         rig_obj = bpy.data.objects.get(str(rig or "").strip())
         if rig_obj is None or "character_roles" not in rig_obj:
             raise ModelingError(f"'{rig}' is not a rig made by rig_character.")
+        speaking = bool(text) and key == "talk"
+        if duration is None:                       # a spoken line lasts as long as it takes to say it
+            duration = min(60.0, speech_seconds(str(text)) + 0.6) if speaking else 3.0
         try:
             seconds, rate, yaw = float(duration), int(fps), math.radians(float(heading))
         except (TypeError, ValueError):
@@ -230,9 +245,14 @@ class CharacterMutator:
         roles = {r: o for r, o in roles.items() if o is not None}
         height = float(rig_obj.get("character_height", 1.8))
         frames = frame_count(seconds, rate)
-        samples = motion_samples(key, frames, rate, height, float(intensity), float(distance) if distance is not None else None)
+        samples = motion_samples(key, frames, rate, height, float(intensity), float(distance) if distance is not None else None,
+                                 text=str(text) if speaking else None)
 
         _clear_animation(list(roles.values()) + [rig_obj])
+        rest_scales = json.loads(rig_obj.get("rest_scales", "{}"))
+        for role, obj in roles.items():
+            if role in rest_scales:
+                obj.scale = tuple(rest_scales[role])
         start = Vector(rig_obj.get("rest_location", list(rig_obj.location)))
         cos_y, sin_y = math.cos(yaw), math.sin(yaw)
         rig_obj.rotation_euler = (0.0, 0.0, yaw)
@@ -245,6 +265,11 @@ class CharacterMutator:
             for role, obj in roles.items():
                 obj.rotation_euler = Euler(sample["rot"][role], "XYZ")
                 obj.keyframe_insert("rotation_euler", frame=frame)
+            for role in FACE_ROLES:
+                if role in roles:
+                    base = rest_scales.get(role, [1.0, 1.0, 1.0])
+                    roles[role].scale = tuple(b * m for b, m in zip(base, sample["scale"][role]))
+                    roles[role].keyframe_insert("scale", frame=frame)
         scn = bpy.context.scene
         scn.render.fps = rate
         scn.frame_start, scn.frame_end = 1, frames
@@ -253,7 +278,8 @@ class CharacterMutator:
         push_undo_step(f"AI: Animate {rig_obj.name} {key}")
         return {"rig": rig_obj.name, "preset": key, "about": PRESETS[key], "frames": frames, "fps": rate,
                 "seconds": round(frames / rate, 2), "frame_range": [1, frames], "animated_parts": sorted(roles),
-                "travel_m": round(math.hypot(last[0], last[1]), 3), "heading": float(heading)}
+                "travel_m": round(math.hypot(last[0], last[1]), 3), "heading": float(heading),
+                "face": [r for r in FACE_ROLES if r in roles], "lip_sync": speaking}
 
     # ------------------------------------------------------------------ library
     LIBRARY_DIR = "characters"

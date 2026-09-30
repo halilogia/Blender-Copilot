@@ -22,7 +22,17 @@ Steps 1 to 4 of the proposed order are built: `render_image`, `render_animation`
 - **Polish** (v1.6): `polish_model` bevels hard corners and shades smooth with sharp edges kept, the cheapest way to lift the look of blocky models.
 - Weak and free models needed help: lists wrapped as `{"item": [...]}`, numbers as strings and batches of tool calls with an approval in the middle are now handled by the add-on instead of failing.
 
-Still missing compared with Higgsfield: facial expressions and lip sync, text or image to 3D (needs an external generator service, which the project has deliberately not chosen), audio, a shot list UI, and above all the model quality of blocky low-poly assets. Realistic (diffusion) video is out of scope: this is controllable 3D animation.
+### v1.7: faces, music, 50 camera moves
+
+- **Faces**: `eye_l`, `eye_r`, `mouth` parts blink in every animation; `talk` lip-syncs a line of text (vowels open the mouth, consonants and pauses close it, no audio needed); `happy`, `surprised`, `angry` change eyes, mouth and posture.
+- **Music**: `make_soundtrack` composes six moods procedurally; `render_shots` with `music` mixes one, composed to the film's length, into the MP4 (AAC).
+- **Camera**: 50 presets, the same order of magnitude as Higgsfield's list.
+
+### An honest note on quality
+
+Higgsfield runs models trained to generate video and 3D; here chat models (ChatGPT, Claude, Gemini, free models) direct a deterministic toolset. That means the tools can be exact (camera paths, light, edit, sound, rigs) while the look of what a model *builds* depends on that model: blocky low-poly shapes, proportions that need a second look, sometimes a wrong light preset. The project answers this with strict but forgiving tools (lists wrapped by weak models, batches with approvals, string numbers all work), recipes in the skills, and ways for the model to check its own work (`render_contact_sheet`, `render_image` returns the picture). A trained text-to-3D model can sit next to this later: generate a `.glb` with an external tool, bring it in with `import_asset`, then rig, light, film and score it with the tools above.
+
+Still missing compared with Higgsfield: text or image to 3D inside the add-on (needs an external generator service, which the project has deliberately not chosen), a shot list UI, realistic materials and hair, and above all the model quality of blocky low-poly assets. Realistic (diffusion) video is out of scope: this is controllable 3D animation.
 
 ## What Higgsfield is (from its own pages)
 
