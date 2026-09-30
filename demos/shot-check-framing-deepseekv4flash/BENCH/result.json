@@ -1,0 +1,21 @@
+{
+  "name": "shot-check-framing-deepseekv4flash",
+  "date": "20260930-163005",
+  "seconds": 287.4,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 24,
+  "tool_errors": 3,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Done. Here's what happened:\n\n**Models**\n- Deleted the default `Cube`.\n- `create_prop` → `tree_pine` at (0, 0, 0), 4 m tall (660 tris).\n- `create_prop` → `house` at (3, 0, 0), ~2.9 m (668 tris). The two stand side by side, both facing +Y.\n\n**Light & shot**\n- `set_environment` → `golden_hour` (warm low sun, `AI_Sun` + `AI_Ground`).\n- `camera_move` → `dolly_in`, **distance = 2 deliberately too close**, 4 s (96 frames @ 24 fps).\n\n**check_shot loop (the point of the exercise)**\n1. distance 2 → `ok: false`: `SUBJECT_CUT` (cut on all four sides) and `CAMERA_INSIDE_SUBJECT` (camera inside/right next to the subject; only 3.58 m subject radius vs 2 m distance).\n2. Raised distance to 9 → inside-subject fixed, but still `SUBJECT_CUT` at the bottom on frames 48/96 (a dolly keeps closing in, so the end frame is the tightest).\n3. Raised to 14 → only frame 96 clipped at the bottom.\n4. Applied the suggested fix again (distance +~30 %) plus a lower elevation: **distance 14 → 18, elevation 15° → 10°** → `check_shot` returned **`ok: true`**, subject fully in frame at frames 1/48/96 and brightness healthy (mean ≈ 0.64–0.69, not black, not blown out).\n\n**Verify & render**\n- `render_image` on frame 48 to confirm light and framing visually (warm golden-hour light, house and tree both fully visible).\n- `render_animation` → **`shot-check-framing-deepseekv4flash.mp4`** (960×540, 96 frames, 4 s @ 24 fps) in the export folder.\n\nNote: `render_animation` doesn't accept a `duration` argument — the 4 s length comes from the frame range that `camera_move` set (96 frames at 24 fps).",
+  "video_bytes": 144929,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

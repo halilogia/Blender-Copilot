@@ -31,6 +31,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-campfire-handheld-claudesonnet46](shot-campfire-handheld-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek. | 3.4 dk | 34 | - | 4.0 sn video | 20260930 |
 | [shot-castle-orbit-claudesonnet46](shot-castle-orbit-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 3.7 dk | 56 | - | 5.0 sn video | 20260930 |
 | [shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 2.4 dk | 29 | - | 5.0 sn video | 20260930 |
+| [shot-check-framing-deepseekv4flash](shot-check-framing-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | create_prop ile bir tree_pine ve bir house yan yana kur (house x=3). camera_move ile dolly_in çek ama distance'ı bilerek 2 ver. Sonra check_shot çağır, çıkan sorunları söylediği araç değişikliğiyle düzelt, check_shot ok olana kadar tekrarla. En sonunda render_animation ile 4 sn'lik film çek. | 4.8 dk | 24 | - | 4.0 sn video | 20260930 |
 | [shot-film-village-spacebunnyalpha](shot-film-village-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Küçük bir köy sahnesi modelle: bir köy evi (duvar, çatı, kapı, pencere, baca) ve yanında iki çam ağacı. Sonra render_shots ile üç planlık kısa bir film çek: 1) gün batımı ışığında aerial_pullback (4 sn), 2) gün batımı ışığında dolly_left (3 sn) ve cinematic look, 3) gece ışığında hero_cam (3 sn). Planlar arası crossfade olsun. | 15.3 dk | 82 | - | 8.83 sn video | 20260930 |
 | [shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek. | 2.4 dk | 21 | - | 8.0 sn video | 20260930 |
 | [shot-knight-run-geminiproagent](shot-knight-run-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 1.6 dk | 23 | - | 4.0 sn video | 20260930 |
@@ -162,6 +163,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-castle-orbit-geminiproagent** ([video](shot-castle-orbit-geminiproagent/shot-castle-orbit-geminiproagent.mp4))
 
 ![shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/sheet.png)
+
+**shot-check-framing-deepseekv4flash** ([video](shot-check-framing-deepseekv4flash/shot-check-framing-deepseekv4flash.mp4))
+
+![shot-check-framing-deepseekv4flash](shot-check-framing-deepseekv4flash/sheet.png)
 
 **shot-film-village-spacebunnyalpha** ([video](shot-film-village-spacebunnyalpha/shot-film-village-spacebunnyalpha.mp4))
 

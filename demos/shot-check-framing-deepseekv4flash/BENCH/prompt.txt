@@ -1,0 +1,1 @@
+create_prop ile bir tree_pine ve bir house yan yana kur (house x=3). camera_move ile dolly_in çek ama distance'ı bilerek 2 ver. Sonra check_shot çağır, çıkan sorunları söylediği araç değişikliğiyle düzelt, check_shot ok olana kadar tekrarla. En sonunda render_animation ile 4 sn'lik film çek.
