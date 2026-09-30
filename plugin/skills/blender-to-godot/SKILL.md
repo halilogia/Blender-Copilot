@@ -20,6 +20,8 @@ Both tool sets are MCP servers in the same Claude Code session: `blender` (Blend
 ## Gotchas
 
 - A prop exported at its Blender scene position appears that far from its collision body: keep `recenter` on.
-- Materials come through as StandardMaterial3D with the base colour, roughness and metallic you set; do not expect textures.
+- Materials come through as StandardMaterial3D with the base colour, roughness and metallic you set. A procedural preset (wood, brick ...) is shader nodes that glTF cannot carry: `bake_material` the joined object first and the `.glb` carries a real texture.
+- Before exporting run `check_model` (normals, scale, ground, triangle budget) and `task_report` (nothing left over). Landscapes: `create_terrain` and `scatter` export as a mesh plus cheap instances.
+- The Godot AI Sidebar can call this add-on itself (Settings > Blender): its agent runs `blender_call`, the `.glb` is copied to `res://assets/blender/` and its path comes back as `godot_path`.
 - Skinned or animated rigs are out of scope for these tools: use several static meshes and animate them in Godot (sway, bob, rotate).
 - Keep viewmodel weapons small: about 0.7 m rifle, scaled down a further ~0.6 when parented to the camera; check the screenshot (the weapon should cover roughly a quarter of the screen height).

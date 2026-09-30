@@ -4,11 +4,15 @@ Blender Copilot can be driven by external agents (Claude Code, Codex, any MCP cl
 
 ## What you get
 
-- **An MCP bridge** inside Blender (or a headless Blender): the same tools the in-Blender agent uses, exposed over MCP with the same safety rules.
-- **Modeling tools** that go beyond primitives, all allow-listed and undoable: `create_mesh`, `mesh_edit`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier`, `frame_view`, `export_gltf`.
-- **Cinematic tools** to direct a film from chat: `set_environment` (9 lights), `camera_move` (50 moves), `camera_settings`, `set_look`, `render_image`, `render_contact_sheet`, `check_shot` (framing and brightness as numbers), `render_animation` (MP4), `edit_video`, `render_shots`.
-- **Character tools**: `rig_character`, `animate_character` (idle, walk, run, aim, wave, jump), camera `follow`, animated glb export.
+- **An MCP bridge** inside Blender (or a headless Blender): the same tools the in-Blender agent uses (51 over MCP), exposed with the same safety rules.
+- **Ready-made and modeling tools**, all allow-listed and undoable: `create_prop` (18 props in one call), `create_primitive`, `create_mesh`, `mesh_edit` (extrude, inset, bevel, loop cut, knife plane, bridge, dissolve, separate, apply modifiers ...), `polish_model`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier`, `frame_view`, `export_gltf`.
+- **Look tools**: `set_material` (colour or procedural preset), `unwrap_uv`, `bake_material` (so a `.glb` keeps a procedural look), `set_shading`.
+- **World tools**: `create_terrain`, `scatter`.
+- **Numbers instead of eyes**: `check_model`, `check_shot`, `task_report` (what the task changed), and `task_rollback` (undo the whole task, verified; needs the gated-tools setting over MCP).
+- **Cinematic tools** to direct a film from chat: `set_environment` (9 lights), `camera_move` (50 moves), `camera_settings`, `set_look`, `render_image`, `render_contact_sheet`, `render_animation` (MP4), `edit_video`, `render_shots`, `make_soundtrack`.
+- **Character tools**: `rig_character`, `animate_character`, `animate_sequence`, `character_library`, camera `follow`, animated glb export.
 - **A Claude Code plugin** with four skills (`blender-game-assets`, `blender-to-godot`, `blender-cinematic-shot`, `blender-character-animation`) and `/blender-connect`.
+- Which model drives it best: [MODELS.md](MODELS.md).
 
 ## Security model
 

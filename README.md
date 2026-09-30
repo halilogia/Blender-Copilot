@@ -13,31 +13,40 @@
 
 **Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
 
-> v1.1.0 completes Vision (Anthropic native + `max_side` capture guard + stdlib local embedding) and adds check-only auto-update plus a local asset browser (`import_asset`). Verified with 682 passing pure-Python unit tests.
+## What's new (details in [CHANGELOG.md](CHANGELOG.md))
 
-> v1.2.0 adds a local MCP bridge (Claude Code and other MCP clients drive the same tools), nine modeling, view and export tools, a Claude Code plugin and a library of demo props modeled by agents.
+- **v1.18** task ledger: `task_report` says by meaning what an AI task changed (objects, materials, moves), `task_rollback` undoes the whole task and verifies it, and the N-panel has **What changed?** and **Undo AI task**.
+- **v1.17** world pack: `create_terrain` (hills, a flat spot for buildings) and `scatter` (many linked copies over an area, along a path, onto the terrain, out of avoided objects).
+- **v1.16** deeper `mesh_edit`: loop cut, knife plane, bridge two faces, delete / flip faces, dissolve, separate, apply modifiers; face selectors by material, area and nearness.
+- **v1.15** textures pack: `unwrap_uv` and `bake_material` (procedural materials painted into an image, so a `.glb` carries the look).
+- **v1.14** `check_model`: a model is measured, not looked at (normals, doubled vertices, scale, ground, triangle budget), with the tool that fixes each finding.
+- **v1.13** `set_material` presets (wood, stone, brick, metal, gold, grass, water, sand, concrete, marble).
+- **v1.12** `check_shot` (framing and brightness as numbers) and a fix for colour grades that were never applied in Blender 5.2.
+- **v1.11** `create_prop`: 18 ready-made props (crate ... rig-ready person and robot) in one call; broken tool JSON from weak models is repaired.
+- **v1.10** tool packs: film, character, texture and world tools load only when the request needs them (a plain modeling request sends about 5,800 tokens of tool descriptions instead of 11,000).
+- **v1.3 to v1.9** film and characters: environments, 50 camera moves, colour looks, `render_shots`, `edit_video`, procedural music, rigged characters with faces, lip sync and scenes.
+- **v1.2** local MCP bridge for Claude Code and other MCP clients, modeling tools, `export_gltf`, Claude Code plugin.
+- **v1.0 to v1.1** grounding, safe mutations with undo, approval gate, vision, asset import, check-only updates.
 
-> v1.3.0 adds cinematic tools so a chat model can direct a shot: `set_environment` (studio, golden hour, overcast, night, neon), `camera_move` (16 keyframed presets: dolly, orbit, arc, crane, pan, tilt, whip pan, dolly zoom, crash zoom, handheld), `render_image` and `render_animation` (MP4). See [docs/HIGGSFIELD.md](docs/HIGGSFIELD.md).
+Which chat model drives it best: [docs/MODELS.md](docs/MODELS.md). Verified with 835 pure-Python unit tests and 38 headless Blender suites; every feature since v1.4 was run end to end by a free chat model (demos in [demos/](demos/README.md)).
 
-> v1.4.0 makes characters move: model a character from separate parts, `rig_character` (no armature), `animate_character` (idle, walk, run, aim, wave, jump), `camera_move` with `follow`, and `export_gltf` with `animations` for a game.
-
-> v1.5.0 turns shots into films: 38 camera moves, 9 lights (with a physical sky), `set_look` colour grades and glow, `camera_settings` (depth of field, rack focus, motion blur), `render_contact_sheet`, `edit_video` (crossfades, slow motion) and `render_shots` (a shot list to one MP4 in one call).
-
-> v1.6.0 finishes the character side: bending elbows and knees (`forearm_*`, `shin_*` parts), `character_library` (save a rigged character and load it in any later scene) and `polish_model` (bevels and smooth shading for blocky models). Free chat models (DeepSeek V4 Flash, Space Bunny) drive all of it through 9router.
-
-> v1.7.0 gives characters a face and films a soundtrack: eyes that blink, `talk` with lip sync from a line of text, `happy`, `surprised` and `angry` expressions, 50 camera presets, and procedural music (`make_soundtrack`, or `music` on `render_shots`) mixed into the MP4. Quality note: everything is driven by chat models, so results depend on the model; the tools, recipes and checks (contact sheets, renders the model can look at) are what keep weaker models on track.
-
-> v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof.
-
-> v1.10.0 makes small and free models cheaper to run: tool packs. The in-Blender agent now sends the film and character tools only when the request needs them (a plain modeling request: about 5,800 tokens of tool descriptions instead of 11,000).
-
-> v1.18.0 gives chat models ready-made building blocks: `create_prop` builds a proportioned, coloured, polished crate, barrel, tree, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, or a rig-ready person or robot, in ONE call (no AI, just geometry). A free model built a village with a rigged walking person and filmed it in 18 tool calls instead of 60 to 120. Weak models' broken tool JSON (truncated, Python-style `True`) is now repaired. Verified with 835 passing pure-Python unit tests and 38 headless Blender suites.
+The Godot side: [Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar) can use this add-on from its own settings (Settings > Blender) to get 3D models as `.glb` files.
 
 ---
 
 ## English
 
 ## Key Features
+
+- **What a chat model can do with it (53 tools, loaded by need):**
+  - **Model**: `create_prop` (18 ready-made props), `create_primitive`, `create_mesh`, `mesh_edit` (extrude, inset, bevel, loop cut, knife plane, bridge, dissolve, separate, apply modifiers ...), `add_modifier`, `add_shape_modifier`, `polish_model`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`.
+  - **Look**: `set_material` (colour, or a procedural preset), `unwrap_uv`, `bake_material`, `set_shading`, `set_environment`, `set_look`.
+  - **Check (numbers instead of eyes)**: `check_model`, `check_shot`, `task_report`, `frame_view`, `capture_viewport`, `visual_verify`; `task_rollback` takes a whole AI task back.
+  - **World**: `create_terrain`, `scatter`.
+  - **Characters**: `rig_character`, `animate_character`, `animate_sequence`, `character_library`.
+  - **Film**: `camera_move` (50 moves), `camera_settings`, `render_image`, `render_contact_sheet`, `render_animation`, `render_shots`, `edit_video`, `make_soundtrack`.
+  - **Game engines**: `export_gltf` (with animations), and the Claude Code plugin skills that hand the file to Godot.
+- **Task ledger**: before the first tool of an AI task the scene is snapshotted by meaning; `task_report` compares, `task_rollback` undoes exactly the task's undo steps and verifies the result, and the N-panel shows **What changed?** and **Undo AI task** after a task that changed something.
 
 - **Strict Non-Destructive Grounding**:
   - `inspect_scene`: Detailed breakdown of scene hierarchy, active camera, render settings, and object counts.
@@ -160,73 +169,32 @@ Details, security model and tool list: [docs/MCP.md](docs/MCP.md).
 ## Project Structure
 
 ```text
-Blender AI Sidebar/
-├── adapter/                      # Thread-safe Blender API bridge
-│   ├── base.py                   # Abstract adapter interface
-│   └── blender_adapter.py        # Main-thread-enforced bpy datablock access & undo push
-├── agent/                        # Core agent coordinator & provider logic
-│   ├── context_builder.py        # ProviderRequestContext assembler & guards
-│   ├── dispatcher.py             # Tool validation & invocation dispatcher
-│   ├── event_router.py           # Stateless event classification boundary
-│   ├── history.py                # Runtime history tracking
-│   ├── http_client.py            # Pure Python streaming HTTP client
-│   ├── mock_provider.py          # Deterministic offline mock provider
-│   ├── models.py                 # ChatMessage, Conversation, ToolCall models
-│   ├── openai_provider.py        # OpenAI-compatible streaming LLM adapter
-│   ├── policy.py                 # ApprovalPolicy, PendingApproval, RiskLevel gating
-│   ├── provider.py               # Abstract provider interface
-│   ├── prompt_queue.py           # FIFO prompts submitted during an active turn
-│   ├── runtime.py                # Main-thread state coordinator & approval handlers
-│   ├── runtime_snapshot.py       # Consistent UI-neutral runtime projection
-│   ├── sse_parser.py             # Deterministic byte-level SSE parser
-│   ├── state_machine.py          # State transitions (IDLE/PROCESSING/TOOL/APPROVAL/ERROR)
-│   ├── tool_call_accumulator.py  # Streaming tool-call reassembly
-│   ├── tool_mapper.py            # Internal-to-OpenAI function schema mapper
-│   └── worker.py                 # Background generation worker thread
-├── brain/                        # Design documents & technical plans
-│   ├── knowledge.md              # Engineering invariants & architecture guide
-│   └── plans/                    # Milestone implementation plans
-├── core/                         # Shared pure Python core domain models
-│   ├── config.py                 # Configuration loader, ENV overrides & validation
-│   ├── event_queue.py            # Thread-safe bounded event queue
-│   ├── events.py                 # Canonical boundary events & metrics
-│   └── types.py                  # ToolResult, ToolError, RiskLevel
-├── tools/                        # Grounding and mutation tool implementations
-│   ├── base.py                   # Abstract BaseTool definition
-│   ├── registry.py               # In-memory tool registry
-│   ├── read_only/                # Non-destructive grounding tools
-│   │   ├── inspect_material.py   # Shader parameters & slot mappings
-│   │   ├── inspect_mesh.py       # Topology, UVs, world bounding box
-│   │   ├── inspect_object.py     # Transform, modifiers, hierarchy
-│   │   ├── inspect_scene.py      # Scene summary, render settings, counts
-│   │   └── inspect_selection.py  # Selected objects & active context
-│   └── mutation/                 # Safe mutation tools with undo
-│       ├── create_primitive.py   # CUBE, SPHERE, PLANE generation via Data API
-│       ├── delete_object.py      # Targeted object unlinking and deletion (MEDIUM Risk)
-│       └── transform_object.py   # Translation, rotation, and scaling (LOW Risk)
-├── ui/                           # Blender native UI & timer integration
-│   ├── gpu_overlay/              # Native 3D Viewport GPU HUD (Alt+Space)
-│   │   ├── header.py             # Header bar widget
-│   │   ├── keymap.py             # Viewport modal hotkey registration
-│   │   ├── modal.py              # Modal operator for mouse/keyboard events
-│   │   ├── renderer.py           # Blender GPU shader drawing routines
-│   │   └── state.py              # HUD state machine, text buffer, and approvals
-│   ├── operators.py              # Send, Clear, Cancel, Approve, Reject operators
-│   ├── panel.py                  # 3D Viewport N-Panel sidebar interface
-│   ├── preferences.py            # Addon Preferences & config persistence
-│   ├── text_formatting.py        # Presentation-only assistant text cleanup
-│   ├── properties.py             # WindowManager RNA property definitions
-│   ├── timer_bridge.py           # bpy.app.timers consumer & UI sync
-│   └── uilist.py                 # Custom UIList history display
-├── tests/                        # Comprehensive test harnesses
-│   ├── integration/              # Headless Blender 5.2 LTS integration suites (25)
-│   ├── manual/                   # Live endpoint verification scripts (9Router)
-│   ├── unit/                     # Pure Python unit test suites (835 tests)
-│   ├── run_all_blender_tests.py  # Master headless test runner (25 suites)
-│   └── run_unit_tests.py         # Pure Python test runner
+Blender Copilot/
+├── adapter/                      # Main-thread Blender access
+│   ├── blender_adapter.py        # One method per tool, thread-checked, wraps the mutators
+│   ├── mutators/                 # bpy / bmesh code: modeling, props, materials, textures, world, cinema, looks, characters, video, QA, undo
+│   ├── readers/                  # Read-only scene, object, mesh, material, viewport readers and the scene snapshot
+│   └── task_ledger.py            # One AI task = report + verified rollback
+├── agent/                        # The add-on's own agent: providers, runtime, dispatcher, approval policy, verifier, memory
+├── bridge/                       # Local MCP server (HTTP, token, protocol, tool host, headless control)
+├── core/                         # Pure Python (no bpy): types, config, tool packs, and the logic behind the tools
+│   ├── camera_paths.py  lipsync.py  soundtrack.py  motion_paths.py   # film and characters
+│   ├── prop_kinds.py  material_presets.py  scatter_points.py         # props, materials, terrain and scatter
+│   └── shot_qa.py  model_qa.py  scene_diff.py                        # numbers instead of eyes
+├── tools/                        # Tool definitions (schema, risk level) and the registry
+│   ├── mutations/                # Tools that change the scene or write files
+│   └── read_only/                # Inspect, capture, task_report, enable_tools
+├── ui/                           # N-panel, viewport HUD, operators, preferences, MCP panel
+├── plugin/                       # Claude Code plugin: skills and /blender-connect
+├── scripts/                      # Benchmarks and reports: demo_bench_mcp.py, model_report.py, demo_promote.py ...
+├── demos/                        # Models and films made by chat models, with chats and triangle counts
+├── docs/                         # MCP.md, MODELS.md, HIGGSFIELD.md, KNOWLEDGE.md
+├── tests/
+│   ├── unit/                     # Pure Python suites (835 tests)
+│   ├── integration/              # Headless Blender 5.2 suites (38)
+│   └── run_all_blender_tests.py  # Runs every headless suite
 ├── blender_manifest.toml         # Blender 5.2 Extension manifest
-├── LICENSE                       # GNU General Public License v3.0
-└── __init__.py                   # Addon lifecycle (register / unregister)
+└── __init__.py                   # Add-on lifecycle and tool registration
 ```
 
 ---
@@ -285,7 +253,7 @@ python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_hard
 ```
 
 ### 2. Headless Blender Integration Tests
-Runs all 25 headless integration test suites inside Blender's actual Python runtime:
+Runs all 38 headless integration test suites inside Blender's actual Python runtime:
 ```bash
 python tests/run_all_blender_tests.py
 ```
@@ -322,6 +290,12 @@ nesne oluşturmak, dönüştürmek, silmek, materyal düzenlemek ve çok adıml�
 işlemleri güvenli biçimde yürütmek için yapılandırılmış araçlar kullanır.
 
 ### Öne çıkan özellikler
+
+- **Bir sohbet modeli neler yapabilir (53 araç, ihtiyaca göre yüklenir):** hazır prop'lar (`create_prop`, 18 tür), modelleme ve mesh düzenleme (loop cut, bıçak, köprü, dissolve ...), malzeme presetleri, UV ve doku pişirme (`.glb` dokuyu taşır), arazi ve toplu dağıtma (`create_terrain`, `scatter`), karakter rig ve animasyonu, film (kamera hareketleri, ışık, renk, müzik, kurgu), glTF dışa aktarma.
+- **Göz yerine sayı:** `check_model` (normaller, çift vertex, ölçek, zemine gömülme, üçgen bütçesi), `check_shot` (kadraj ve parlaklık), `task_report` (görevin sahnede neyi değiştirdiği).
+- **Görev defteri:** yapay zekânın bir görevi tek parça olarak geri alınır (`task_rollback`, panelde "Undo AI task") ve sahnenin gerçekten eski haline döndüğü doğrulanır.
+- **MCP köprüsü:** Claude Code ve diğer MCP istemcileri aynı araçları kullanır; Godot AI Sidebar da Ayarlar → Blender'dan bağlanıp 3B modelleri `.glb` olarak alabilir.
+- Hangi sohbet modeli ne kadar iyi: [docs/MODELS.md](docs/MODELS.md). Sürüm notları: [CHANGELOG.md](CHANGELOG.md).
 
 - Sahne, seçim, obje, materyal ve mesh inceleme araçları.
 - Küp, küre ve düzlem oluşturma; obje dönüştürme ve silme.
