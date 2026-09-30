@@ -7,6 +7,10 @@ description: Model low-poly game assets (crates, barrels, trees, rocks, sandbags
 
 You model with allow-listed tools, not with Python: nothing here can run arbitrary code, every step is one Ctrl+Z, and delete_object needs the user's approval. Read the tool schemas first and use their exact argument names (`delete_object` takes `name`, most others `object_name` or `name`).
 
+## Start with `create_prop`
+
+For common things one call builds a proportioned, coloured, bevelled and smooth-shaded result standing on the ground with its front toward +Y: `crate`, `barrel`, `tree_pine`, `tree_round`, `rock`, `house`, `tower`, `fence`, `lamp`, `tent`, `well`, `car`, `chest`, `table`, `chair`, `campfire`, and the characters `humanoid` and `robot` (separate parts named for `rig_character`, with forearms, shins, eyes and mouth). Pass `size` (height in meters), `location`, `colors` (for example `{"roof": [0.2, 0.3, 0.7]}`; the result lists the color names), `seed` for the rock. Place several with different `location`s to build a scene, then add what is missing with the modeling tools below. Only build from primitives what `create_prop` does not cover.
+
 ## Workflow (one asset)
 
 1. **Spec first.** Size in meters (a crate 1 m, a door 2 m, a soldier 1.8 m), triangle budget (props 100-800, character 500-2500, tree 300-800), style (flat-shaded low-poly reads best without textures), 3 to 5 colours.

@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.10.0
+# Blender - Copilot — v1.11.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -29,7 +29,9 @@
 
 > v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof.
 
-> v1.10.0 makes small and free models cheaper to run: tool packs. The in-Blender agent now sends the film and character tools only when the request needs them (a plain modeling request: about 5,800 tokens of tool descriptions instead of 11,000). Verified with 792 passing pure-Python unit tests and 31 headless Blender suites.
+> v1.10.0 makes small and free models cheaper to run: tool packs. The in-Blender agent now sends the film and character tools only when the request needs them (a plain modeling request: about 5,800 tokens of tool descriptions instead of 11,000).
+
+> v1.11.0 gives chat models ready-made building blocks: `create_prop` builds a proportioned, coloured, polished crate, barrel, tree, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, or a rig-ready person or robot, in ONE call (no AI, just geometry). A free model built a village with a rigged walking person and filmed it in 18 tool calls instead of 60 to 120. Weak models' broken tool JSON (truncated, Python-style `True`) is now repaired. Verified with 797 passing pure-Python unit tests and 32 headless Blender suites.
 
 ---
 
@@ -369,7 +371,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.10.0 durumunda 792 pure-Python unit testi ve 31 Blender integration
+v1.11.0 durumunda 797 pure-Python unit testi ve 32 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.

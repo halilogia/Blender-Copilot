@@ -6,9 +6,61 @@ Zero Blender dependencies. Zero network dependencies. Pure Python.
 """
 
 import json
+import re
 from typing import Any, Dict, List, Optional
 
 from agent.models import ToolCall, ToolCallDelta
+
+
+def lenient_json_loads(raw: str):
+    """json.loads that also forgives what weak models produce: text after the object, a missing closing bracket or
+    brace (truncated output), trailing commas. Raises json.JSONDecodeError when nothing sensible can be recovered."""
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError as first:
+        error = first
+    text = raw.strip()
+    # 1. a valid object followed by extra text
+    try:
+        obj, _ = json.JSONDecoder().raw_decode(text)
+        return obj
+    except json.JSONDecodeError:
+        pass
+    # 2. trailing commas, then closers the model forgot (in the order the open brackets need them)
+    cleaned = re.sub(r",\s*([}\]])", r"\1", text)
+    stack, in_string, escaped = [], False, False
+    for ch in cleaned:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+        elif ch == '"':
+            in_string = True
+        elif ch in "{[":
+            stack.append("}" if ch == "{" else "]")
+        elif ch in "}]" and stack:
+            stack.pop()
+    repaired = cleaned + ('"' if in_string else "") + "".join(reversed(stack))
+    repaired = re.sub(r",\s*([}\]])", r"\1", repaired)
+    if repaired != raw:
+        try:
+            return json.loads(repaired)
+        except json.JSONDecodeError:
+            pass
+    # 3. Python-style literals (True, None, single quotes) from a model that writes Python dicts
+    for candidate in (text, repaired):
+        try:
+            import ast
+
+            value = ast.literal_eval(candidate)
+            if isinstance(value, (dict, list)):
+                return value
+        except (ValueError, SyntaxError):
+            pass
+    raise error
 
 
 class ToolCallAccumulatorError(Exception):
@@ -101,7 +153,7 @@ class ToolCallAccumulator:
                 parsed_args: Dict[str, Any] = {}
             else:
                 try:
-                    loaded = json.loads(raw_args)
+                    loaded = lenient_json_loads(raw_args)
                 except json.JSONDecodeError as exc:
                     raise ToolCallAccumulatorError(
                         code="MALFORMED_JSON",

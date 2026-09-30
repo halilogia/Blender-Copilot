@@ -46,6 +46,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-talker-music-deepseekv4flash](shot-talker-music-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli düşük poligonlu bir robot karakter modelle: kafa, gövde, kollar, bacaklar ve yüz için EyeL, EyeR, Mouth adlı küçük kutular (ayrı parçalar, birleştirme). rig_character ile bağla ve animate_character ile talk animasyonunu şu metinle ver: 'Merhaba, ben yeni robotunuzum. Bugün birlikte harika şeyler yapacağız!'. Sonra render_shots ile iki planlık film çek: 1) studio ışığında eyes_in (3 sn), 2) studio ışığında dolly_out (3 sn), cinematic look; müzik olarak 'playful' kullan. | 5.6 dk | 63 | - | 5.5 sn video | 20260930 |
 | [shot-tank-crane-claudesonnet46](shot-tank-crane-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 2.8 dk | 29 | - | 4.0 sn video | 20260930 |
 | [shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 1.8 dk | 34 | - | 4.0 sn video | 20260930 |
+| [shot-village-props-deepseekv4flash](shot-village-props-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | create_prop ile küçük bir köy sahnesi kur: bir house, yanında iki tree_pine (farklı konumlarda), bir well ve bir fence; sonra bir humanoid ekle, rig_character ile bağla ve 4 metre yürüt (walk). sunset ışığı kur, kamera humanoid'i takip etsin (follow, dolly_in) ve 5 saniyelik bir MP4 çek; kısa bir 'calm' müzik ekle (render_shots kullan). | 3.9 dk | 18 | - | 5.0 sn video | 20260930 |
 | [shot-zombie-walk-geminiproagent](shot-zombie-walk-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Yeşil tenli, yırtık giysili sevimli düşük poligonlu bir zombi modelle (kafa, gövde, kollar, bacaklar ayrı parçalar olsun, birleştirme). rig_character ile bağla, yürüt (3 metre, yavaş), gece ışığı kur, kamera takip etsin (follow) ve 5 saniyelik MP4 al. | 1.7 dk | 36 | - | 5.0 sn video | 20260930 |
 | [soldier](soldier/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir asker karakteri modelle: kask, gövde, kollar, bacaklar, botlar, sırt çantası, elinde tüfek tutma pozunda kollar. Yaklaşık 1.8 m boyunda, T-pozu değil, hafif yürüyüş duruşu olsun; üniforma zeytin yeşili, kask koyu, cilt tonu ayrı. | 1.8 dk | 55 | 1504 | 1.56x3.63x4.80 m | 20260930 |
 | [spaceship](spaceship/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir uzay gemisi modelle: gövde, kokpit camı, iki kanat, iki motor ve motor alevleri, ayrı renkli şeritler. | 1.4 dk | 28 | 520 | 4.40x1.45x4.60 m | 20260930 |
@@ -221,6 +222,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-tank-crane-geminiproagent** ([video](shot-tank-crane-geminiproagent/shot-tank-crane-geminiproagent.mp4))
 
 ![shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/sheet.png)
+
+**shot-village-props-deepseekv4flash** ([video](shot-village-props-deepseekv4flash/shot-village-props-deepseekv4flash.mp4))
+
+![shot-village-props-deepseekv4flash](shot-village-props-deepseekv4flash/sheet.png)
 
 **shot-zombie-walk-geminiproagent** ([video](shot-zombie-walk-geminiproagent/shot-zombie-walk-geminiproagent.mp4))
 

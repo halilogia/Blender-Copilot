@@ -1,0 +1,1 @@
+create_prop ile küçük bir köy sahnesi kur: bir house, yanında iki tree_pine (farklı konumlarda), bir well ve bir fence; sonra bir humanoid ekle, rig_character ile bağla ve 4 metre yürüt (walk). sunset ışığı kur, kamera humanoid'i takip etsin (follow, dolly_in) ve 5 saniyelik bir MP4 çek; kısa bir 'calm' müzik ekle (render_shots kullan).

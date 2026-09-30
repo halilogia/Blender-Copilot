@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.11.0] - 2026-09-30
+
+### Added
+- **`create_prop`**: ready-made, proportioned, coloured, bevelled and smooth-shaded low-poly props in one call, standing on the ground with the front toward +Y: crate, barrel, tree_pine, tree_round, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire. `humanoid` and `robot` come as separate parts named for `rig_character` (Head, Torso, arms with forearms, legs with shins, boots, eyes, mouth, hair or antenna). `size`, `location`, `colors` (by name, the result lists the names), `seed`, `polish`; one undo step. Pure geometry, no AI.
+- Skills, agent prompt and MCP instructions say to start with `create_prop`; the agent prompt is shorter than before (about 4,400 characters).
+- Tests: `tests/integration/test_prop_tools.py` (all 18 kinds stand on the ground at the right height under a triangle budget, colours, seed, undo, humanoids rig and act, errors, wrapped lists). A free model (DeepSeek V4 Flash) built a village with a rigged walking person and filmed it in 18 tool calls.
+
+### Fixed
+- Tool arguments from weak models are repaired instead of ending the turn: text after the object, truncated output (missing brackets, cut strings), trailing commas, Python-style `True`, `None` and single quotes (`lenient_json_loads`, `tests/unit/test_lenient_json.py`); hopeless JSON is still reported.
+
+---
+
 ## [1.10.0] - 2026-09-30
 
 ### Added

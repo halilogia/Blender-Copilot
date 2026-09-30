@@ -27,6 +27,7 @@ from adapter.mutators.cinema_mutator import CinemaMutator
 from adapter.mutators.character_mutator import CharacterMutator
 from adapter.mutators.look_mutator import LookMutator
 from adapter.mutators.polish_mutator import PolishMutator
+from adapter.mutators.prop_mutator import PropMutator
 from adapter.mutators.video_mutator import VideoMutator
 from adapter.mutators import (
     PrimitiveMutator,
@@ -857,6 +858,9 @@ class BlenderAdapter:
     # ------------------------------------------------------------------
     # Cinematic (v1.3): environment presets, camera moves, EEVEE renders
     # ------------------------------------------------------------------
+    def create_prop(self, **kwargs) -> ToolResult:
+        return self._modeling("create_prop", PropMutator.create_prop, **kwargs)
+
     def polish_model(self, **kwargs) -> ToolResult:
         return self._modeling("polish_model", PolishMutator.polish_model, **kwargs)
 

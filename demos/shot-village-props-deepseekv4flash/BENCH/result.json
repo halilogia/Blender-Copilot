@@ -1,0 +1,21 @@
+{
+  "name": "shot-village-props-deepseekv4flash",
+  "date": "20260930-160817",
+  "seconds": 234.3,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 18,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Done. Here's a summary of what I built in the scene:\n\n**Models (create_prop)**\n- `House` — village house (walls, tiled roof, door, windows, chimney), ~2.9 m tall\n- `TreePine_A` at [-6, -1] and `TreePine_B` at [5.5, -3] — two pines at different spots, different sizes (4.2 m / 4.7 m)\n- `Well` — stone well with roof, water and bucket\n- `Fence` — wooden fence section\n\n**Character**\n- `Villager` humanoid (16 parts: head, torso, arms + forearms, legs + shins, boots, eyes, mouth, hair) as a separate-parts character\n- `rig_character` → `Villager_Rig`, then `animate_character` **walk**, 4 m traveled in 5 s (frames 1–120, 24 fps) heading +Y toward the village\n\n**Lighting & camera**\n- `set_environment` preset **sunset** (AI_Sun + AI_World, 40 m ground)\n- `camera_move` preset **dolly_in** with **follow=true** on `Villager_Rig`, 5 s — I first checked a test frame (`render_image`), saw the camera was in front of the walker (village behind camera), and reframed to azimuth 165° / elevation 14° so you see him walking *into* the village, with the sunset behind.\n\n**Final video**\n- `render_shots` → **`shot-village-props-deepseekv4flash.mp4`** (960×540, 24 fps, 120 frames, 5.0 s), with a **calm** music bed (`shot-village-props-deepseekv4flash_music.wav`).\n\nThe clip is a single 5-second dolly-in that tracks the villager as he walks toward the sunlit village props.",
+  "video_bytes": 434128,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

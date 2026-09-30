@@ -1,11 +1,11 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.10.0 implemented (2026-09-30) — film araçları (38 kamera hareketi, ışık ve renk ayarı, çok planlı kurgu) + yerel MCP köprüsü + modelleme araçları + sinema araçları (ışık, kamera hareketi, MP4 render) + karakter animasyonu (rig, yürüme/koşma/nişan/el sallama/zıplama) + Claude Code eklentisi; 792 unit tests OK, hardening green, headless 31/31 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.11.0 implemented (2026-09-30) — film araçları (38 kamera hareketi, ışık ve renk ayarı, çok planlı kurgu) + yerel MCP köprüsü + modelleme araçları + sinema araçları (ışık, kamera hareketi, MP4 render) + karakter animasyonu (rig, yürüme/koşma/nişan/el sallama/zıplama) + Claude Code eklentisi; 797 unit tests OK, hardening green, headless 32/32 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ---
 
-## v1.10.1 — Blender-Runtime Mühürleme (sıradaki)
+## v1.11.1 — Blender-Runtime Mühürleme (sıradaki)
 
 Kapsam: kod değişimi yok (gerekmedikçe); v1.1’in makinede kanıtı.
 
@@ -17,7 +17,7 @@ Kapsam: kod değişimi yok (gerekmedikçe); v1.1’in makinede kanıtı.
 - [ ] **Performans probu**: 500+ objeli sahnede `AssetLibrary.refresh()` + `LocalIndex.query()` <200ms; `TimerBridge` 5ms tick bütçesi korunur.
 - Kabul: yukarıdaki 4 madde işaretli + unit/headless yeşil kalır.
 
-## v1.10.2 — Asset Browser Derinleştirme
+## v1.11.2 — Asset Browser Derinleştirme
 
 - [ ] Preferences’a asset library dizin seçici + `BLENDER_AI_ASSET_DIR` göstergesi (`ui/preferences.py`).
 - [ ] N-Panel arama kutusu + skorlu sonuç listesi (`ui/panel.py`, `agent/asset_index.py` `search()` reuse).
@@ -25,19 +25,19 @@ Kapsam: kod değişimi yok (gerekmedikçe); v1.1’in makinede kanıtı.
 - [ ] `import_asset(location=...)` opsiyonel argümanı + verifier `location` epsilon kuralı + unit test.
 - Kabul: yeni unit testler + headless `test_asset_import.py` yeşil + 1 GUI import turu.
 
-## v1.10.3 — Update Akışı + Topluluk Sürümü
+## v1.11.3 — Update Akışı + Topluluk Sürümü
 
 - [ ] N-Panel Diagnostics: "Check for Updates" butonu + sonuç rozeti (`Up to date` / `vX.Y.Z available`); opt-in `auto_check` (default False).
 - [ ] Dağıtım: Extensions platform paketi + `blender_manifest.toml` sürüm disiplini (her release’te minor bump, `bl_info` senkron).
 - [ ] Kısa EN/TR "v1.2 live verification" notu (GUI kanıtıyla; video/onboarder yok).
-- Kabul: `main`’de sürüm 1.10.3, paket kurulur + açılır, check-updates rozeti canlıda görülür.
+- Kabul: `main`’de sürüm 1.11.3, paket kurulur + açılır, check-updates rozeti canlıda görülür.
 
-## v1.11 Adayları (deferred, söz yok)
+## v1.12 Adayları (deferred, söz yok)
 
 - Text-to-3D (`generate_3d_asset`) araştırması; harici servis seçimi yok.
 - Controlled Python yürütme katmanı yok; `exec`/`eval` yasağı sürüyor.
 
 ---
 
-Kabul kapısı (tümü): unit yeşil ✅ + headless 31/31 ✅ + GUI turu ⬜ + hardening yeşil ✅.
-Çalışma sırası: v1.10.1 -> v1.10.2 -> v1.10.3; v1.11’e kapı kapalı.
+Kabul kapısı (tümü): unit yeşil ✅ + headless 32/32 ✅ + GUI turu ⬜ + hardening yeşil ✅.
+Çalışma sırası: v1.11.1 -> v1.11.2 -> v1.11.3; v1.12’ye kapı kapalı.

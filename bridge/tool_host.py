@@ -16,7 +16,7 @@ INSTRUCTIONS = (
     "Blender Copilot tools for Blender 5.2. Units are meters, +Z is up. "
     "Look before you change: inspect_scene, inspect_object, inspect_mesh; verify by frame_view (aim the viewport: ISO / FRONT / TOP, "
     "clean overlays off) then capture_viewport (returns an image) after every few edits. Every mutation is one Ctrl+Z step. "
-    "Model game assets without Python: create_primitive (cube, sphere, plane, cylinder, cone, icosphere, torus), "
+    "Model game assets without Python: create_prop first for common things (crate, barrel, trees, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, humanoid, robot: one call, proportioned, coloured, polished; humanoid and robot come as rig-ready parts), then create_primitive (cube, sphere, plane, cylinder, cone, icosphere, torus), "
     "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide / taper faces picked by normal), "
     "add_modifier (bevel, subsurf, boolean), add_shape_modifier (mirror, array, solidify, decimate, triangulate), "
     "set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. "
