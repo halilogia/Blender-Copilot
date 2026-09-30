@@ -1,0 +1,21 @@
+{
+  "name": "shot-film-village-spacebunnyalpha",
+  "date": "20260930-115824",
+  "seconds": 917.5,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 82,
+  "tool_errors": 16,
+  "approvals": 2,
+  "followups": 0,
+  "final_views": 4,
+  "model": "openrouter/space-bunny-alpha",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti.\n\n**Model** — varsayılan `Cube` ve `Light` silindi. Ev parçaları birleşti: duvarlar (4 × 3.5 × 2.6 m), kiremit çatı, koyu ahşap kapı, iki pencere, taş baca → `village_house` (84 üçgen). İki çam ağacı gövde + iki koni katman olarak → `pine_left`, `pine_right` (her biri 248 üçgen). Toplam ~580 üçgen. Dönüşümler bake edildi (scale 1,1,1). Pencerelere emissive verildi → gece planında parlıyor.\n\n**Kadraj düzeltmeleri** — `render_image` + `render_contact_sheet` ile test edildi:\n- İlk kare çok yakındı (kapı ve çatı kadrajı dolduruyordu) → distance 16 → 22 m, elevation 28.\n- `aerial_pullback` mesafeyi ~3× artırıyor; bu presette sıkı açılış **ve** geniş bitiş aynı anda mümkün değil. 22 m'de açılış okunuyor, kapanış kabul edilebilir.\n- `dolly_left` yolculuğu mutlak (distance'a orantılı değil) → ev kadrajdan çıkıyordu. `intensity=0.3` ile 24 m'de sabitlendi. `intensity` `aerial_pullback`'te etkisiz.\n- `hero_cam` başlangıcı zemin düzleminin altında kaldı (kare boş) → aynı alçak açı `static` preset'iyle, elevation 6, distance 21.\n\n**Film** — `shot-film-village-spacebunnyalpha.mp4`, 8.83 sn, 960×540, 24 fps, 212 kare, crossfade 0.6 sn. Planlar: aerial_pullback 4 sn (gün batımı) → dolly_left 3 sn (gün batımı + cinematic) → gece ışığı 3 sn.\n\nNot: `render_shots`'a `object_names` veremedim — iç içe liste hatası yaptım ve parametreyi tamamen çıkarmak gerekti. Sahnedeki tek mesh grubu bizim modelimiz olduğu için sonuç değişmedi; yine de film birleştirilirken özneyi otomatik algıladı.",
+  "video_bytes": 376783,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 212,
+  "video_seconds": 8.83
+}

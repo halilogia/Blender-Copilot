@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.5.0
+# Blender - Copilot — v1.5.1
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -361,7 +361,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.5.0 durumunda 744 pure-Python unit testi ve 30 Blender integration
+v1.5.1 durumunda 748 pure-Python unit testi ve 30 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 30/30 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.

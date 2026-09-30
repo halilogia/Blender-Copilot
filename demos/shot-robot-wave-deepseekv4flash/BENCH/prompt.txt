@@ -1,0 +1,1 @@
+Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al.

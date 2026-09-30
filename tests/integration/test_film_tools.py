@@ -140,6 +140,10 @@ def test_new_presets_and_roll():
     assert up_mid.z < 0.7, "half way through a barrel roll the camera is on its side or upside down"
     res = adapter.camera_move(preset="snorricam", object_names=["Subject"], duration=1.0, fps=12)
     assert res.success and res.data["follow"] is True
+    # weak models wrap or quote lists and stringify numbers: all of it must still work
+    for wrapped in ({"item": ["Subject"]}, {"item": {"item": ["Subject"]}}, "Subject", '["Subject"]'):
+        res = adapter.camera_move(preset="static", object_names=wrapped, duration="1", fps="12", distance="9")
+        assert res.success and res.data["distance"] == 9.0, (wrapped, res.error if not res.success else res.data)
     print("[PASS] Test 4")
 
 

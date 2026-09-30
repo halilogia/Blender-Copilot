@@ -1,0 +1,1 @@
+Küçük bir köy sahnesi modelle: bir köy evi (duvar, çatı, kapı, pencere, baca) ve yanında iki çam ağacı. Sonra render_shots ile üç planlık kısa bir film çek: 1) gün batımı ışığında aerial_pullback (4 sn), 2) gün batımı ışığında dolly_left (3 sn) ve cinematic look, 3) gece ışığında hero_cam (3 sn). Planlar arası crossfade olsun.

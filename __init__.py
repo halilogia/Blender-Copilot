@@ -3,7 +3,7 @@
 bl_info = {
     "name": "Blender - Copilot",
     "author": "Halil Emre",
-    "version": (1, 5, 0),
+    "version": (1, 5, 1),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",

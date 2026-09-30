@@ -10,7 +10,7 @@ class RenderShotsTool(BaseTool):
 
     name = "render_shots"
     description = (
-        "Render a whole shot list into ONE film in a single call: for every shot it sets the environment and look (if given), makes the camera move and renders it, then joins the shots with transitions. Build the models first (rig and animate characters first if they move). shots: up to 8 objects with preset (a camera_move preset) and optional duration, object_names, environment (a set_environment preset), look (a set_look preset), azimuth, elevation, distance, focal_length, follow, intensity, angle, fps. Example: [{\"preset\": \"dolly_in\", \"duration\": 3, \"environment\": \"sunset\"}, {\"preset\": \"orbit\", \"duration\": 4, \"look\": \"cinematic\"}]. Total at most 75 seconds. Blender is busy while it renders."
+        "Render a whole shot list into ONE film in a single call: for every shot it sets the environment and look (if given), makes the camera move and renders it, then joins the shots with transitions. Build the models first (rig and animate characters first if they move). shots: up to 8 objects with preset (a camera_move preset) and optional duration, object_names, environment (a set_environment preset), look (a set_look preset), azimuth, elevation, distance, focal_length, follow, intensity, angle, fps. Example: [{\"preset\": \"dolly_in\", \"duration\": 3, \"environment\": \"sunset\"}, {\"preset\": \"orbit\", \"duration\": 4, \"look\": \"cinematic\"}]. If a shot has no environment or look the previous one stays, so set them on each shot that changes. Total at most 75 seconds. Blender is busy while it renders."
     )
     input_schema = {
         "type": "object",

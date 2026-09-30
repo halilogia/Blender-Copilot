@@ -14,7 +14,7 @@ import bpy
 
 from adapter.mutators.cinema_mutator import CinemaMutator, ENVIRONMENTS, _stem
 from adapter.mutators.look_mutator import LOOKS, LookMutator
-from adapter.mutators.modeling_mutator import ModelingError
+from adapter.mutators.modeling_mutator import ModelingError, as_list
 from core.camera_paths import PRESETS
 
 CLIP_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}\.mp4$")
@@ -42,6 +42,7 @@ class VideoMutator:
         kind = str(transition or "cut").strip().lower()
         if kind not in TRANSITIONS:
             raise ModelingError(f"transition must be one of {sorted(TRANSITIONS)}.")
+        clips = as_list(clips)
         if not isinstance(clips, list) or not (1 <= len(clips) <= MAX_CLIPS):
             raise ModelingError(f"clips must be a list of 1 to {MAX_CLIPS} clip names, or {{'file': name, 'speed': 0.5}}.")
         folder = Path(export_dir).expanduser()
@@ -132,6 +133,7 @@ class VideoMutator:
     def render_shots(cls, export_dir: str, filename: str, shots: Any, transition: str = "crossfade",
                      transition_seconds: float = 0.5, width: int = 960, height: int = 540, samples: int = 12) -> Dict[str, Any]:
         stem = _stem(filename, "film")
+        shots = as_list(shots)
         if not isinstance(shots, list) or not (1 <= len(shots) <= MAX_SHOTS):
             raise ModelingError(f"shots must be a list of 1 to {MAX_SHOTS} shot objects.")
         plan = []

@@ -6,6 +6,7 @@ and glTF export into a configured folder. Blender Data API and BMesh only; opera
 Blender offers no data-level equivalent (object join, glTF export).
 """
 
+import json
 import math
 import os
 import re
@@ -32,6 +33,23 @@ FILENAME_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-.]{0,80}$")
 
 class ModelingError(ValueError):
     """Bad arguments or an unsupported situation; the message is shown to the agent."""
+
+
+def as_list(value: Any) -> Any:
+    """Models often wrap a list as {"item": [...]}, quote it as a JSON string or pass one bare name: unwrap those."""
+    while isinstance(value, dict) and len(value) == 1:
+        value = next(iter(value.values()))
+    if isinstance(value, str):
+        text = value.strip()
+        if text.startswith("["):
+            try:
+                loaded = json.loads(text)
+                if isinstance(loaded, list):
+                    return loaded
+            except ValueError:
+                pass
+        return [text] if text else value
+    return value
 
 
 def _vec3(value: Any, what: str) -> Vector:
@@ -110,8 +128,10 @@ class ModelingMutator:
     @classmethod
     def create_mesh(cls, vertices: Any, faces: Any, name: Optional[str] = None, location: Any = None, rotation: Any = None,
                     scale: Any = None, smooth: bool = False) -> Dict[str, Any]:
+        vertices = as_list(vertices)
         if not isinstance(vertices, list) or not vertices:
             raise ModelingError("vertices must be a non-empty list of [x, y, z] points.")
+        faces = as_list(faces)
         if not isinstance(faces, list) or not faces:
             raise ModelingError("faces must be a non-empty list of vertex-index lists.")
         if len(vertices) > MAX_VERTICES or len(faces) > MAX_FACES:
@@ -282,6 +302,7 @@ class ModelingMutator:
     # ------------------------------------------------------------------ join / parent / transform / origin
     @classmethod
     def join_objects(cls, object_names: Any, target_name: str, new_name: Optional[str] = None) -> Dict[str, Any]:
+        object_names = as_list(object_names)
         if not isinstance(object_names, list) or not object_names:
             raise ModelingError("object_names must be a non-empty list of mesh object names.")
         target = _mesh_object(target_name)
@@ -399,6 +420,7 @@ class ModelingMutator:
     def export_gltf(cls, object_names: Any, filename: str, export_dir: str, apply_modifiers: bool = True,
                     include_materials: bool = True, y_up: bool = True, recenter: bool = True,
                     animations: bool = False) -> Dict[str, Any]:
+        object_names = as_list(object_names)
         if not isinstance(object_names, list) or not object_names:
             raise ModelingError("object_names must be a non-empty list of object names.")
         name = str(filename or "").strip()
@@ -564,6 +586,7 @@ class ModelingMutator:
         if key not in cls.VIEW_DIRECTIONS:
             raise ModelingError(f"direction must be one of {sorted(cls.VIEW_DIRECTIONS)}.")
         if object_names:
+            object_names = as_list(object_names)
             if not isinstance(object_names, list):
                 raise ModelingError("object_names must be a list of names.")
             objs = []

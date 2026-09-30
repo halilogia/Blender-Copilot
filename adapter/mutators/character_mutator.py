@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Sequence
 import bpy
 from mathutils import Euler, Matrix, Vector
 
-from adapter.mutators.modeling_mutator import ModelingError, _unique_mesh
+from adapter.mutators.modeling_mutator import ModelingError, as_list, _unique_mesh
 from adapter.mutators.undo_manager import push_undo_step
 from core.camera_paths import frame_count
 from core.motion_paths import PRESETS, ROLES, motion_samples
@@ -38,6 +38,7 @@ def _world_bounds(obj: "bpy.types.Object"):
 
 
 def _mesh_objects(names: Any, what: str = "object_names") -> List["bpy.types.Object"]:
+    names = as_list(names)
     if not isinstance(names, list) or not names:
         raise ModelingError(f"{what} must be a non-empty list of mesh object names.")
     objs = []

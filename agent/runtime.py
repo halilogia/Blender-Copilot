@@ -514,6 +514,37 @@ class AgentRuntime:
             self.conversation = Conversation(messages[:start])
         self._active_conversation_start = None
 
+    def _fill_missing_tool_results(self, reason: str) -> int:
+        """Answer tool calls of the last assistant message that never ran.
+
+        A model may send several tool calls in one message. When one of them needs approval the batch stops there, so
+        the calls after it never get a result, and providers reject the next request ("tool results are missing").
+        Each skipped call gets a short NOT_EXECUTED result so the model can repeat it if it is still needed.
+        """
+        messages = list(self.conversation.messages)
+        last_index = None
+        for i in range(len(messages) - 1, -1, -1):
+            if messages[i].role == Role.ASSISTANT and messages[i].tool_calls:
+                last_index = i
+                break
+        if last_index is None:
+            return 0
+        answered = {m.tool_call_id for m in messages[last_index + 1:] if m.role == Role.TOOL}
+        added = 0
+        for call in messages[last_index].tool_calls:
+            if call.call_id in answered:
+                continue
+            self.conversation.add_message(
+                ChatMessage(
+                    role=Role.TOOL,
+                    content=json.dumps({"error": reason, "type": "NOT_EXECUTED"}, ensure_ascii=False),
+                    tool_call_id=call.call_id,
+                    name=call.tool_name,
+                )
+            )
+            added += 1
+        return added
+
     def _execute_approved_plan(self, review: Any) -> Any:
         token = review.approval_id
         try:
@@ -1807,6 +1838,7 @@ class AgentRuntime:
             self._current_turn_id = None
             return err_res
 
+        self._fill_missing_tool_results("An earlier tool call in the same message needed the user's decision, so this one was not run. Call it again if it is still needed.")
         self.state_machine.transition_to(AgentState.PROCESSING)
 
         # Delegate next LLM step to worker
@@ -1938,6 +1970,7 @@ class AgentRuntime:
         )
         self.event_queue.put(ToolResultReadyEvent(tool_result=tool_res, turn_id=pending.turn_id))
 
+        self._fill_missing_tool_results("An earlier tool call in the same message needed the user's decision, so this one was not run. Call it again if it is still needed.")
         self.state_machine.transition_to(AgentState.PROCESSING)
 
         context = None

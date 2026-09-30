@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Sequence
 import bpy
 from mathutils import Quaternion, Vector
 
-from adapter.mutators.modeling_mutator import ModelingError
+from adapter.mutators.modeling_mutator import ModelingError, as_list
 from adapter.mutators.undo_manager import push_undo_step
 from core.camera_paths import FOLLOW_PRESETS, PRESETS, camera_rolls, camera_samples, frame_count
 
@@ -269,6 +269,7 @@ class CinemaMutator:
             raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
         if key in FOLLOW_PRESETS:
             follow = True
+        object_names = as_list(object_names)
         if object_names is not None and not isinstance(object_names, list):
             raise ModelingError("object_names must be a list of names.")
         try:

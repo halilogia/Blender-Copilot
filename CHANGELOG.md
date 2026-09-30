@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.1] - 2026-09-30
+
+### Fixed
+- **Batches of tool calls with an approval in the middle**: when a model sent several tool calls in one message and one needed approval, the calls after it never got a result, and strict providers rejected the next request ("Tool results are missing for tool calls ..."; seen with DeepSeek V4 Flash through 9router). After approve or reject each skipped call now gets a `NOT_EXECUTED` result so the model can repeat it.
+- Lists that weak models wrap or quote (`{"item": [...]}`, a JSON string, one bare name) are unwrapped for object names, vertices, faces, clips and shot lists; numbers sent as strings are accepted.
+- `render_shots` explains that a shot without `environment` or `look` keeps the previous one (a free model left the whole film in night light).
+
+### Verified
+- 748 unit tests, 30 headless Blender suites; a free model (DeepSeek V4 Flash) and Space Bunny make shots and a three-shot film through 9router.
+
+---
+
 ## [1.5.0] - 2026-09-30
 
 ### Added
