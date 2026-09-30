@@ -1,8 +1,8 @@
 # Demo kütüphanesi
 
-Her model, boş bir Blender sahnesinde tek bir istemle bir ajanın izin listeli araçlarla (rastgele Python yok) modellediği bir `.glb` dosyasıdır: ya **Claude Code** Blender Copilot MCP köprüsü üzerinden, ya da eklentinin **kendi Blender içi ajanı** 9router üzerinden (`Ajan` sütunu hangisi olduğunu söyler) (`scripts/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: izometrik, ön, sağ, üst.
+Her model, boş bir Blender sahnesinde tek bir istemle bir ajanın izin listeli araçlarla (rastgele Python yok) modellediği bir `.glb` dosyasıdır: ya **Claude Code** Blender Copilot MCP köprüsü üzerinden, ya da eklentinin **kendi Blender içi ajanı** 9router üzerinden (`Ajan` sütunu hangisi olduğunu söyler) (`scripts/demo_bench_mcp.py`). `shot-` ile başlayanlar **çekimdir**: ajan modeli yapar, ışığı kurar, kamerayı hareket ettirir ve MP4 render alır (yalnız sohbet modeli, elle müdahale yok). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Modellerde sayfada dört görünüm var (izometrik, ön, sağ, üst); çekimlerde videodan dört kare.
 
-Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: `res://assets/models/` altına at).
+Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: `res://assets/models/` altına at); MP4 dosyaları herhangi bir oynatıcıda açılır.
 
 | Model | Ajan | İstem | Süre | Araç çağrısı | Üçgen | Boyut | Tarih |
 |---|---|---|---|---|---|---|---|
@@ -27,6 +27,14 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [robot](robot/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu sevimli bir robot karakter modelle: kutu kafa, anten, iki göz, gövde, kollar, bacaklar, göğüste bir panel. | 1.0 dk | 29 | 536 | 1.00x1.00x1.00 m | 20260930 |
 | [rock](rock/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir kaya kümesi modelle: 3 farklı boyda düzensiz, köşeli kaya, birbirine yaslı, gri tonları ve üstünde biraz yosun yeşili. Zemine oturuyor olsun (alt yüz düz). | 1.1 dk | 23 | 114 | 1.82x1.04x1.76 m | 20260930 |
 | [sailboat](sailboat/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu küçük bir yelkenli tekne modelle: gövde, güverte, direk, iki yelken, dümen. | 1.2 dk | 21 | 324 | 3.10x4.10x1.20 m | 20260930 |
+| [shot-campfire-handheld-claudesonnet46](shot-campfire-handheld-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek. | 3.4 dk | 34 | - | 4.0 sn video | 20260930 |
+| [shot-castle-orbit-claudesonnet46](shot-castle-orbit-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 3.7 dk | 56 | - | 5.0 sn video | 20260930 |
+| [shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 2.4 dk | 29 | - | 5.0 sn video | 20260930 |
+| [shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek. | 2.4 dk | 21 | - | 8.0 sn video | 20260930 |
+| [shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek. | 5.0 dk | 49 | - | 5.0 sn video | 20260930 |
+| [shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek. | 3.7 dk | 36 | - | 4.0 sn video | 20260930 |
+| [shot-tank-crane-claudesonnet46](shot-tank-crane-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 2.8 dk | 29 | - | 4.0 sn video | 20260930 |
+| [shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 1.8 dk | 34 | - | 4.0 sn video | 20260930 |
 | [soldier](soldier/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir asker karakteri modelle: kask, gövde, kollar, bacaklar, botlar, sırt çantası, elinde tüfek tutma pozunda kollar. Yaklaşık 1.8 m boyunda, T-pozu değil, hafif yürüyüş duruşu olsun; üniforma zeytin yeşili, kask koyu, cilt tonu ayrı. | 1.8 dk | 55 | 1504 | 1.56x3.63x4.80 m | 20260930 |
 | [spaceship](spaceship/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir uzay gemisi modelle: gövde, kokpit camı, iki kanat, iki motor ve motor alevleri, ayrı renkli şeritler. | 1.4 dk | 28 | 520 | 4.40x1.45x4.60 m | 20260930 |
 | [sword](sword/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar. | 0.9 dk | 17 | 230 | 0.16x0.98x0.05 m | 20260930 |
@@ -125,6 +133,38 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **sailboat**
 
 ![sailboat](sailboat/sheet.png)
+
+**shot-campfire-handheld-claudesonnet46** ([video](shot-campfire-handheld-claudesonnet46/shot-campfire-handheld-claudesonnet46.mp4))
+
+![shot-campfire-handheld-claudesonnet46](shot-campfire-handheld-claudesonnet46/sheet.png)
+
+**shot-castle-orbit-claudesonnet46** ([video](shot-castle-orbit-claudesonnet46/shot-castle-orbit-claudesonnet46.mp4))
+
+![shot-castle-orbit-claudesonnet46](shot-castle-orbit-claudesonnet46/sheet.png)
+
+**shot-castle-orbit-geminiproagent** ([video](shot-castle-orbit-geminiproagent/shot-castle-orbit-geminiproagent.mp4))
+
+![shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/sheet.png)
+
+**shot-house-night-claudesonnet46** ([video](shot-house-night-claudesonnet46/shot-house-night-claudesonnet46.mp4))
+
+![shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/sheet.png)
+
+**shot-robot-vertigo-spacebunnyalpha** ([video](shot-robot-vertigo-spacebunnyalpha/shot-robot-vertigo-spacebunnyalpha.mp4))
+
+![shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/sheet.png)
+
+**shot-soldier-dolly-claudesonnet46** ([video](shot-soldier-dolly-claudesonnet46/shot-soldier-dolly-claudesonnet46.mp4))
+
+![shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/sheet.png)
+
+**shot-tank-crane-claudesonnet46** ([video](shot-tank-crane-claudesonnet46/shot-tank-crane-claudesonnet46.mp4))
+
+![shot-tank-crane-claudesonnet46](shot-tank-crane-claudesonnet46/sheet.png)
+
+**shot-tank-crane-geminiproagent** ([video](shot-tank-crane-geminiproagent/shot-tank-crane-geminiproagent.mp4))
+
+![shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/sheet.png)
 
 **soldier**
 

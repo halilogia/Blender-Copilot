@@ -1,0 +1,391 @@
+"""Cinematic mutators: environment presets, camera move presets and rendering (EEVEE) to PNG or MP4.
+
+Allow-listed and bounded like the modeling tools: no arbitrary Python, output files only inside the configured export
+folder, resolution and frame counts capped. Camera paths come from ``core.camera_paths`` (plain math).
+"""
+
+import math
+import re
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Sequence
+
+import bpy
+from mathutils import Vector
+
+from adapter.mutators.modeling_mutator import ModelingError
+from adapter.mutators.undo_manager import push_undo_step
+from core.camera_paths import PRESETS, camera_samples, frame_count
+
+HELPER_PREFIX = "AI_"
+CAMERA_NAME = "ShotCamera"
+TARGET_NAME = "ShotTarget"
+MAX_WIDTH, MAX_HEIGHT = 1920, 1080
+MIN_SIDE = 64
+STEM_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}$")
+
+# sky colour, sky strength, sun colour, sun energy, sun elevation, sun azimuth (0 = +Y side), sun softness (rad),
+# ground colour, exposure, extra point lights
+ENVIRONMENTS: Dict[str, Dict[str, Any]] = {
+    "studio": {"sky": (0.72, 0.72, 0.75), "sky_strength": 1.0, "sun": (1.0, 1.0, 1.0), "energy": 2.0, "elevation": 50.0,
+               "azimuth": 30.0, "softness": 0.12, "ground": (0.75, 0.75, 0.75), "exposure": 0.0,
+               "about": "neutral grey backdrop, soft white key light"},
+    "golden_hour": {"sky": (1.0, 0.72, 0.48), "sky_strength": 0.7, "sun": (1.0, 0.62, 0.3), "energy": 3.0, "elevation": 12.0,
+                    "azimuth": 55.0, "softness": 0.03, "ground": (0.36, 0.3, 0.2), "exposure": 0.0,
+                    "about": "low warm sun, orange sky, long shadows"},
+    "overcast": {"sky": (0.62, 0.66, 0.7), "sky_strength": 0.95, "sun": (1.0, 1.0, 1.0), "energy": 0.6, "elevation": 60.0,
+                 "azimuth": 20.0, "softness": 0.5, "ground": (0.34, 0.37, 0.33), "exposure": 0.0,
+                 "about": "grey sky, soft even light, weak shadows"},
+    "night": {"sky": (0.02, 0.03, 0.09), "sky_strength": 0.7, "sun": (0.45, 0.55, 1.0), "energy": 1.1, "elevation": 32.0,
+              "azimuth": 200.0, "softness": 0.05, "ground": (0.05, 0.06, 0.08), "exposure": 0.4,
+              "about": "dark blue night with a cold moon light from behind"},
+    "neon": {"sky": (0.02, 0.0, 0.05), "sky_strength": 0.4, "sun": (0.5, 0.4, 1.0), "energy": 0.05, "elevation": 40.0,
+             "azimuth": 0.0, "softness": 0.1, "ground": (0.02, 0.02, 0.04), "exposure": 0.3,
+             "about": "dark scene lit by a magenta and a cyan light", "point_lights": True},
+}
+
+
+def _stem(value: Any, default: str) -> str:
+    stem = str(value or default).strip()
+    for ext in (".png", ".mp4"):
+        if stem.lower().endswith(ext):
+            stem = stem[: -len(ext)]
+    if not STEM_RX.match(stem):
+        raise ModelingError("filename must be a plain name (letters, digits, _ -), no folders.")
+    return stem
+
+
+def _size(width: Any, height: Any) -> tuple:
+    try:
+        w, h = int(width), int(height)
+    except (TypeError, ValueError):
+        raise ModelingError("width and height must be whole numbers.")
+    if not (MIN_SIDE <= w <= MAX_WIDTH and MIN_SIDE <= h <= MAX_HEIGHT):
+        raise ModelingError(f"width must be {MIN_SIDE}-{MAX_WIDTH} and height {MIN_SIDE}-{MAX_HEIGHT}.")
+    return w, h
+
+
+def _scene_meshes(names: Optional[Sequence[str]] = None) -> List["bpy.types.Object"]:
+    """Named objects, or every mesh that is not one of the helper objects (ground, lights, camera rig)."""
+    if names:
+        objs = []
+        for n in names:
+            obj = bpy.data.objects.get(str(n).strip())
+            if obj is None:
+                raise ModelingError(f"Object '{n}' not found in the scene.")
+            objs.append(obj)
+        return objs
+    return [o for o in bpy.context.scene.objects if o.type == "MESH" and not o.name.startswith(HELPER_PREFIX)]
+
+
+def _bounds(objs: Sequence["bpy.types.Object"]):
+    pts = [o.matrix_world @ Vector(c) for o in objs if o.type == "MESH" for c in o.bound_box]
+    if not pts:
+        return Vector((0.0, 0.0, 0.5)), 1.0, 0.0
+    lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+    hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+    return (lo + hi) / 2.0, max((hi - lo).length / 2.0, 0.05), lo.z
+
+
+def _link(obj: "bpy.types.Object") -> None:
+    if obj.name not in bpy.context.scene.objects:
+        bpy.context.scene.collection.objects.link(obj)
+
+
+def _remove_object(name: str) -> None:
+    obj = bpy.data.objects.get(name)
+    if obj is not None:
+        bpy.data.objects.remove(obj, do_unlink=True)
+
+
+def _material(name: str, color: Sequence[float], roughness: float) -> "bpy.types.Material":
+    mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+    mat.diffuse_color = (color[0], color[1], color[2], 1.0)
+    try:
+        mat.use_nodes = True
+        bsdf = mat.node_tree.nodes.get("Principled BSDF")
+        if bsdf is not None:
+            bsdf.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
+            bsdf.inputs["Roughness"].default_value = roughness
+    except Exception:
+        pass
+    return mat
+
+
+class CinemaMutator:
+    """Environment, camera and render operations."""
+
+    @classmethod
+    def set_environment(cls, preset: str = "studio", ground: bool = True, ground_color: Any = None,
+                        ground_size: Any = None) -> Dict[str, Any]:
+        key = str(preset or "studio").strip().lower()
+        if key not in ENVIRONMENTS:
+            raise ModelingError(f"preset must be one of {sorted(ENVIRONMENTS)}.")
+        env = ENVIRONMENTS[key]
+        scn = bpy.context.scene
+        center, radius, floor_z = _bounds(_scene_meshes())
+
+        world = bpy.data.worlds.get("AI_World") or bpy.data.worlds.new("AI_World")
+        try:
+            world.use_nodes = True
+        except Exception:
+            pass
+        nt = world.node_tree
+        for node in list(nt.nodes):
+            nt.nodes.remove(node)
+        bg = nt.nodes.new("ShaderNodeBackground")
+        bg.inputs[0].default_value = (*env["sky"], 1.0)
+        bg.inputs[1].default_value = env["sky_strength"]
+        out = nt.nodes.new("ShaderNodeOutputWorld")
+        nt.links.new(bg.outputs[0], out.inputs[0])
+        scn.world = world
+
+        # Sun (reused by name): rotation Z = 180 - azimuth makes the light arrive from that side (0 = +Y, the front).
+        sun_obj = bpy.data.objects.get("AI_Sun")
+        if sun_obj is None or sun_obj.type != "LIGHT":
+            _remove_object("AI_Sun")
+            sun_obj = bpy.data.objects.new("AI_Sun", bpy.data.lights.new("AI_Sun", "SUN"))
+        _link(sun_obj)
+        sun_obj.data.color = env["sun"]
+        sun_obj.data.energy = env["energy"]
+        sun_obj.data.angle = env["softness"]
+        sun_obj.rotation_euler = (math.radians(90.0 - env["elevation"]), 0.0, math.radians(180.0 - env["azimuth"]))
+
+        lights = ["AI_Sun"]
+        for name in ("AI_NeonA", "AI_NeonB"):
+            _remove_object(name)
+        if env.get("point_lights"):
+            dist = max(radius * 2.5, 1.0)
+            for name, color, sign in (("AI_NeonA", (1.0, 0.1, 0.8), 1.0), ("AI_NeonB", (0.1, 0.8, 1.0), -1.0)):
+                data = bpy.data.lights.new(name, "POINT")
+                data.color = color
+                data.energy = 1600.0 * dist * dist / 6.25
+                obj = bpy.data.objects.new(name, data)
+                obj.location = (center.x + sign * dist, center.y + dist * 0.8, center.z + dist * 0.6)
+                _link(obj)
+                lights.append(name)
+
+        ground_name = None
+        if not ground:
+            _remove_object("AI_Ground")
+        if ground:
+            color = env["ground"]
+            if ground_color is not None:
+                if not isinstance(ground_color, (list, tuple)) or len(ground_color) < 3:
+                    raise ModelingError("ground_color must be [r, g, b].")
+                color = tuple(max(0.0, min(1.0, float(v))) for v in ground_color[:3])
+            size = float(ground_size) if ground_size is not None else max(radius * 10.0, 6.0)
+            if not (0.5 <= size <= 2000.0):
+                raise ModelingError("ground_size must be between 0.5 and 2000 meters.")
+            obj = bpy.data.objects.get("AI_Ground")
+            if obj is None or obj.type != "MESH":
+                _remove_object("AI_Ground")
+                mesh = bpy.data.meshes.new("AI_Ground")
+                obj = bpy.data.objects.new("AI_Ground", mesh)
+            half = size / 2.0
+            obj.data.clear_geometry()
+            obj.data.from_pydata([(-half, -half, 0), (half, -half, 0), (half, half, 0), (-half, half, 0)], [], [(0, 1, 2, 3)])
+            obj.data.update()
+            obj.location = (center.x, center.y, floor_z)
+            obj.data.materials.clear()
+            obj.data.materials.append(_material("AI_Ground", color, 0.85))
+            _link(obj)
+            ground_name = obj.name
+
+        scn.render.engine = "BLENDER_EEVEE"
+        try:
+            scn.view_settings.view_transform = "Standard"
+            scn.view_settings.look = "None"
+        except Exception:
+            pass
+        scn.view_settings.exposure = env["exposure"]
+        push_undo_step(f"AI: Environment {key}")
+        return {"preset": key, "about": env["about"], "lights": lights, "ground": ground_name, "world": world.name,
+                "scene_center": [round(v, 3) for v in center], "scene_radius": round(radius, 3)}
+
+    @classmethod
+    def camera_move(cls, preset: str, object_names: Any = None, duration: float = 4.0, fps: int = 24,
+                    distance: Any = None, elevation: float = 15.0, azimuth: float = 35.0, angle: float = 120.0,
+                    intensity: float = 1.0, focal_length: float = 35.0) -> Dict[str, Any]:
+        key = str(preset or "").strip().lower()
+        if key not in PRESETS:
+            raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
+        if object_names is not None and not isinstance(object_names, list):
+            raise ModelingError("object_names must be a list of names.")
+        try:
+            seconds, rate = float(duration), int(fps)
+        except (TypeError, ValueError):
+            raise ModelingError("duration must be a number of seconds and fps a whole number.")
+        if not (0.2 <= seconds <= 60.0):
+            raise ModelingError("duration must be between 0.2 and 60 seconds.")
+        if not (8 <= rate <= 60):
+            raise ModelingError("fps must be between 8 and 60.")
+        frames = frame_count(seconds, rate)
+        objs = _scene_meshes(object_names)
+        center, radius, _ = _bounds(objs)
+        samples = camera_samples(key, frames, tuple(center), radius, float(distance) if distance else None,
+                                 float(elevation), float(azimuth), float(angle), float(intensity), float(focal_length))
+
+        scn = bpy.context.scene
+        cam = bpy.data.objects.get(CAMERA_NAME)
+        if cam is None or cam.type != "CAMERA":
+            _remove_object(CAMERA_NAME)
+            cam = bpy.data.objects.new(CAMERA_NAME, bpy.data.cameras.new(CAMERA_NAME))
+        target = bpy.data.objects.get(TARGET_NAME)
+        if target is None:
+            target = bpy.data.objects.new(TARGET_NAME, None)
+            target.empty_display_type = "PLAIN_AXES"
+        _link(cam)
+        _link(target)
+        for obj in (cam, target, cam.data):
+            obj.animation_data_clear()
+        for con in list(cam.constraints):
+            cam.constraints.remove(con)
+        track = cam.constraints.new("TRACK_TO")
+        track.target = target
+        track.track_axis = "TRACK_NEGATIVE_Z"
+        track.up_axis = "UP_Y"
+        cam.data.clip_end = max(cam.data.clip_end, radius * 60.0)
+        for i, (pos, aim, focal) in enumerate(samples):
+            frame = 1 + i
+            cam.location = pos
+            cam.keyframe_insert("location", frame=frame)
+            target.location = aim
+            target.keyframe_insert("location", frame=frame)
+            cam.data.lens = focal
+            cam.data.keyframe_insert("lens", frame=frame)
+        scn.camera = cam
+        scn.render.fps = rate
+        scn.frame_start, scn.frame_end = 1, frames
+        scn.frame_set(1)
+        push_undo_step(f"AI: Camera move {key}")
+        return {"camera": cam.name, "target": target.name, "preset": key, "about": PRESETS[key], "frames": frames,
+                "fps": rate, "seconds": round(frames / rate, 2), "frame_range": [1, frames],
+                "subject_center": [round(v, 3) for v in center], "subject_radius": round(radius, 3),
+                "distance": round(float(distance) if distance else radius * 2.8, 3)}
+
+    # ------------------------------------------------------------------ rendering
+    @classmethod
+    def _render_setup(cls, width: int, height: int, samples: int):
+        scn = bpy.context.scene
+        if scn.camera is None:
+            raise ModelingError("The scene has no active camera. Call camera_move (or create_camera) first.")
+        r = scn.render
+        saved = {"engine": r.engine, "x": r.resolution_x, "y": r.resolution_y, "pct": r.resolution_percentage,
+                 "path": r.filepath, "frame": scn.frame_current, "start": scn.frame_start, "end": scn.frame_end,
+                 "media": getattr(r.image_settings, "media_type", None), "fmt": r.image_settings.file_format}
+        r.engine = "BLENDER_EEVEE"
+        r.resolution_x, r.resolution_y, r.resolution_percentage = width, height, 100
+        try:
+            scn.eevee.taa_render_samples = max(1, min(64, int(samples)))
+        except Exception:
+            pass
+        return scn, saved
+
+    @classmethod
+    def _render_restore(cls, scn, saved) -> None:
+        r = scn.render
+        r.engine, r.resolution_x, r.resolution_y, r.resolution_percentage = saved["engine"], saved["x"], saved["y"], saved["pct"]
+        if saved["media"] is not None:
+            try:
+                r.image_settings.media_type = saved["media"]
+            except Exception:
+                pass
+        try:
+            r.image_settings.file_format = saved["fmt"]
+        except Exception:
+            pass
+        r.filepath = saved["path"]
+        scn.frame_start, scn.frame_end = saved["start"], saved["end"]
+        scn.frame_set(saved["frame"])
+
+    @classmethod
+    def _write_still(cls, scn, path: Path) -> None:
+        r = scn.render
+        if hasattr(r.image_settings, "media_type"):
+            r.image_settings.media_type = "IMAGE"
+        r.image_settings.file_format = "PNG"
+        r.filepath = str(path)
+        bpy.ops.render.render(write_still=True)
+        if not path.exists():
+            raise ModelingError("Blender did not write the image.")
+
+    @classmethod
+    def render_image(cls, export_dir: str, filename: str = "shot", width: int = 960, height: int = 540,
+                     frame: Any = None, samples: int = 16) -> Dict[str, Any]:
+        stem = _stem(filename, "shot")
+        w, h = _size(width, height)
+        folder = Path(export_dir).expanduser()
+        folder.mkdir(parents=True, exist_ok=True)
+        path = folder / f"{stem}.png"
+        scn, saved = cls._render_setup(w, h, samples)
+        try:
+            if frame is not None:
+                scn.frame_set(int(max(scn.frame_start, min(scn.frame_end, int(frame)))))
+            used_frame = scn.frame_current
+            cls._write_still(scn, path)
+        finally:
+            cls._render_restore(scn, saved)
+        return {"path": str(path), "filename": path.name, "width": w, "height": h, "frame": used_frame,
+                "bytes": path.stat().st_size, "format": "PNG", "engine": "EEVEE"}
+
+    @classmethod
+    def render_animation(cls, export_dir: str, filename: str = "shot", width: int = 960, height: int = 540,
+                         start_frame: Any = None, end_frame: Any = None, video_format: str = "mp4",
+                         samples: int = 12) -> Dict[str, Any]:
+        import time
+
+        stem = _stem(filename, "shot")
+        w, h = _size(width, height)
+        fmt = str(video_format or "mp4").strip().lower()
+        if fmt not in ("mp4", "png"):
+            raise ModelingError("format must be 'mp4' or 'png' (a numbered image sequence).")
+        folder = Path(export_dir).expanduser()
+        folder.mkdir(parents=True, exist_ok=True)
+        scn, saved = cls._render_setup(w, h, samples)
+        try:
+            first = int(start_frame) if start_frame is not None else scn.frame_start
+            last = int(end_frame) if end_frame is not None else scn.frame_end
+            if first < 1 or last < first:
+                raise ModelingError("start_frame must be >= 1 and end_frame >= start_frame.")
+            if last - first + 1 > 480:
+                raise ModelingError("At most 480 frames per render; shorten the shot or lower fps.")
+            scn.frame_start, scn.frame_end = first, last
+            r = scn.render
+            started = time.time()
+            if fmt == "mp4":
+                target = folder / f"{stem}.mp4"
+                if hasattr(r.image_settings, "media_type"):
+                    r.image_settings.media_type = "VIDEO"
+                r.image_settings.file_format = "FFMPEG"
+                r.ffmpeg.format = "MPEG4"
+                r.ffmpeg.codec = "H264"
+                try:
+                    r.ffmpeg.constant_rate_factor = "MEDIUM"
+                except Exception:
+                    pass
+                r.filepath = str(target)
+                bpy.ops.render.render(animation=True)
+                if not target.exists():
+                    raise ModelingError("Blender did not write the video (is ffmpeg output available?).")
+                out_path, size = target, target.stat().st_size
+            else:
+                seq = folder / f"{stem}_frames"
+                seq.mkdir(parents=True, exist_ok=True)
+                if hasattr(r.image_settings, "media_type"):
+                    r.image_settings.media_type = "IMAGE"
+                r.image_settings.file_format = "PNG"
+                r.filepath = str(seq / "frame_")
+                bpy.ops.render.render(animation=True)
+                written = sorted(seq.glob("frame_*.png"))
+                if not written:
+                    raise ModelingError("Blender did not write any frames.")
+                out_path, size = seq, sum(p.stat().st_size for p in written)
+            seconds_taken = round(time.time() - started, 1)
+            preview_path = folder / f"{stem}_preview.png"
+            scn.frame_set((first + last) // 2)
+            cls._write_still(scn, preview_path)
+        finally:
+            cls._render_restore(scn, saved)
+        return {"path": str(out_path), "filename": out_path.name, "format": fmt.upper(), "frames": last - first + 1,
+                "fps": scn.render.fps, "width": w, "height": h, "bytes": size, "render_seconds": seconds_taken,
+                "preview_path": str(preview_path), "engine": "EEVEE"}

@@ -1,0 +1,21 @@
+{
+  "name": "shot-robot-vertigo-spacebunnyalpha",
+  "date": "20260930-094133",
+  "seconds": 302.3,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 49,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 1,
+  "final_views": 4,
+  "model": "openrouter/space-bunny-alpha",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti. Video render edildi.\n\n**Çıktı**\n```\n...\\bench-runs\\20260930-094133-shot-robot-vertigo-spacebunnyalpha\\shot-robot-vertigo-spacebunnyalpha.mp4\n```\n- 960x540, 120 kare, 24 fps, 5.0 sn, EEVEE, H.264\n- render süresi 9.1 sn, 187 KB\n\n**Yapılanlar**\n- `set_environment` → preset `night`, koyu mavi gökyüzü, soğuk ay ışığı (`AI_Sun`), 12 m zemin (`AI_Ground`)\n- `camera_move` → preset `dolly_zoom`, 5 sn, 24 fps, başlangıç mesafe 5.5 m, lens 40 mm\n- Test kareleri: ilk denemede kamera çok yakındı (gövde kadrajı dolduruyordu) → mesafe 2.6 m'den 5.5 m'ye çekildi, lens 40 mm'ye düşürüldü\n- `render_animation` → MP4\n\nNot: isimdeki \"spacebunnyalpha\" dosya adı olarak aynen kullanıldı; render engine EEVEE, alpha kanalı yok (opak MP4).",
+  "video_bytes": 187024,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

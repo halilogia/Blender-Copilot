@@ -6,7 +6,8 @@ Blender Copilot can be driven by external agents (Claude Code, Codex, any MCP cl
 
 - **An MCP bridge** inside Blender (or a headless Blender): the same tools the in-Blender agent uses, exposed over MCP with the same safety rules.
 - **Modeling tools** that go beyond primitives, all allow-listed and undoable: `create_mesh`, `mesh_edit`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier`, `frame_view`, `export_gltf`.
-- **A Claude Code plugin** with two skills (`blender-game-assets`, `blender-to-godot`) and `/blender-connect`.
+- **Cinematic tools** to direct a shot from chat: `set_environment`, `camera_move`, `render_image`, `render_animation` (MP4).
+- **A Claude Code plugin** with three skills (`blender-game-assets`, `blender-to-godot`, `blender-cinematic-shot`) and `/blender-connect`.
 
 ## Security model
 
@@ -61,6 +62,8 @@ Read-only: `inspect_scene`, `inspect_selection`, `inspect_object`, `inspect_mate
 
 Scene and modeling (risk LOW, one undo step each): `create_primitive` (CUBE, SPHERE, PLANE, CYLINDER, CONE, ICOSPHERE, TORUS), `create_mesh`, `mesh_edit` (EXTRUDE_FACES, INSET_FACES, BEVEL_EDGES, SUBDIVIDE, TRIANGULATE, RECALC_NORMALS, MERGE_BY_DISTANCE, SCALE_TO_HEIGHT_TAPER; faces picked by normal direction), `add_modifier` (BEVEL, SUBSURF; BOOLEAN is gated), `add_shape_modifier` (MIRROR, ARRAY, SOLIDIFY, DECIMATE, TRIANGULATE), `set_material`, `assign_material`, `set_shading`, `transform_object`, `duplicate_object`, `parent_object`, `join_objects`, `apply_transform`, `set_origin`, `create_camera`, `create_light`, `import_asset`, `frame_view` (aims the viewport so `capture_viewport` shows the model), `export_gltf` (writes a `.glb`; `recenter` puts the prop at the origin so a game engine does not place it where it was modelled).
 
+Cinematic (risk LOW, files only in the export folder): `set_environment` (studio, golden_hour, overcast, night, neon: world, sun, ground, tone mapping), `camera_move` (16 presets keyframed around the subject: static, dolly_in, dolly_out, orbit, arc_left, arc_right, crane_up, crane_down, pan_left, pan_right, tilt_up, tilt_down, whip_pan, dolly_zoom, crash_zoom_in, handheld), `render_image` (one EEVEE frame as PNG, returned as an image), `render_animation` (the shot as H.264 MP4 or a PNG sequence, plus a preview frame; at most 480 frames and 1920x1080; renders keep Blender busy, about 0.1 s per frame at 960x540). The skill `blender-cinematic-shot` explains the workflow. See [HIGGSFIELD.md](HIGGSFIELD.md) for why.
+
 Gated (MEDIUM+): `delete_object`.
 
 Every tool has MCP `annotations` (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`, `title`) so clients can skip approval prompts for tools that only observe.
@@ -81,7 +84,7 @@ A fresh `claude -p` process connected through `--mcp-config` (HTTP, bearer token
 
 `scripts/demo_bench_mcp.py` gives a fresh Claude Code agent one short prompt ("model a low-poly barrel") and only the `blender` MCP server, then keeps everything in `archives/bench-runs/<date>-<name>/` (git-ignored): the prompt, the raw and readable chat, every viewport capture the agent made, four final views (`sheet.png`), the `.glb` and `result.json` (calls, triangles, size, time). `scripts/demo_history.py` builds `archives/history/index.html` (zoom, chat links, "demos'a koy" picks) and `scripts/demo_promote.py <run>` copies the best runs into the tracked [`demos/`](../demos/README.md) library.
 
-Two agents were benchmarked with the same tools. **Claude Code** (`claude-opus-5-5`) drives the bridge over MCP (24 demos). The **add-on's own in-Blender agent** runs headless through an OpenAI-compatible gateway, here 9router: `python scripts/demo_bench_mcp.py --via 9router --model ag/claude-sonnet-4-6 --only crate` (also tried: `gemini-pro-agent`, `openrouter/space-bunny-alpha`; the cheap `a` combo stopped before exporting). For that agent the run script sets `BLENDER_AI_CONTINUE_ON_TOOL_ERROR=1` (a failed call goes back to the model), the default 100 tool rounds apply (`BLENDER_AI_MAX_TOOL_ROUNDS`), and up to two follow-up messages ask it to finish and export, like a user would. The `Ajan` column of [`demos/README.md`](../demos/README.md) says which agent made each model.
+Two agents were benchmarked with the same tools. **Claude Code** (`claude-opus-5-5`) drives the bridge over MCP (24 demos). The **add-on's own in-Blender agent** runs headless through an OpenAI-compatible gateway, here 9router: `python scripts/demo_bench_mcp.py --via 9router --model ag/claude-sonnet-4-6 --only crate` (also tried: `gemini-pro-agent`, `openrouter/space-bunny-alpha`; the cheap `a` combo stopped before exporting). For that agent the run script sets `BLENDER_AI_CONTINUE_ON_TOOL_ERROR=1` (a failed call goes back to the model), the default 100 tool rounds apply (`BLENDER_AI_MAX_TOOL_ROUNDS`), and up to two follow-up messages ask it to finish and export, like a user would. The `Ajan` column of [`demos/README.md`](../demos/README.md) says which agent made each model. `--shots` (or `--only shot-castle-orbit`) runs the cinematic prompts instead: the agent models, lights, moves the camera and renders an MP4 (`shot-*` demos, four frames of the video in `sheet.png`).
 
 ## Tests
 

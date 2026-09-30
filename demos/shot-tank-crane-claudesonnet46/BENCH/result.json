@@ -1,0 +1,21 @@
+{
+  "name": "shot-tank-crane-claudesonnet46",
+  "date": "20260930-091515",
+  "seconds": 169.5,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 29,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti. Özet:\n\n**Model** (260 üçgen):\n- `TankBody` — zeytin yeşili, bevel'lı gövde\n- `Track_L / Track_R` — koyu palet blokları\n- `Turret` — üstten daralan kule\n- `Barrel` — çelik silindir namlu\n- Hepsi `Tank` adıyla join, origin tabana alındı\n\n**Sahne:**\n- `golden_hour` — alçak sıcak güneş, uzun gölgeler, turuncu gökyüzü\n- Koyu toprak renkli zemin\n\n**Çekim:**\n- `crane_up` — kamera 10°→ yukarı süzülür, tank çerçevede sabit\n- 4 sn / 24 fps / 96 kare / 960×540\n- Render: 7.9 sn\n\n**Çıktı:** `shot-tank-crane-claudesonnet46.mp4`",
+  "video_bytes": 190570,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

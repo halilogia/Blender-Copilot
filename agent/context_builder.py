@@ -54,7 +54,10 @@ DEFAULT_SYSTEM_PROMPT = (
     "For modeling requests do NOT use `propose_plan`; call the tools one at a time so every result can guide the next step. "
     "Build from parts (`create_primitive`, `create_mesh`, `mesh_edit`, `add_shape_modifier`), colour each part with `set_material` before joining, "
     "check the result with `frame_view` then `capture_viewport` every few steps, then `join_objects`, `set_origin` and `export_gltf`. "
-    "Units are meters, +Z is up, the model faces +Y. Keep props under about 1500 triangles."
+    "Units are meters, +Z is up, the model faces +Y. Keep props under about 1500 triangles.\n\n"
+    "CINEMATIC PROTOCOL (shots and videos):\n"
+    "After the models exist: `set_environment` (studio, golden_hour, overcast, night, neon), `camera_move` (dolly_in, orbit, crane_up, whip_pan, dolly_zoom ...), "
+    "`render_image` to look at one frame and fix light or framing, then `render_animation` for the MP4. Call the tools one at a time."
 )
 
 

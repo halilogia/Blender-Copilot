@@ -55,6 +55,64 @@ SUFFIX = (
     "kısaca ne yaptığını ve üçgen sayısını yaz."
 )
 
+# Shots: model, light, camera move, render an MP4. Names start with "shot-".
+SHOTS = {
+    "shot-castle-orbit": "Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek.",
+    "shot-soldier-dolly": "Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek.",
+    "shot-tank-crane": "Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek.",
+    "shot-house-night": "Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek.",
+    "shot-robot-vertigo": "Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek.",
+    "shot-campfire-handheld": "Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek.",
+}
+
+SUFFIX_SHOT = (
+    "\n\nÇalışma sahnesi bir deneme sahnesi: varsayılan Cube'u silebilirsin. Önce modeli yap, sonra set_environment, "
+    "camera_move ve render_image ile bir kareye bakıp ışığı ve kadrajı düzelt, en sonunda render_animation ile "
+    "`{name}` adıyla MP4 al ve kısaca ne yaptığını yaz."
+)
+
+
+def is_shot(name):
+    return name.startswith("shot-")
+
+
+def media_summary(path):
+    """Frames, duration and size of a video through ffprobe (empty when ffprobe is missing)."""
+    import shutil
+    ffprobe = shutil.which("ffprobe")
+    info = {"video_bytes": Path(path).stat().st_size}
+    if not ffprobe:
+        return info
+    out = subprocess.run([ffprobe, "-v", "error", "-select_streams", "v:0", "-count_packets", "-show_entries",
+                          "stream=width,height,nb_read_packets,duration", "-of", "json", str(path)],
+                         capture_output=True, text=True).stdout
+    try:
+        stream = json.loads(out)["streams"][0]
+        info.update({"video_width": int(stream["width"]), "video_height": int(stream["height"]),
+                     "video_frames": int(stream["nb_read_packets"]), "video_seconds": round(float(stream.get("duration", 0)), 2)})
+    except (ValueError, KeyError, IndexError):
+        pass
+    return info
+
+
+def video_sheet(video, out):
+    """Four evenly spaced frames of the video in one 2x2 picture (needs ffmpeg and PIL)."""
+    import shutil
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return False
+    frames = media_summary(video).get("video_frames") or 0
+    if frames < 4:
+        return False
+    step = max(1, frames // 4)
+    tmp = Path(out).parent / "shots"
+    tmp.mkdir(exist_ok=True)
+    for i in range(4):
+        subprocess.run([ffmpeg, "-y", "-v", "error", "-i", str(video), "-vf", f"select=eq(n\\,{min(frames - 1, i * step + step // 2)})",
+                        "-frames:v", "1", str(tmp / f"video-{i + 1}.png")], capture_output=True)
+    paths = [tmp / f"video-{i + 1}.png" for i in range(4)]
+    return all(p.exists() for p in paths) and make_sheet(paths, out)
+
 
 def free_port():
     with socket.socket() as s:
@@ -216,7 +274,7 @@ def run_one(name, prompt, timeout_min, max_turns, model):
     run_dir = RUNS / f"{stamp}-{name}"
     shots_dir = run_dir / "shots"
     shots_dir.mkdir(parents=True)
-    full_prompt = prompt + SUFFIX.format(name=name)
+    full_prompt = prompt + (SUFFIX_SHOT if is_shot(name) else SUFFIX).format(name=name)
     (run_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
     bridge = Bridge(run_dir)
     started = time.time()
@@ -250,6 +308,8 @@ def run_one(name, prompt, timeout_min, max_turns, model):
         try:
             finals = final_views(bridge, shots_dir)
             make_sheet(finals, run_dir / "sheet.png")
+            if is_shot(name) and (run_dir / f"{name}.mp4").exists():
+                video_sheet(run_dir / f"{name}.mp4", run_dir / "sheet.png")
         except Exception as exc:  # the scene may be empty when the agent failed
             status = status if status != "ok" else f"no-final-views: {exc}"
     finally:
@@ -257,11 +317,11 @@ def run_one(name, prompt, timeout_min, max_turns, model):
         (run_dir / "mcp.json").unlink(missing_ok=True)  # holds the one-run token
     result = {"name": name, "date": stamp, "status": status, "seconds": round(duration or time.time() - started, 1)}
     result.update(stats if events else {})
-    glb = run_dir / f"{name}.glb"
-    if glb.exists():
-        result.update(glb_summary(glb))
+    artifact = run_dir / (f"{name}.mp4" if is_shot(name) else f"{name}.glb")
+    if artifact.exists():
+        result.update(media_summary(artifact) if is_shot(name) else glb_summary(artifact))
     else:
-        result["status"] = "no-glb" if result["status"] == "ok" else result["status"]
+        result["status"] = "no-output" if result["status"] == "ok" else result["status"]
     for ev in events:
         if ev.get("type") == "result":
             result["final_message"] = str(ev.get("result", ""))[:2000]
@@ -306,6 +366,7 @@ def run_one_agent(name, prompt, timeout_min, base_url, model):
     try:
         subprocess.run([BLENDER, "--background", "--python", str(ROOT / "scripts" / "agent_run_headless.py"), "--",
                         "--prompt-file", str(run_dir / "prompt.txt"), "--out-dir", str(run_dir), "--name", name,
+                        "--kind", "shot" if is_shot(name) else "model",
                         "--timeout", str(timeout_min * 60 - 30)],
                        env=router_env(base_url, model), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                        timeout=timeout_min * 60)
@@ -317,16 +378,18 @@ def run_one_agent(name, prompt, timeout_min, base_url, model):
     finals = [run_dir / "shots" / f"final-{d}.png" for d in ("iso", "front", "right", "top")]
     if all(p.exists() for p in finals):
         make_sheet(finals, run_dir / "sheet.png")
+    if is_shot(name) and (run_dir / f"{name}.mp4").exists():
+        video_sheet(run_dir / f"{name}.mp4", run_dir / "sheet.png")
     result = {"name": name, "date": stamp, "seconds": round(time.time() - started, 1), "agent": "in-Blender agent",
               "via": base_url}
     result.update(stats)
-    glb = run_dir / f"{name}.glb"
-    if glb.exists():
-        result.update(glb_summary(glb))
+    artifact = run_dir / (f"{name}.mp4" if is_shot(name) else f"{name}.glb")
+    if artifact.exists():
+        result.update(media_summary(artifact) if is_shot(name) else glb_summary(artifact))
         if result["status"] in ("error", "timeout"):
             result["note"] = f"exported despite {result['status']}"
     elif result["status"] == "ok":
-        result["status"] = "no-glb"
+        result["status"] = "no-output"
     (run_dir / "result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"[bench] {name}: {result['status']} {result.get('triangles', '-')} tris, "
           f"{result.get('tool_calls', '-')} calls, {result['seconds']}s -> {run_dir}", flush=True)
@@ -344,12 +407,14 @@ def main():
     ap.add_argument("--via", choices=["claude", "9router"], default="claude",
                     help="claude: Claude Code over MCP (default); 9router: the add-on's own in-Blender agent")
     ap.add_argument("--router-url", default="http://localhost:20128/v1")
+    ap.add_argument("--shots", action="store_true", help="with no --only: run every shot prompt instead of the model prompts")
     args = ap.parse_args()
     if args.name and args.prompt:
         jobs = [(re.sub(r"[^A-Za-z0-9_-]", "-", args.name), args.prompt)]
     else:
-        names = args.only.split(",") if args.only else list(DEFAULTS)
-        jobs = [(n, DEFAULTS[n]) for n in names]
+        pool = {**DEFAULTS, **SHOTS}
+        names = args.only.split(",") if args.only else (list(SHOTS) if args.shots else list(DEFAULTS))
+        jobs = [(n, pool[n]) for n in names]
     for name, prompt in jobs:
         if args.via == "9router":
             run_one_agent(name, prompt, args.timeout_min, args.router_url, args.model or "a")

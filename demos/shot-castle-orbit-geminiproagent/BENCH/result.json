@@ -1,0 +1,21 @@
+{
+  "name": "shot-castle-orbit-geminiproagent",
+  "date": "20260930-094639",
+  "seconds": 143.1,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 29,
+  "tool_errors": 5,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "MP4 hazır. Neler yaptım:\n\n*   Cube silindi, yerine ana gövde (Keep) yapıldı.\n*   Silindir (Tower) yapıldı, 3 kez çoğaltıldı ve köşelere dizildi.\n*   Küpler (Wall_X, Wall_Y) oluşturulup 4 yöne sur olarak yerleştirildi.\n*   Tüm parçalar birleştirilip \"Castle\" yapıldı.\n*   Işık \"golden_hour\" olarak ayarlandı.\n*   Kamera kalenin etrafında dönecek (orbit) ve 5 saniye sürecek şekilde ayarlandı.\n*   Örnek kare alındı. Işık ve kadraj sorunsuz.\n*   `shot-castle-orbit-geminiproagent.mp4` renderlandı.",
+  "video_bytes": 209939,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

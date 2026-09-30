@@ -1,0 +1,21 @@
+{
+  "name": "shot-house-night-claudesonnet46",
+  "date": "20260930-095139",
+  "seconds": 144.3,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 21,
+  "tool_errors": 1,
+  "approvals": 2,
+  "followups": 1,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Tamamlandı.\n\n**`shot-house-night-claudesonnet46.mp4`**\n- 192 kare · 8 sn · 24 fps · 960×540\n- EEVEE · 12 sample · 12 sn render süresi\n- 360° orbit · night preset · pencere glow aktif\n- Yol: `...bench-runs\\20260930-095139-...\\shot-house-night-claudesonnet46.mp4`",
+  "video_bytes": 324733,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 192,
+  "video_seconds": 8.0
+}

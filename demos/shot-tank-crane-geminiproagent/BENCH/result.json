@@ -1,0 +1,21 @@
+{
+  "name": "shot-tank-crane-geminiproagent",
+  "date": "20260930-094906",
+  "seconds": 107.6,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 34,
+  "tool_errors": 8,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": ".mp4 render success.\n\nDone.\n1. Delete Cube.\n2. Create primitive shapes (body, turret, barrel, track_L, track_R).\n3. Set materials (tank_green, track_black). Bevel body and turret.\n4. Join to 'Tank'. Set origin BOTTOM_CENTER. Apply transform.\n5. Set environment 'golden_hour'.\n6. Camera move 'crane_up'. Render check image.\n7. Render 4 second animation to `shot-tank-crane-geminiproagent.mp4`.\n\nFile saved at: `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094906-shot-tank-crane-geminiproagent\\shot-tank-crane-geminiproagent.mp4`",
+  "video_bytes": 186520,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

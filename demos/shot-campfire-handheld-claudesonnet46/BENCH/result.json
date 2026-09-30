@@ -1,0 +1,21 @@
+{
+  "name": "shot-campfire-handheld-claudesonnet46",
+  "date": "20260930-092234",
+  "seconds": 204.0,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 34,
+  "tool_errors": 2,
+  "approvals": 3,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti. Özet:\n\n---\n\n**Ne yapıldı:**\n\n**Model** — 7 parça:\n- `Stone_Ring` — boolean ile içi boşaltılmış taş halka (koyu gri, mat)\n- `Ash_Ground` — halka içi kül tabanı (siyahımsı)\n- `Log_A/B/C` — 120° aralıklı üç odun silindiri, içe eğik (kahverengi)\n- `Flame_Core` — turuncu dış alev konisi, emission strength 8\n- `Flame_Inner` — sarı iç alev, emission strength 12\n- `FireLight` — turuncu point light (80W), ateşin üstünde, çevreye sıcak ışık saçıyor\n\n**Ortam** — `night` preset: koyu mavi gece gökyüzü, soğuk ay ışığı arkadan, siyah zemin\n\n**Kamera** — 40mm lens, 25° azimuth, 22° elevation, 3.2m mesafe, `handheld` preset → 4 sn / 96 kare hafif el titremesi\n\n**Çıktı** — `shot-campfire-handheld-claudesonnet46.mp4`, 960×540, 24fps, EEVEE, ~7.8 sn render süresi",
+  "video_bytes": 261876,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

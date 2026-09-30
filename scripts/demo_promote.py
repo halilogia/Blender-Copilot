@@ -31,7 +31,9 @@ def promote(run_name):
         REPLACED.mkdir(parents=True, exist_ok=True)
         shutil.move(str(dest), str(REPLACED / f"{run_name}-old"))
     (dest / "BENCH").mkdir(parents=True)
-    shutil.copy2(run / f"{name}.glb", dest / f"{name}.glb")
+    for ext in ("glb", "mp4"):
+        if (run / f"{name}.{ext}").exists():
+            shutil.copy2(run / f"{name}.{ext}", dest / f"{name}.{ext}")
     shutil.copy2(run / "sheet.png", dest / "sheet.png")
     shutil.copy2(run / "shots" / "final-iso.png", dest / "screenshot.png")
     for file in ("prompt.txt", "result.json", "chat.md"):
@@ -49,20 +51,23 @@ def rebuild():
     for folder in sorted(p for p in DEMOS.iterdir() if p.is_dir()):
         result = json.loads((folder / "BENCH" / "result.json").read_text(encoding="utf-8"))
         prompt = (folder / "BENCH" / "prompt.txt").read_text(encoding="utf-8").strip()
-        size = "x".join(f"{v:.2f}" for v in result.get("size_m", [])) + " m"
+        video = (folder / f"{folder.name}.mp4").exists()
+        size = (f"{result.get('video_seconds', '-')} sn video" if video else "x".join(f"{v:.2f}" for v in result.get("size_m", [])) + " m")
         who = ("Blender Copilot ajanı (9router)" if result.get("agent") == "in-Blender agent" else "Claude Code (MCP)") + f" · {result.get('model') or 'claude-opus-5-5'}"
         rows.append(f"| [{folder.name}]({folder.name}/) | {who} | {prompt} | {result['seconds'] / 60:.1f} dk | "
                     f"{result.get('tool_calls', '-')} | {result.get('triangles', '-')} | {size} | {result['date'][:8]} |")
-        gallery.append(f"**{folder.name}**\n\n![{folder.name}]({folder.name}/sheet.png)\n")
+        clip = f" ([video]({folder.name}/{folder.name}.mp4))" if video else ""
+        gallery.append(f"**{folder.name}**{clip}\n\n![{folder.name}]({folder.name}/sheet.png)\n")
     text = (
         "# Demo kütüphanesi\n\n"
         "Her model, boş bir Blender sahnesinde tek bir istemle bir ajanın izin listeli araçlarla (rastgele Python yok) "
         "modellediği bir `.glb` dosyasıdır: ya **Claude Code** Blender Copilot MCP köprüsü üzerinden, ya da eklentinin "
         "**kendi Blender içi ajanı** 9router üzerinden (`Ajan` sütunu hangisi olduğunu söyler) "
-        "(`scripts/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: "
-        "izometrik, ön, sağ, üst.\n\n"
+        "(`scripts/demo_bench_mcp.py`). `shot-` ile başlayanlar **çekimdir**: ajan modeli yapar, ışığı kurar, kamerayı "
+        "hareket ettirir ve MP4 render alır (yalnız sohbet modeli, elle müdahale yok). İstem, sohbet ve ölçüm her demonun "
+        "`BENCH/` klasöründe. Modellerde sayfada dört görünüm var (izometrik, ön, sağ, üst); çekimlerde videodan dört kare.\n\n"
         "Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: "
-        "`res://assets/models/` altına at).\n\n"
+        "`res://assets/models/` altına at); MP4 dosyaları herhangi bir oynatıcıda açılır.\n\n"
         "| Model | Ajan | İstem | Süre | Araç çağrısı | Üçgen | Boyut | Tarih |\n|---|---|---|---|---|---|---|---|\n"
         + "\n".join(rows) + "\n\n## Galeri\n\n" + "\n".join(gallery))
     (DEMOS / "README.md").write_text(text, encoding="utf-8")

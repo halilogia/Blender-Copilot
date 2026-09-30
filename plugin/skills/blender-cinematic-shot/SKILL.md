@@ -1,0 +1,42 @@
+---
+name: blender-cinematic-shot
+description: Direct a short cinematic shot in Blender 5.2 through Blender Copilot's MCP tools - build or import the subject, light it with an environment preset, move the camera (dolly, orbit, crane, whip pan, dolly zoom ...) and render a PNG or an MP4. Use when the user wants a video, a camera move, a turntable, a product or scene shot, or a Higgsfield-style result made from 3D models.
+---
+
+# A cinematic shot from chat, no Python
+
+Every step is an allow-listed tool: no code runs, the camera moves are keyframed math, and the files land in the add-on's export folder. Read the tool schemas first and use their exact argument names.
+
+## Workflow
+
+1. **Subject.** Model it (skill `blender-game-assets`) or bring it in with `import_asset`. Put it near the origin, real-world scale, facing +Y. One or a few objects; the camera frames all meshes unless you pass `object_names`.
+2. **Light.** `set_environment` with one of: `studio` (neutral, product shots), `golden_hour` (low warm sun, outdoor drama), `overcast` (soft even light), `night` (dark blue, moon light from behind), `neon` (dark, magenta and cyan). It also adds a ground plane; pass `ground: false` for floating objects or a `ground_color`.
+3. **Camera.** `camera_move` with a preset. Defaults frame the subject well (distance about 2.8 times its radius, 15 degrees up, 35 degrees to the side, 35 mm, 4 seconds, 24 fps). Change `duration`, `distance`, `elevation`, `azimuth`, `focal_length` only for a reason.
+4. **Look at one frame.** `render_image` (960x540 is enough) returns the picture. Check: subject fully in frame and large enough, light on the side the camera sees, no black or washed-out areas. Fix with another `set_environment` preset, `camera_move` with a different `distance` or `azimuth`, then render again.
+5. **Render the shot.** `render_animation` (mp4). Then say where the file is and how long it is.
+
+## Choosing the move
+
+| Want | Preset |
+|---|---|
+| Product turntable, show all sides | `orbit` (`angle` 360, `duration` 6-8) |
+| Reveal, draw the viewer in | `dolly_in`; the opposite is `dolly_out` |
+| Hero, power | `crane_up` (rises past the subject), `crane_down` |
+| Sweep past the subject | `arc_left`, `arc_right` |
+| Scan a scene | `pan_left`, `pan_right`, `tilt_up`, `tilt_down` |
+| Fast cut, energy | `whip_pan` (short, 1-2 s), `crash_zoom_in` |
+| Suspense, unease | `dolly_zoom` (subject keeps its size while the background stretches) |
+| Documentary, alive | `handheld` (small shake) |
+| Locked frame | `static` |
+
+Move length: 2-3 s for whip_pan, crash_zoom_in, dolly_zoom; 4-6 s for dolly, arc, crane; 6-10 s for a full orbit. Slow moves read as expensive.
+
+## Rules that save time
+
+- Camera azimuth 0 is in front of the subject (models face +Y); a positive azimuth moves the camera toward +X.
+- Call `set_environment` before the first `render_image`; a scene without light renders black.
+- `camera_move` replaces the previous shot (same `ShotCamera`); to make a second shot with another move, render the first one, then call `camera_move` again.
+- Small subjects (a 0.3 m prop) still work: the distance scales with the subject's size.
+- Renders block Blender for a few seconds (about 0.1 s per frame at 960x540). Keep shots under 10 seconds while iterating and use 1280x720 or 1920x1080 only for the final render.
+- Call tools one at a time and read each result; do not use `propose_plan` for shots.
+- To use the video in a game engine or an editor, copy the MP4 from the export folder; it is a normal H.264 file.

@@ -377,7 +377,7 @@ class OpenAICompatibleProvider:
             yield ProviderError(
                 turn_id=turn_id,
                 type=err_type,
-                message=f"HTTP {err.status_code}: {err.message}" + (f" - {err.body_snippet[:200]}" if err.body_snippet else ""),
+                message=f"HTTP {err.status_code}: {err.message}" + (f" - {err.body_snippet[:600]}" if err.body_snippet else ""),
                 details={"status_code": err.status_code, "body_snippet": err.body_snippet},
             )
             return

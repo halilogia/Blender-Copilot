@@ -23,6 +23,8 @@ INSTRUCTIONS = (
     "Finish with export_gltf (a .glb in the export folder, Y-up, modifiers applied) and hand the file path to the game "
     "engine (Godot: copy it under res:// and call sync_project). Keep low-poly game assets under ~3000 triangles, "
     "origin at the bottom centre, real-world scale. "
+    "Direct a shot like a film: set_environment (studio, golden_hour, overcast, night, neon light), camera_move (dolly, orbit, arc, crane, pan, tilt, "
+    "whip_pan, dolly_zoom, crash_zoom_in, handheld; keyframed around the subject), render_image to check one frame, render_animation for an MP4. "
     "Tools with risk MEDIUM or higher (delete_object) need the user's approval and are refused over MCP unless the "
     "user enabled 'Allow gated tools' in the add-on preferences; tell the user instead of retrying."
 )
@@ -109,7 +111,9 @@ class RegistryToolHost:
         self._counter += 1
         call = ToolCall(call_id=f"mcp_{self._counter}", tool_name=name, arguments=dict(arguments))
         try:
-            result = self.submit(lambda: self._dispatch(call), timeout=self.call_timeout)
+            # renders keep Blender's main thread busy for a while: give them a longer window
+            wait = max(self.call_timeout, 600.0) if name.startswith("render_") else self.call_timeout
+            result = self.submit(lambda: self._dispatch(call), timeout=wait)
         except TimeoutError:
             return ToolResult.fail(name, "TIMEOUT", f"Blender did not run '{name}' within {self.call_timeout:.0f} s "
                                    "(is the main thread busy or the add-on's timer stopped?)").to_dict()

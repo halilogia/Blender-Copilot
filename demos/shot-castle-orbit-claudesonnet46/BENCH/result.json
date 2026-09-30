@@ -1,0 +1,21 @@
+{
+  "name": "shot-castle-orbit-claudesonnet46",
+  "date": "20260930-095552",
+  "seconds": 223.4,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 56,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "MP4 hazır. Özet:\n\n---\n\n**Ne yapıldı:**\n\n**Model** — Varsayılan Cube silindi. Kale 14 parçadan oluştu:\n- `Keep` — merkez ana kule, üstte battlement profili (inset+extrude)\n- `Wall_N/S/E/W` — 4 sur duvarı, her biri üstte merlon çıkıntısı\n- `Tower_NE/NW/SE/SW` — 4 köşe silindirik kulesi, yine battlement tepeli\n- `Roof_NE/NW/SE/SW` — konik bordo çatılar\n- `CourtYard` — avlu tabanı\n- Taş: gri-bej Principled BSDF (roughness 0.85) / Çatı: koyu bordo\n\n**Işık** — `golden_hour` preset: alçak sıcak güneş, uzun gölgeler, turuncu gökyüzü, toprak rengi zemin\n\n**Kamera** — `orbit` 360° tam tur, 28 m mesafe, 22° yükseklik, 35 mm lens, 5 sn / 24 fps\n\n**Render** — 120 kare EEVEE, 960×540, `shot-castle-orbit-claudesonnet46.mp4` (~8.3 sn render süresi)",
+  "video_bytes": 298005,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

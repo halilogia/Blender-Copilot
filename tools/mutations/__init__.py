@@ -19,6 +19,10 @@ from .set_origin import SetOriginTool
 from .export_gltf import ExportGltfTool
 from .add_shape_modifier import AddShapeModifierTool
 from .frame_view import FrameViewTool
+from .set_environment import SetEnvironmentTool
+from .camera_move import CameraMoveTool
+from .render_image import RenderImageTool
+from .render_animation import RenderAnimationTool
 
 __all__ = [
     "CreatePrimitiveTool",
@@ -40,4 +44,8 @@ __all__ = [
     "ExportGltfTool",
     "AddShapeModifierTool",
     "FrameViewTool",
+    "SetEnvironmentTool",
+    "CameraMoveTool",
+    "RenderImageTool",
+    "RenderAnimationTool",
 ]

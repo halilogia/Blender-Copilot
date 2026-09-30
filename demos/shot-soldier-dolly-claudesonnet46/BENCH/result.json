@@ -1,0 +1,21 @@
+{
+  "name": "shot-soldier-dolly-claudesonnet46",
+  "date": "20260930-095939",
+  "seconds": 220.7,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 36,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti. Özet:\n\n**Model** — 8 parça (bacaklar, gövde, kafa, kask, 2 kol, tüfek gövde+namlu) join edildi → `Soldier`, 346 üçgen. 4 materyal: zeytin yeşili üniforma, ten rengi kafa, koyu yeşil kask, gun-metal tüfek.\n\n**Sahne** — `overcast` preset: gri gökyüzü, yumuşak tek yönlü güneş, sert gölge yok.\n\n**Kamera** — `dolly_in`, 4 sn, 96 kare @24fps. Başlangıç mesafe 4.5 m → askere yavaşça yaklaşır. Azimuth 25°, elevation 18°, 50 mm lens.\n\n**Çıktı** → `shot-soldier-dolly-claudesonnet46.mp4` (960×540, 6.9 sn render süresi)",
+  "video_bytes": 151197,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

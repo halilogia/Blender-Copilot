@@ -22,7 +22,7 @@ if str(ROOT) not in sys.path:
 
 
 def parse(argv):
-    args = {"prompt_file": "", "out_dir": "", "name": "model", "timeout": 900.0}
+    args = {"prompt_file": "", "out_dir": "", "name": "model", "timeout": 900.0, "kind": "model"}
     it = iter(argv)
     for a in it:
         if a == "--prompt-file":
@@ -31,6 +31,8 @@ def parse(argv):
             args["out_dir"] = next(it)
         elif a == "--name":
             args["name"] = next(it)
+        elif a == "--kind":
+            args["kind"] = next(it)
         elif a == "--timeout":
             args["timeout"] = float(next(it))
     return args
@@ -60,11 +62,18 @@ def main():
     from agent.state_machine import AgentState
 
     started = time.time()
-    runtime.submit_prompt(prompt + f"\n\nÇalışma sahnesi bir deneme sahnesi (varsayılan Cube'u silebilirsin). Modeli viewport'ta kontrol et, sonunda `{args['name']}.glb` adıyla export_gltf ile dışa aktar ve kısaca ne yaptığını yaz.")
+    shot = args["kind"] == "shot"
+    if shot:
+        tail = (f"\n\nÇalışma sahnesi bir deneme sahnesi (varsayılan Cube'u silebilirsin). Önce modeli yap, sonra set_environment, camera_move ve "
+                f"render_image ile bir kareye bakıp ışığı ve kadrajı düzelt, en sonunda render_animation ile `{args['name']}` adıyla MP4 al ve kısaca ne yaptığını yaz.")
+    else:
+        tail = (f"\n\nÇalışma sahnesi bir deneme sahnesi (varsayılan Cube'u silebilirsin). Modeli viewport'ta kontrol et, "
+                f"sonunda `{args['name']}.glb` adıyla export_gltf ile dışa aktar ve kısaca ne yaptığını yaz.")
+    runtime.submit_prompt(prompt + tail)
     approvals = 0
     status = "ok"
     followups = 0
-    glb = out / f"{args['name']}.glb"
+    glb = out / (f"{args['name']}.mp4" if shot else f"{args['name']}.glb")
     while True:
         bridge.tick()
         try:
@@ -81,8 +90,10 @@ def main():
             if runtime.current_state == AgentState.IDLE and not glb.exists() and followups < 2:
                 followups += 1
                 runtime.submit_prompt(
-                    f"Model henüz dışa aktarılmadı. Kalan parçaları tamamla, join_objects ve set_origin ile tek nesne yap "
-                    f"ve export_gltf ile `{args['name']}.glb` olarak dışa aktar.")
+                    (f"Video henüz render edilmedi. Eksik adımları tamamla (set_environment, camera_move) ve render_animation ile `{args['name']}` adıyla MP4 al."
+                     if shot else
+                     f"Model henüz dışa aktarılmadı. Kalan parçaları tamamla, join_objects ve set_origin ile tek nesne yap "
+                     f"ve export_gltf ile `{args['name']}.glb` olarak dışa aktar."))
                 continue
             break
         if time.time() - started > args["timeout"]:

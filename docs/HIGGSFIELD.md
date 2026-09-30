@@ -1,6 +1,16 @@
 # Higgsfield gap analysis: what an open-source, Blender-native version needs
 
-Research date 2026-09-30. Türkçe özet en altta. Nothing here is implemented yet except what the "Have" column says.
+Research date 2026-09-30. Türkçe özet en altta. The feature map below is the state before v1.3.0; the status section right after this line says what has been built since.
+
+## Status (v1.3.0, same day)
+
+Steps 1 to 4 of the proposed order are built: `render_image`, `render_animation` (MP4), `set_environment` (5 presets), `camera_move` (16 presets) and the skill `blender-cinematic-shot`. They were then tried the way the project intends: **chat models drive the add-on's own agent** (through 9router: `ag/claude-sonnet-4-6`, `ag/gemini-pro-agent`, `openrouter/space-bunny-alpha`), one short Turkish prompt per shot ("model a castle, set golden hour light, orbit the camera, render a 5 second MP4"). Eight shots are in [`demos/`](../demos/README.md) (`shot-*`, MP4 plus frames plus the chat). What the runs showed:
+
+- All three models finish the whole chain (model, light, camera, MP4) unaided in 20 to 64 tool calls; free and mid models sometimes need one or two nudges ("the video is not rendered yet"), which the bench script sends like a user would.
+- The weak link is the 3D model, not the camera: floating cone roofs, blocky soldiers, dark robots. Lighting presets needed tuning after the first renders (blown highlights on golden hour, white sky on overcast); more tuning and a look check by the model (`render_image`, then fix) is the next quality lever.
+- Found and fixed on the way: the in-Blender agent stopped a turn on the first tool error and had a fixed limit of 5 tool rounds; the image store kept 10 pictures and a long session died with `IMAGE_NOT_FOUND`.
+
+Still missing compared with Higgsfield: character motion (walk, aim, poses), a character library, text or image to 3D, effects such as slow motion and transitions, audio, a shot list UI. Realistic (diffusion) video is out of scope: this is 3D animation.
 
 ## What Higgsfield is (from its own pages)
 

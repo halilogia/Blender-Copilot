@@ -137,7 +137,7 @@ class ViewportReader:
     DEFAULT_HEIGHT: int = 512
     MIN_DIMENSION: int = 64
     MAX_DIMENSION: int = 2048
-    MAX_CACHE_SIZE: int = 10
+    MAX_CACHE_SIZE: int = 48
     THUMBNAIL_SIDE: int = 256
 
     def __init__(self):

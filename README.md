@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.2.0
+# Blender - Copilot — v1.3.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -15,7 +15,9 @@
 
 > v1.1.0 completes Vision (Anthropic native + `max_side` capture guard + stdlib local embedding) and adds check-only auto-update plus a local asset browser (`import_asset`). Verified with 682 passing pure-Python unit tests.
 
-> v1.2.0 adds a local MCP bridge (Claude Code and other MCP clients drive the same tools), nine modeling, view and export tools, a Claude Code plugin and a library of 33 demo props modeled by agents. Verified with 709 passing pure-Python unit tests and 27 headless Blender suites.
+> v1.2.0 adds a local MCP bridge (Claude Code and other MCP clients drive the same tools), nine modeling, view and export tools, a Claude Code plugin and a library of demo props modeled by agents.
+
+> v1.3.0 adds cinematic tools so a chat model can direct a shot: `set_environment` (studio, golden hour, overcast, night, neon), `camera_move` (16 keyframed presets: dolly, orbit, arc, crane, pan, tilt, whip pan, dolly zoom, crash zoom, handheld), `render_image` and `render_animation` (MP4). Verified with 722 passing pure-Python unit tests and 28 headless Blender suites. See [docs/HIGGSFIELD.md](docs/HIGGSFIELD.md).
 
 ---
 
@@ -355,9 +357,9 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.2.0 durumunda 709 pure-Python unit testi ve 27 Blender integration
+v1.3.0 durumunda 722 pure-Python unit testi ve 28 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
-asset import 6/6, anthropic roundtrip). Headless 27/27 Blender 5.2.2 LTS’te
+asset import 6/6, anthropic roundtrip). Headless 28/28 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.
 
 ### Tanılama logları

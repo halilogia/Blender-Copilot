@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-09-30
+
+### Added
+- **Cinematic tools** (chat-model driven, no Python, LOW risk, files only in the export folder): `set_environment` (studio, golden_hour, overcast, night, neon: world, sun, ground, Standard tone mapping), `camera_move` (16 keyframed presets around the subject: static, dolly_in/out, orbit, arc_left/right, crane_up/down, pan_left/right, tilt_up/down, whip_pan, dolly_zoom, crash_zoom_in, handheld; math in `core/camera_paths.py`), `render_image` (EEVEE PNG returned as an image) and `render_animation` (H.264 MP4 or PNG sequence plus a preview frame; at most 480 frames and 1920x1080; Blender 5 `media_type = "VIDEO"`).
+- Skill `blender-cinematic-shot` in the Claude Code plugin; the in-Blender agent's system prompt has a cinematic protocol; MCP render calls get a 600 s window.
+- Tests: `tests/unit/test_camera_paths.py` (13) and `tests/integration/test_cinema_tools.py` (a real PNG and MP4 are written and checked, settings restored, undo).
+- Demo bench shots: `scripts/demo_bench_mcp.py --shots` (model, light, move, MP4) with the add-on's own agent through 9router; `demos/` shows them with a video link.
+- Research: `docs/HIGGSFIELD.md` (gap analysis of a Higgsfield-style workflow).
+
+### Fixed
+- The viewport image store kept only 10 pictures; an agent that captured or rendered more lost older ones and the run ended with `IMAGE_NOT_FOUND`. It now keeps 48.
+- Provider HTTP errors show up to 600 characters of the response body.
+
+---
+
 ## [1.2.0] - 2026-09-30
 
 ### Added

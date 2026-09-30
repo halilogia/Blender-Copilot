@@ -23,6 +23,7 @@ from adapter.readers.mesh_reader import (
 )
 from adapter.readers.viewport_reader import ViewportReader
 from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
+from adapter.mutators.cinema_mutator import CinemaMutator
 from adapter.mutators import (
     PrimitiveMutator,
     InvalidPrimitiveTypeError,
@@ -848,3 +849,41 @@ class BlenderAdapter:
 
     def frame_view(self, **kwargs) -> ToolResult:
         return self._modeling("frame_view", ModelingMutator.frame_view, **kwargs)
+
+    # ------------------------------------------------------------------
+    # Cinematic (v1.3): environment presets, camera moves, EEVEE renders
+    # ------------------------------------------------------------------
+    def set_environment(self, **kwargs) -> ToolResult:
+        return self._modeling("set_environment", CinemaMutator.set_environment, **kwargs)
+
+    def camera_move(self, **kwargs) -> ToolResult:
+        return self._modeling("camera_move", CinemaMutator.camera_move, **kwargs)
+
+    def _attach_image(self, result: ToolResult, path_key: str) -> ToolResult:
+        """Put a rendered PNG into the in-memory image store so agents (and MCP clients) can look at it."""
+        import hashlib
+
+        try:
+            data = result.data
+            if not result.success or not isinstance(data, dict) or not data.get(path_key):
+                return result
+            png = Path(data[path_key]).read_bytes()
+            image_id = "rn_" + hashlib.sha1(png).hexdigest()[:12]
+            cache = self._viewport_reader._cache
+            if len(cache) >= self._viewport_reader.MAX_CACHE_SIZE:
+                cache.popitem(last=False)
+            cache[image_id] = png
+            data.update({"image_id": image_id, "mime_type": "image/png", "byte_size": len(png)})
+        except Exception:
+            pass
+        return result
+
+    def render_image(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._attach_image(self._modeling("render_image", CinemaMutator.render_image, **kwargs), "path")
+
+    def render_animation(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        if "format" in kwargs:
+            kwargs["video_format"] = kwargs.pop("format")
+        return self._attach_image(self._modeling("render_animation", CinemaMutator.render_animation, **kwargs), "preview_path")
