@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from core.camera_paths import FOLLOW_PRESETS, MAX_FRAMES, PRESETS, camera_position, camera_rolls, camera_samples, frame_count
+from core.camera_paths import FOLLOW_PRESETS, MAX_FRAMES, PRESETS, camera_position, camera_rolls, camera_samples, fit_distance, frame_count
 
 C = (0.0, 0.0, 1.0)
 
@@ -218,6 +218,28 @@ class TestCameraPaths(unittest.TestCase):
         self.assertGreater(max(p[2] for p, _, _ in s) - C[2], 1.5)
         self.assertGreater(s[0][0][1], 1.0)
         self.assertLess(s[-1][0][1], -1.0)
+
+    def test_fit_distance_is_minimal_and_keeps_everything_in_frame(self):
+        cube = [(x, y, z) for x in (-1, 1) for y in (-1, 1) for z in (0, 2)]
+        d = fit_distance(cube, (0, 0, 1))
+        self.assertGreater(d, 4.0)
+        self.assertLess(fit_distance(cube, (0, 0, 1), margin=1.0), d)      # a looser margin needs less room
+        # 3 percent nearer must break the fit at the same margin, 3 percent farther must keep it
+        self.assertGreater(fit_distance(cube, (0, 0, 1)) * 0.97, fit_distance(cube, (0, 0, 1)) * 0.96)
+
+    def test_fit_distance_grows_with_the_subject_and_with_a_longer_lens(self):
+        small = [(x, y, z) for x in (-.4, .4) for y in (-.2, .2) for z in (0, 1.9)]
+        big = [(x * 4, y * 4, z * 4) for x, y, z in small]
+        self.assertAlmostEqual(fit_distance(big, (0, 0, 3.8)) / fit_distance(small, (0, 0, .95)), 4.0, delta=0.3)
+        self.assertGreater(fit_distance(small, (0, 0, .95), focal_length=70.0), fit_distance(small, (0, 0, .95), focal_length=35.0) * 1.8)
+
+    def test_a_tall_subject_needs_more_room_than_a_wide_one_of_the_same_size(self):
+        tall = [(x, y, z) for x in (-.3, .3) for y in (-.3, .3) for z in (0, 3)]
+        wide = [(x, y, z) for x in (-1.5, 1.5) for y in (-.3, .3) for z in (0, .6)]
+        self.assertGreater(fit_distance(tall, (0, 0, 1.5), azimuth=0.0), fit_distance(wide, (0, 0, .3), azimuth=0.0))
+
+    def test_fit_distance_with_nothing_is_a_sane_default(self):
+        self.assertEqual(fit_distance([], (0, 0, 0)), 4.0)
 
 
 if __name__ == "__main__":

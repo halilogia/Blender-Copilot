@@ -14,7 +14,7 @@ from mathutils import Quaternion, Vector
 
 from adapter.mutators.modeling_mutator import ModelingError, as_list
 from adapter.mutators.undo_manager import push_undo_step
-from core.camera_paths import FOLLOW_PRESETS, PRESETS, camera_rolls, camera_samples, frame_count
+from core.camera_paths import FOLLOW_PRESETS, PRESETS, camera_rolls, camera_samples, fit_distance, frame_count
 
 HELPER_PREFIX = "AI_"
 CAMERA_NAME = "ShotCamera"
@@ -26,8 +26,8 @@ STEM_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}$")
 # sky colour, sky strength, sun colour, sun energy, sun elevation, sun azimuth (0 = +Y side), sun softness (rad),
 # ground colour, exposure, extra point lights
 ENVIRONMENTS: Dict[str, Dict[str, Any]] = {
-    "studio": {"sky": (0.72, 0.72, 0.75), "sky_strength": 1.0, "sun": (1.0, 1.0, 1.0), "energy": 2.0, "elevation": 50.0,
-               "azimuth": 30.0, "softness": 0.12, "ground": (0.75, 0.75, 0.75), "exposure": 0.0,
+    "studio": {"sky": (0.6, 0.6, 0.64), "sky_strength": 0.7, "sun": (1.0, 1.0, 1.0), "energy": 1.6, "elevation": 50.0,
+               "azimuth": 30.0, "softness": 0.12, "ground": (0.5, 0.5, 0.5), "exposure": 0.0,
                "about": "neutral grey backdrop, soft white key light"},
     "golden_hour": {"sky": (1.0, 0.72, 0.48), "sky_strength": 0.4, "sun": (1.0, 0.62, 0.3), "energy": 2.6, "elevation": 12.0,
                     "azimuth": 55.0, "softness": 0.03, "ground": (0.36, 0.3, 0.2), "exposure": 0.0, "nishita": (9.0, 55.0),
@@ -99,21 +99,16 @@ def _bounds(objs: Sequence["bpy.types.Object"]):
     return (lo + hi) / 2.0, max((hi - lo).length / 2.0, 0.05), lo.z
 
 
-def _frame_distance(objs: Sequence["bpy.types.Object"], focal_length: float) -> float:
-    """Camera distance that fits the subject in the render frame: tall subjects need more room than wide ones
-    because a 16:9 frame is much narrower vertically (about 32 degrees at 35 mm) than horizontally (about 54)."""
-    pts = [o.matrix_world @ Vector(c) for o in objs if o.type == "MESH" for c in o.bound_box]
+def _frame_distance(objs: Sequence["bpy.types.Object"], focal_length: float, azimuth: float = 35.0, elevation: float = 15.0) -> float:
+    """Camera distance that fits the whole subject in the render frame, from the real projection (core.camera_paths.fit_distance)."""
+    pts = [tuple(o.matrix_world @ Vector(c)) for o in objs if o.type == "MESH" for c in o.bound_box]
     if not pts:
         return 4.0
-    dx = max(p.x for p in pts) - min(p.x for p in pts)
-    dy = max(p.y for p in pts) - min(p.y for p in pts)
-    dz = max(p.z for p in pts) - min(p.z for p in pts)
+    xs, ys, zs = [p[0] for p in pts], [p[1] for p in pts], [p[2] for p in pts]
+    center = ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, (min(zs) + max(zs)) / 2)
     render = bpy.context.scene.render
     aspect = render.resolution_y / max(render.resolution_x, 1)
-    lens = max(float(focal_length), 10.0)
-    half_w, half_h = math.tan(math.atan(18.0 / lens)), math.tan(math.atan(18.0 * aspect / lens))
-    hxy = max(dx, dy) / 2.0
-    return max(1.15 * max(hxy / half_w, (dz / 2.0) / half_h) + hxy, 0.5)
+    return max(fit_distance(pts, center, azimuth, elevation, focal_length, aspect), 0.5)
 
 
 def _link(obj: "bpy.types.Object") -> None:
@@ -301,7 +296,7 @@ class CinemaMutator:
             deltas = [c - centers[0] for c in centers]
             scn_f.frame_set(first)
         center, radius, _ = _bounds(objs)
-        distance = float(distance) if distance else _frame_distance(objs, float(focal_length))
+        distance = float(distance) if distance else _frame_distance(objs, float(focal_length), float(azimuth), float(elevation))
         samples = camera_samples(key, frames, tuple(center), radius, distance,
                                  float(elevation), float(azimuth), float(angle), float(intensity), float(focal_length))
         if deltas is not None:

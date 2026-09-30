@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.12.0] - 2026-09-30
+
+### Added
+- **`check_shot`** (read only, film pack): checks the current shot with numbers, for a few frames of it: where the subject sits (cut off, too small, too big, off centre, behind the camera) and how bright the picture is (too dark, mostly black, too bright, blown out). Each issue names the frames and the tool call that fixes it. For models that cannot look at pictures or misread them. Pure logic in `core/shot_qa.py`.
+- `fit_distance`: `camera_move` places the camera from the real projection (lens, aspect, direction) so the whole subject fits; a cube seen from a corner is no longer cut off.
+
+### Fixed
+- **`set_look` colour grades were never applied** in Blender 5.2 (the colour balance node changed its menu and sockets): looks now use Offset/Power/Slope and really tint the picture (test measures it).
+- `studio` light preset was blown out: dimmer sky, sun and ground.
+
+---
+
 ## [1.11.0] - 2026-09-30
 
 ### Added

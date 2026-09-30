@@ -10,30 +10,33 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import bpy
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector
 
-from adapter.mutators.cinema_mutator import CAMERA_NAME, CinemaMutator, _stem
-from adapter.mutators.modeling_mutator import ModelingError
+from adapter.mutators.cinema_mutator import CAMERA_NAME, CinemaMutator, _scene_meshes, _stem
+from adapter.mutators.modeling_mutator import ModelingError, as_list
 from adapter.mutators.undo_manager import push_undo_step
+from core.shot_qa import frame_issues, light_issues, rect_of, verdict
 
 GROUP_NAME = "AI_Look"
 
-# lift / gain are RGB multipliers around 1, gamma likewise; sat multiplies saturation; glare = (type, threshold, strength, size)
+# The compositor works on linear light, so a grade is slope (multiplies: tints highlights and mids), offset (adds: tints the
+# shadows) and power (contrast). sat multiplies saturation; glare = (type, threshold, strength, size).
 LOOKS: Dict[str, Dict[str, Any]] = {
     "natural": {"about": "no grading: removes any earlier look"},
-    "cinematic": {"lift": (0.92, 0.97, 1.06), "gamma": (1.0, 1.0, 1.0), "gain": (1.12, 1.0, 0.88), "sat": 1.05,
-                  "glare": ("Fog Glow", 1.2, 0.12, 6), "about": "teal shadows, warm highlights, a touch of glow"},
-    "noir": {"lift": (1.0, 1.0, 1.0), "gamma": (0.85, 0.85, 0.85), "gain": (1.2, 1.2, 1.2), "sat": 0.05,
+    "cinematic": {"slope": (1.10, 1.0, 0.88), "offset": (-0.006, 0.0, 0.010), "power": (1.0, 1.0, 1.0), "sat": 1.05,
+                  "glare": ("Fog Glow", 1.2, 0.12, 6), "about": "warm highlights, teal shadows, a touch of glow"},
+    "noir": {"slope": (1.2, 1.2, 1.2), "offset": (0.0, 0.0, 0.0), "power": (1.25, 1.25, 1.25), "sat": 0.05,
              "about": "black and white with hard contrast"},
-    "vintage": {"lift": (1.05, 1.02, 0.95), "gamma": (1.0, 1.0, 1.0), "gain": (1.05, 0.98, 0.85), "sat": 0.7,
+    "vintage": {"slope": (1.05, 0.97, 0.85), "offset": (0.02, 0.015, 0.01), "power": (1.1, 1.1, 1.1), "sat": 0.7,
                 "about": "warm, faded, lifted blacks"},
-    "warm": {"lift": (1.0, 1.0, 1.0), "gamma": (1.0, 1.0, 1.0), "gain": (1.1, 1.0, 0.88), "sat": 1.0, "about": "warm tint"},
-    "cold": {"lift": (0.95, 0.98, 1.04), "gamma": (1.0, 1.0, 1.0), "gain": (0.9, 0.98, 1.12), "sat": 0.95, "about": "cold blue tint"},
-    "vivid": {"lift": (1.0, 1.0, 1.0), "gamma": (0.95, 0.95, 0.95), "gain": (1.05, 1.05, 1.05), "sat": 1.35,
+    "warm": {"slope": (1.12, 1.0, 0.85), "offset": (0.0, 0.0, 0.0), "power": (1.0, 1.0, 1.0), "sat": 1.0, "about": "warm tint"},
+    "cold": {"slope": (0.88, 0.98, 1.12), "offset": (0.0, 0.0, 0.004), "power": (1.0, 1.0, 1.0), "sat": 0.95, "about": "cold blue tint"},
+    "vivid": {"slope": (1.05, 1.05, 1.05), "offset": (0.0, 0.0, 0.0), "power": (0.92, 0.92, 0.92), "sat": 1.35,
               "about": "strong, saturated colour"},
-    "neon_glow": {"lift": (1.0, 1.0, 1.0), "gamma": (1.0, 1.0, 1.0), "gain": (1.0, 1.0, 1.0), "sat": 1.3,
+    "neon_glow": {"slope": (1.0, 1.0, 1.0), "offset": (0.0, 0.0, 0.0), "power": (1.0, 1.0, 1.0), "sat": 1.3,
                   "glare": ("Bloom", 0.6, 1.0, 8), "about": "bright parts bloom into a glow"},
-    "dreamy": {"lift": (1.02, 1.02, 1.02), "gamma": (1.0, 1.0, 1.0), "gain": (1.0, 1.0, 1.0), "sat": 0.9,
+    "dreamy": {"slope": (1.0, 1.0, 1.0), "offset": (0.015, 0.015, 0.015), "power": (1.0, 1.0, 1.0), "sat": 0.9,
                "glare": ("Fog Glow", 0.5, 0.6, 7), "about": "soft haze around bright parts"},
 }
 
@@ -85,11 +88,12 @@ class LookMutator:
         sink = nodes.new("NodeGroupOutput")
         applied = []
 
-        def mix(triple):  # blend a multiplier triple toward 1.0 by strength
-            return tuple(1.0 + (v - 1.0) * amount for v in triple) + (1.0,)
-
-        for name, values in (("Lift", look.get("lift")), ("Gamma", look.get("gamma")), ("Gain", look.get("gain"))):
-            if values and _set(balance, name, mix(values), "RGBA"):
+        _set(balance, "Type", "Offset/Power/Slope (ASC-CDL)")
+        for name, values, base in (("Slope", look.get("slope"), 1.0), ("Offset", look.get("offset"), 0.0), ("Power", look.get("power"), 1.0)):
+            if values is None:
+                continue
+            scaled = tuple(base + (v - base) * amount for v in values) + (1.0,)
+            if _set(balance, name, scaled, "RGBA"):
                 applied.append(name.lower())
         links.new(source.outputs["Image"], balance.inputs["Image"])
         last = balance.outputs["Image"]
@@ -248,3 +252,75 @@ class LookMutator:
             tmp.unlink(missing_ok=True)
         return {"path": str(path), "filename": path.name, "frames": picks, "tiles": [cols, rows], "width": cols * w,
                 "height": rows * h, "bytes": path.stat().st_size}
+
+    @classmethod
+    def check_shot(cls, object_names: Any = None, samples: Any = 3, render: Any = True) -> Dict[str, Any]:
+        """Measure the current shot instead of looking at it: where the subject sits in the frame, how bright it is."""
+        import shutil
+        import tempfile
+
+        import numpy as np
+
+        scn = bpy.context.scene
+        cam = scn.camera
+        if cam is None:
+            raise ModelingError("The scene has no active camera. Call camera_move first.")
+        try:
+            count = int(samples)
+        except (TypeError, ValueError):
+            raise ModelingError("samples must be a whole number between 1 and 6.")
+        if not (1 <= count <= 6):
+            raise ModelingError("samples must be between 1 and 6.")
+        objs = [o for o in _scene_meshes(as_list(object_names) if object_names else None) if o.type == "MESH"]
+        if not objs:
+            raise ModelingError("There is no mesh to check. Model something first, or name the subject in object_names.")
+        first, last = scn.frame_start, scn.frame_end
+        picks = sorted({round(first + (last - first) * i / max(count - 1, 1)) for i in range(count)})
+        saved_frame = scn.frame_current
+        folder = tempfile.mkdtemp(prefix="bc_qa_")
+        entries: List[Dict[str, Any]] = []
+        setup = None
+        try:
+            if render:
+                setup = CinemaMutator._render_setup(320, 180, 4)
+            for frame in picks:
+                scn.frame_set(frame)
+                bpy.context.view_layer.update()
+                points = []
+                for o in objs:
+                    for corner in o.bound_box:
+                        co = world_to_camera_view(scn, cam, o.matrix_world @ Vector(corner))
+                        points.append((co.x, co.y, co.z))
+                rect = rect_of(points)
+                entry: Dict[str, Any] = {"frame": frame, "issues": frame_issues(rect)}
+                if rect.get("visible"):
+                    entry["subject_screen"] = {
+                        "left": round(rect["xmin"], 3), "right": round(rect["xmax"], 3), "bottom": round(rect["ymin"], 3),
+                        "top": round(rect["ymax"], 3),
+                        "share_of_frame": round((rect["xmax"] - rect["xmin"]) * (rect["ymax"] - rect["ymin"]), 3)}
+                if render:
+                    path = CinemaMutator_write(scn, folder, frame)
+                    img = bpy.data.images.load(path)
+                    buf = np.empty(len(img.pixels), dtype=np.float32)
+                    img.pixels.foreach_get(buf)
+                    bpy.data.images.remove(img)
+                    px = buf.reshape(-1, 4)
+                    lum = 0.2126 * px[:, 0] + 0.7152 * px[:, 1] + 0.0722 * px[:, 2]
+                    stats = {"mean": float(lum.mean()), "white": float((lum > 0.97).mean()), "black": float((lum < 0.03).mean())}
+                    entry["brightness"] = {k: round(v, 3) for k, v in stats.items()}
+                    entry["issues"] += light_issues(stats)
+                entries.append(entry)
+        finally:
+            if setup is not None:
+                CinemaMutator._render_restore(*setup)
+            scn.frame_set(saved_frame)
+            shutil.rmtree(folder, ignore_errors=True)
+        result = verdict(entries)
+        result.update({"frames_checked": picks, "per_frame": entries, "subject": [o.name for o in objs][:12]})
+        return result
+
+
+def CinemaMutator_write(scn, folder: str, frame: int) -> str:
+    path = Path(folder) / f"f{frame}.png"
+    CinemaMutator._write_still(scn, path)
+    return str(path)

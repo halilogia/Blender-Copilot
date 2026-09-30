@@ -61,6 +61,7 @@ Move length: 2-3 s for whip_pan, crash_zoom_in, dolly_zoom; 4-6 s for dolly, arc
 - `set_look` grades everything you render afterwards: `cinematic` (teal and orange), `noir`, `vintage`, `warm`, `cold`, `vivid`, `neon_glow`, `dreamy`; `natural` removes it. Pair a look with the light: `noir` with `overcast` or `night`, `cinematic` with `golden_hour` or `sunset`, `neon_glow` with `neon`.
 - `camera_settings`: `f_stop` 1.8 with `focus_object` blurs the background (portrait feel); `focus_object` plus `rack_focus_to` glides the focus from one object to another; `motion_blur` true softens fast moves. Call it after `camera_move`.
 - `render_contact_sheet` renders 4 frames of the whole move into one picture: use it instead of several `render_image` calls to check framing and motion.
+- `check_shot` measures the shot in numbers (subject cut off, too small, off centre, too dark, blown out) and says which tool call fixes each problem: call it after `camera_move` and `set_environment`, repeat until ok, then render. It works even when you cannot look at images.
 
 ## Several shots, one film
 

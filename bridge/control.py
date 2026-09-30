@@ -15,7 +15,7 @@ from bridge.settings import BridgeSettings, ensure_token, load_settings, save_se
 from bridge.tool_host import INSTRUCTIONS, RegistryToolHost
 
 PUMP_INTERVAL = 0.02
-VERSION = "1.11.0"
+VERSION = "1.12.0"
 
 
 class BridgeController:

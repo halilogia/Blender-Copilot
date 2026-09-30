@@ -262,3 +262,46 @@ def camera_rolls(preset: str, frames: int, intensity: float = 1.0) -> List[float
     if preset == "barrel_roll":
         return [360.0 * _ease(i / n) for i in range(frames)]
     return [0.0] * frames
+
+
+def fit_distance(points: Sequence[Sequence[float]], center: Sequence[float], azimuth: float = 35.0, elevation: float = 15.0,
+                 focal_length: float = 35.0, aspect: float = 9.0 / 16.0, margin: float = 0.86) -> float:
+    """Smallest camera distance at which every point lies inside the frame (a ``margin`` share of it), for a camera on the
+    usual sphere around ``center`` aimed at ``center``. Uses the real projection, so depth and perspective are respected:
+    a cube seen from a corner needs more room than its width suggests. 35 mm lens on a 36 mm wide sensor by default."""
+    pts = [tuple(float(v) for v in p) for p in points]
+    if not pts:
+        return 4.0
+    c = tuple(float(v) for v in center)
+    lens = max(float(focal_length), 10.0)
+
+    def fits(d: float) -> bool:
+        pos = camera_position(c, d, azimuth, elevation)
+        fwd = (c[0] - pos[0], c[1] - pos[1], c[2] - pos[2])
+        n = math.sqrt(sum(v * v for v in fwd)) or 1.0
+        fwd = (fwd[0] / n, fwd[1] / n, fwd[2] / n)
+        right = (fwd[1], -fwd[0], 0.0)                  # fwd x world up, flattened
+        rn = math.sqrt(right[0] ** 2 + right[1] ** 2) or 1.0
+        right = (right[0] / rn, right[1] / rn, 0.0)
+        up = (right[1] * fwd[2] - right[2] * fwd[1], right[2] * fwd[0] - right[0] * fwd[2], right[0] * fwd[1] - right[1] * fwd[0])
+        for p in pts:
+            v = (p[0] - pos[0], p[1] - pos[1], p[2] - pos[2])
+            depth = v[0] * fwd[0] + v[1] * fwd[1] + v[2] * fwd[2]
+            if depth <= 1e-6:
+                return False
+            x = (v[0] * right[0] + v[1] * right[1] + v[2] * right[2]) / depth * (lens / 18.0)
+            y = (v[0] * up[0] + v[1] * up[1] + v[2] * up[2]) / depth * (lens / (18.0 * aspect))
+            if abs(x) > margin or abs(y) > margin:
+                return False
+        return True
+
+    lo, hi = 0.05, 4000.0
+    if fits(lo):
+        return lo
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        if fits(mid):
+            hi = mid
+        else:
+            lo = mid
+    return hi

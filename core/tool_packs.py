@@ -11,7 +11,7 @@ from typing import Iterable, List, Sequence, Set
 PACKS = {
     "film": (
         "set_environment", "camera_move", "camera_settings", "set_look", "render_image", "render_contact_sheet",
-        "render_animation", "render_shots", "edit_video", "make_soundtrack",
+        "render_animation", "render_shots", "edit_video", "make_soundtrack", "check_shot",
     ),
     "characters": ("rig_character", "animate_character", "animate_sequence", "character_library"),
 }

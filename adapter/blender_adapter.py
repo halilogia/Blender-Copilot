@@ -905,6 +905,9 @@ class BlenderAdapter:
     def set_look(self, **kwargs) -> ToolResult:
         return self._modeling("set_look", LookMutator.set_look, **kwargs)
 
+    def check_shot(self, **kwargs) -> ToolResult:
+        return self._modeling("check_shot", LookMutator.check_shot, **kwargs)
+
     def camera_settings(self, **kwargs) -> ToolResult:
         return self._modeling("camera_settings", LookMutator.camera_settings, **kwargs)
 

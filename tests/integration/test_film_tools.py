@@ -72,9 +72,13 @@ def test_look_and_lens():
         assert max(abs(r - g), abs(g - b)) < 0.03, (r, g, b)
         warm_base = max(abs(base_rgb[0] - base_rgb[2]), 0.0)
         cine = adapter.set_look(preset="cinematic")
-        assert cine.success and "gain" in cine.data["applied"], cine
+        assert cine.success and "slope" in cine.data["applied"], cine
         cr, cg, cb = mean_rgb(adapter.render_image(filename="cine", width=160, height=90, samples=2).data["path"])
-        assert (cr - cb) > (base_rgb[0] - base_rgb[2]) + 0.01, ((cr, cg, cb), base_rgb)
+        assert max(abs(a - b) for a, b in zip((cr, cg, cb), base_rgb)) > 0.005, ((cr, cg, cb), base_rgb)
+        warm = adapter.set_look(preset="warm")
+        assert warm.success, warm
+        wr, wg, wb = mean_rgb(adapter.render_image(filename="warm", width=160, height=90, samples=2).data["path"])
+        assert (wr - wb) > (base_rgb[0] - base_rgb[2]) + 0.03, ((wr, wg, wb), base_rgb)
         assert adapter.set_look(preset="dreamy").success and adapter.set_look(preset="neon_glow").success
         assert adapter.set_look(preset="natural").success
         assert bpy.context.scene.compositing_node_group is None
@@ -227,12 +231,68 @@ def test_edit_and_shots():
     print("[PASS] Test 5")
 
 
+def test_check_shot():
+    print("Test 6: check_shot measures framing and brightness...")
+    adapter = scene_with_subject()
+    assert adapter.set_environment(preset="studio").success
+    scn = bpy.context.scene
+    no_cam = adapter.check_shot()
+    assert not no_cam.success and "camera" in no_cam.error.message.lower(), no_cam
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12).success
+    good = adapter.check_shot(object_names=["Subject"])
+    assert good.success, good.error
+    assert good.data["ok"] is True, good.data["issues"]
+    assert len(good.data["frames_checked"]) == 3 and "brightness" in good.data["per_frame"][0]
+    share = good.data["per_frame"][0]["subject_screen"]["share_of_frame"]
+    assert 0.04 < share < 0.88, share
+    # too close: cut off
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12, distance=1.6).success
+    close = adapter.check_shot(object_names=["Subject"], render=False)
+    assert close.success and "SUBJECT_CUT" in [i["code"] for i in close.data["issues"]], close.data
+    assert "brightness" not in close.data["per_frame"][0], "render=false measures only the framing"
+    # too far: tiny
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12, distance=90).success
+    far = adapter.check_shot(object_names=["Subject"], render=False)
+    assert "SUBJECT_TOO_SMALL" in [i["code"] for i in far.data["issues"]], far.data
+    assert "distance" in far.data["issues"][0]["fix"]
+    # the subject drifts out of a fixed shot: found in the last frame only
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12).success
+    subject = bpy.data.objects["Subject"]
+    subject.location = (0, 0, 1)
+    subject.keyframe_insert("location", frame=1)
+    subject.location = (60, 0, 1)
+    subject.keyframe_insert("location", frame=scn.frame_end)
+    drift = adapter.check_shot(object_names=["Subject"], samples=3, render=False)
+    frames = [f for i in drift.data["issues"] for f in i["frames"]]
+    assert drift.data["ok"] is False and scn.frame_end in frames and 1 not in frames, drift.data
+    subject.animation_data_clear()
+    subject.location = (0, 0, 1)
+    # light: black world and no sun, then a blinding world
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12).success
+    world = scn.world
+    bg = next(n for n in world.node_tree.nodes if n.bl_idname == "ShaderNodeBackground")
+    bpy.data.objects.remove(bpy.data.objects["AI_Sun"], do_unlink=True)
+    bg.inputs[1].default_value = 0.0
+    dark = adapter.check_shot(object_names=["Subject"], samples=1)
+    assert {"TOO_DARK", "MOSTLY_BLACK"} & {i["code"] for i in dark.data["issues"]}, dark.data
+    bg.inputs[0].default_value = (1, 1, 1, 1)
+    bg.inputs[1].default_value = 40.0
+    bright = adapter.check_shot(object_names=["Subject"], samples=1)
+    assert {"TOO_BRIGHT", "BLOWN_OUT"} & {i["code"] for i in bright.data["issues"]}, bright.data
+    assert scn.frame_current == 1, "the frame the user was on is restored"
+    for bad in (dict(samples=0), dict(samples=9), dict(samples="x"), dict(object_names=["Nope"])):
+        res = adapter.check_shot(**bad)
+        assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+    print("[PASS] Test 6")
+
+
 def main():
     test_environments()
     test_look_and_lens()
     test_contact_sheet()
     test_new_presets_and_roll()
     test_edit_and_shots()
+    test_check_shot()
     print("\nALL FILM TOOL INTEGRATION TESTS PASSED")
 
 
