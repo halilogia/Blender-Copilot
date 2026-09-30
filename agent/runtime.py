@@ -48,6 +48,7 @@ from agent.policy import (
     NoPendingApprovalError,
     PendingApproval,
 )
+from core.tool_packs import filter_tools, packs_for_text, valid_packs
 from agent.models import (
     AgentResult,
     ChatMessage,
@@ -151,6 +152,8 @@ class AgentRuntime:
         self.auto_approve_low_risk_plans: bool = bool(auto_approve_low_risk_plans)
         # Iterative work (modeling) needs the model to see a failed call and correct it instead of ending the turn.
         self.continue_on_tool_failure: bool = bool(continue_on_tool_failure)
+        # film and character tools are sent only once the request needs them (core/tool_packs.py)
+        self.active_packs: set = set()
         self._current_tool_round: int = 0
         self._current_plan_repairs: int = 0
         self._streaming_text: str = ""
@@ -284,6 +287,8 @@ class AgentRuntime:
     ) -> ToolResult:
         """Dispatch tool call on the main thread and verify mutation outcomes."""
         tool_res = self.dispatcher.dispatch(tool_call)
+        if tool_call.tool_name == "enable_tools" and tool_res.success:
+            self.active_packs |= set(valid_packs((tool_res.data or {}).get("enabled", [])))
 
         # Handle visual_verify tool post-execution
         if tool_call.tool_name == "visual_verify" and tool_res.success and self.visual_verifier:
@@ -514,6 +519,10 @@ class AgentRuntime:
             self.conversation = Conversation(messages[:start])
         self._active_conversation_start = None
 
+    def _request_tools(self):
+        """The tools to send with the next request: the core plus the packs this conversation has loaded."""
+        return filter_tools(self.dispatcher.registry.list(), self.active_packs)
+
     def _fill_missing_tool_results(self, reason: str) -> int:
         """Answer tool calls of the last assistant message that never ran.
 
@@ -644,7 +653,7 @@ class AgentRuntime:
         # 5. Build context via ContextBuilder and submit task to worker
         context = None
         if hasattr(self.provider, "stream_chat"):
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
             try:
                 context = ContextBuilder.build(
                     conversation=self.conversation,
@@ -765,7 +774,7 @@ class AgentRuntime:
         # 5. Build context via ContextBuilder and submit task to worker
         context = None
         if hasattr(self.provider, "stream_chat"):
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
             try:
                 context = ContextBuilder.build(
                     conversation=self.conversation,
@@ -986,6 +995,7 @@ class AgentRuntime:
         expected_visual_description: Optional[str] = None,
     ) -> str:
         """Submit a prompt or queue it behind the active turn."""
+        self.active_packs |= packs_for_text(prompt)
         if (
             self._current_turn_id is not None
             or self.state_machine.current_state
@@ -1121,7 +1131,7 @@ class AgentRuntime:
 
         context = None
         if hasattr(self.provider, "stream_chat"):
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
             try:
                 context = ContextBuilder.build(
                     conversation=self.conversation,
@@ -1615,7 +1625,7 @@ class AgentRuntime:
             # 6.4 Build updated Context and delegate next LLM step to worker
             context = None
             if hasattr(self.provider, "stream_chat"):
-                tools = self.dispatcher.registry.list()
+                tools = self._request_tools()
                 try:
                     context = ContextBuilder.build(
                         conversation=self.conversation,
@@ -1844,7 +1854,7 @@ class AgentRuntime:
         # Delegate next LLM step to worker
         context = None
         if hasattr(self.provider, "stream_chat"):
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
             try:
                 context = ContextBuilder.build(
                     conversation=self.conversation,
@@ -1975,7 +1985,7 @@ class AgentRuntime:
 
         context = None
         if hasattr(self.provider, "stream_chat"):
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
             try:
                 context = ContextBuilder.build(
                     conversation=self.conversation,
@@ -2058,7 +2068,7 @@ class AgentRuntime:
             self.conversation.add_message(ChatMessage(role=Role.USER, content=prompt))
             tool_results: List[ToolResult] = []
             current_round = 0
-            tools = self.dispatcher.registry.list()
+            tools = self._request_tools()
 
             self._maybe_compact_context()
 

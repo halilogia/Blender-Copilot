@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.9.1
+# Blender - Copilot — v1.10.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -27,7 +27,9 @@
 
 > v1.7.0 gives characters a face and films a soundtrack: eyes that blink, `talk` with lip sync from a line of text, `happy`, `surprised` and `angry` expressions, 50 camera presets, and procedural music (`make_soundtrack`, or `music` on `render_shots`) mixed into the MP4. Quality note: everything is driven by chat models, so results depend on the model; the tools, recipes and checks (contact sheets, renders the model can look at) are what keep weaker models on track.
 
-> v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof. Verified with 781 passing pure-Python unit tests and 31 headless Blender suites.
+> v1.9.0 lets a character act a scene: `animate_sequence` chains walk, wave, talk and the other motions on one timeline (turns, glides between poses). Every feature since v1.4 has been run end to end by a chat model through 9router, with the demos in `demos/` as proof.
+
+> v1.10.0 makes small and free models cheaper to run: tool packs. The in-Blender agent now sends the film and character tools only when the request needs them (a plain modeling request: about 5,800 tokens of tool descriptions instead of 11,000). Verified with 792 passing pure-Python unit tests and 31 headless Blender suites.
 
 ---
 
@@ -367,7 +369,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.9.1 durumunda 781 pure-Python unit testi ve 31 Blender integration
+v1.10.0 durumunda 792 pure-Python unit testi ve 31 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.

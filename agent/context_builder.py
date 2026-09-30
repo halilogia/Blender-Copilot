@@ -55,6 +55,7 @@ DEFAULT_SYSTEM_PROMPT = (
     "Build from parts (`create_primitive`, `create_mesh`, `mesh_edit`, `add_shape_modifier`), colour each part with `set_material` before joining, "
     "check the result with `frame_view` then `capture_viewport` every few steps, then `join_objects`, `set_origin` and `export_gltf`. "
     "Units are meters, +Z is up, the model faces +Y. Keep props under about 1500 triangles. Finish with `polish_model` (bevels, smooth shading) before you export or rig.\n\n"
+    "TOOL PACKS: the film tools (light, camera, render, edit, music) and the character tools (rig, animate) are sent only when the request needs them; they load by themselves from the request's words, or call `enable_tools`.\n\n"
     "CINEMATIC PROTOCOL (shots and videos):\n"
     "After the models exist: `set_environment` (studio, golden_hour, overcast, night, neon), `camera_move` (dolly_in, orbit, crane_up, whip_pan, dolly_zoom ...), "
     "`render_image` (one frame) or `render_contact_sheet` (the whole move) to fix light or framing, optionally `set_look` and `camera_settings`, then `render_animation` for the MP4. For several shots use `render_shots` with `music` (calm, epic, tense, playful, night, synthwave) or `edit_video` on clips. Call the tools one at a time.\n"

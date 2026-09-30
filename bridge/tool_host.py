@@ -65,7 +65,7 @@ class RegistryToolHost:
         self.adapter = adapter
         self.submit = submit
         self.allow_gated = allow_gated
-        self.exclude = set(exclude or {"propose_plan"})
+        self.exclude = set(exclude or {"propose_plan", "enable_tools"})   # MCP clients see every tool anyway
         self.policy = policy or ApprovalPolicy()
         self.call_timeout = call_timeout
         self._counter = 0

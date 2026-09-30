@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.10.0] - 2026-09-30
+
+### Added
+- **Tool packs** (`core/tool_packs.py`, `enable_tools`): the in-Blender agent sends the film tools (light, camera, render, edit, music) and the character tools (rig, animate) only when the conversation needs them. They load by themselves from the request's words (English and Turkish; a character request also loads the film pack) or when the model calls `enable_tools`. A plain modeling request now costs about 5,800 tokens of tool descriptions instead of about 11,000; the full set is unchanged over MCP, where clients handle long tool lists themselves.
+- Tests: `tests/unit/test_tool_packs.py` and `tests/unit/test_runtime_packs.py` (what is sent, keyword loading, `enable_tools`, size); a free model (DeepSeek V4 Flash) made a crate with the core tools only and a film shot with the film pack loaded from the request alone.
+
+---
+
 ## [1.9.1] - 2026-09-30
 
 ### Removed
