@@ -1,0 +1,21 @@
+{
+  "name": "shot-knight-run-geminiproagent",
+  "date": "20260930-104840",
+  "seconds": 96.7,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 23,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "䐪Küp silindi. Şövalye parçaları (gövde, baş, miğfer, kollar, bacaklar, kalkan) modellendi. Metal, ten ve ahşap renkleri atandı. `rig_character` ile iskelet kuruldu. `animate_character` ile 8 metrelik koşma (run) eylemi verildi. Kapalı hava (overcast) ışığı ve karakteri takip eden (follow) kamera ayarlandı. Test karesi alındı. 4 saniyelik `shot-knight-run-geminiproagent.mp4` animasyonu başarıyla işlendi (render). İşlem tamam.",
+  "video_bytes": 190559,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

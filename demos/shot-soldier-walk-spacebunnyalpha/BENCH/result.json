@@ -1,0 +1,21 @@
+{
+  "name": "shot-soldier-walk-spacebunnyalpha",
+  "date": "20260930-103557",
+  "seconds": 397.7,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 58,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "openrouter/space-bunny-alpha",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti.\n\nNe yapıldı:\n- Varsayılan `Cube` silindi.\n- Düşük poligonlu asker, 11 AYRI parça olarak kuruldu: `Torso`, `Head`, `Helmet`, `Arm_L`, `Arm_R`, `Leg_L`, `Leg_R`, `Boot_L`, `Boot_R`, `Backpack`, `Rifle` — hiçbiri birleştirilmedi. Materyaller: Uniform, Skin, HelmetMat, Leather, PackMat, Gunmetal.\n- `rig_character` ile `Soldier_Rig` altına bağlandı; kask kafaya, botlar bacaklara, çanta gövdeye, tüfek sağ kola aksesuar olarak atandı.\n- `set_environment` golden_hour: alçak sıcak güneş, turuncu gökyüzü, uzun gölgeler.\n- `animate_character` walk, 5 m, 5 sn, 24 fps, 120 kare.\n- `camera_move` static + follow=true, 9 m, 55 mm.\n- `render_image` ile kare 40 üç kez kontrol edildi: kollar içeri alındı, kamerayı uzaklaştırıldı, bacak eklemi kapatıldı.\n- `render_animation` → `shot-soldier-walk-spacebunnyalpha.mp4`, 960x540, 120 kare, 8.9 sn render.\n\nÇıktı: `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\shot-soldier-walk-spacebunnyalpha.mp4`",
+  "video_bytes": 177466,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

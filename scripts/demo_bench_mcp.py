@@ -63,6 +63,12 @@ SHOTS = {
     "shot-house-night": "Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek.",
     "shot-robot-vertigo": "Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek.",
     "shot-campfire-handheld": "Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek.",
+    # characters that move: parts stay separate, rig_character, animate_character, camera follows
+    "shot-soldier-walk": "Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al.",
+    "shot-robot-wave": "Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al.",
+    "shot-knight-run": "Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al.",
+    "shot-soldier-aim": "Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al.",
+    "shot-zombie-walk": "Yeşil tenli, yırtık giysili sevimli düşük poligonlu bir zombi modelle (kafa, gövde, kollar, bacaklar ayrı parçalar olsun, birleştirme). rig_character ile bağla, yürüt (3 metre, yavaş), gece ışığı kur, kamera takip etsin (follow) ve 5 saniyelik MP4 al.",
 }
 
 SUFFIX_SHOT = (

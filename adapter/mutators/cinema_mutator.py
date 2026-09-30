@@ -73,6 +73,7 @@ def _scene_meshes(names: Optional[Sequence[str]] = None) -> List["bpy.types.Obje
             if obj is None:
                 raise ModelingError(f"Object '{n}' not found in the scene.")
             objs.append(obj)
+            objs.extend(c for c in obj.children_recursive if c not in objs)   # a rig or parent stands for its parts
         return objs
     return [o for o in bpy.context.scene.objects if o.type == "MESH" and not o.name.startswith(HELPER_PREFIX)]
 
@@ -84,6 +85,23 @@ def _bounds(objs: Sequence["bpy.types.Object"]):
     lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
     hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
     return (lo + hi) / 2.0, max((hi - lo).length / 2.0, 0.05), lo.z
+
+
+def _frame_distance(objs: Sequence["bpy.types.Object"], focal_length: float) -> float:
+    """Camera distance that fits the subject in the render frame: tall subjects need more room than wide ones
+    because a 16:9 frame is much narrower vertically (about 32 degrees at 35 mm) than horizontally (about 54)."""
+    pts = [o.matrix_world @ Vector(c) for o in objs if o.type == "MESH" for c in o.bound_box]
+    if not pts:
+        return 4.0
+    dx = max(p.x for p in pts) - min(p.x for p in pts)
+    dy = max(p.y for p in pts) - min(p.y for p in pts)
+    dz = max(p.z for p in pts) - min(p.z for p in pts)
+    render = bpy.context.scene.render
+    aspect = render.resolution_y / max(render.resolution_x, 1)
+    lens = max(float(focal_length), 10.0)
+    half_w, half_h = math.tan(math.atan(18.0 / lens)), math.tan(math.atan(18.0 * aspect / lens))
+    hxy = max(dx, dy) / 2.0
+    return max(1.15 * max(hxy / half_w, (dz / 2.0) / half_h) + hxy, 0.5)
 
 
 def _link(obj: "bpy.types.Object") -> None:
@@ -205,7 +223,7 @@ class CinemaMutator:
     @classmethod
     def camera_move(cls, preset: str, object_names: Any = None, duration: float = 4.0, fps: int = 24,
                     distance: Any = None, elevation: float = 15.0, azimuth: float = 35.0, angle: float = 120.0,
-                    intensity: float = 1.0, focal_length: float = 35.0) -> Dict[str, Any]:
+                    intensity: float = 1.0, focal_length: float = 35.0, follow: bool = False) -> Dict[str, Any]:
         key = str(preset or "").strip().lower()
         if key not in PRESETS:
             raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
@@ -221,9 +239,24 @@ class CinemaMutator:
             raise ModelingError("fps must be between 8 and 60.")
         frames = frame_count(seconds, rate)
         objs = _scene_meshes(object_names)
+        deltas = None
+        bpy.context.scene.frame_set(1)      # the subject is framed as it stands at the first frame of the shot
+        if follow:
+            # the subject moves (a walking character): the camera keeps the same framing relative to it
+            scn_f = bpy.context.scene
+            centers = []
+            for f in range(1, frames + 1):
+                scn_f.frame_set(f)
+                centers.append(_bounds(objs)[0])
+            deltas = [c - centers[0] for c in centers]
+            scn_f.frame_set(1)
         center, radius, _ = _bounds(objs)
-        samples = camera_samples(key, frames, tuple(center), radius, float(distance) if distance else None,
+        distance = float(distance) if distance else _frame_distance(objs, float(focal_length))
+        samples = camera_samples(key, frames, tuple(center), radius, distance,
                                  float(elevation), float(azimuth), float(angle), float(intensity), float(focal_length))
+        if deltas is not None:
+            samples = [((p[0] + d.x, p[1] + d.y, p[2] + d.z), (a[0] + d.x, a[1] + d.y, a[2] + d.z), fl)
+                       for (p, a, fl), d in zip(samples, deltas)]
 
         scn = bpy.context.scene
         cam = bpy.data.objects.get(CAMERA_NAME)
@@ -261,7 +294,7 @@ class CinemaMutator:
         return {"camera": cam.name, "target": target.name, "preset": key, "about": PRESETS[key], "frames": frames,
                 "fps": rate, "seconds": round(frames / rate, 2), "frame_range": [1, frames],
                 "subject_center": [round(v, 3) for v in center], "subject_radius": round(radius, 3),
-                "distance": round(float(distance) if distance else radius * 2.8, 3)}
+                "distance": round(float(distance) if distance else radius * 2.8, 3), "follow": bool(follow)}
 
     # ------------------------------------------------------------------ rendering
     @classmethod

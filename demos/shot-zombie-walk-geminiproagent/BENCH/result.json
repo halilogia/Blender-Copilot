@@ -1,0 +1,21 @@
+{
+  "name": "shot-zombie-walk-geminiproagent",
+  "date": "20260930-103410",
+  "seconds": 103.3,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 36,
+  "tool_errors": 9,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "-Cube silindi.\n-Kafa, gövde, kollar, bacaklar ayrı yaratıldı.\n-Yeşil deri ve kahverengi yırtık giysi materyalleri atandı.\n-`rig_character` ile iskelet kuruldu.\n-`animate_character` ile 3 metrelik yürüme animasyonu (5 saniye) eklendi.\n-`set_environment` ile gece ışığı ayarlandı.\n-`camera_move` ile orbit (takip) kamera ayarlandı.\n-`render_animation` ile MP4 dosyası `shot-zombie-walk-geminiproagent.mp4` adıyla kaydedildi.\n\nİşlem tamam. Başka istek?",
+  "video_bytes": 289967,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

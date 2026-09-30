@@ -7,7 +7,8 @@ Blender Copilot can be driven by external agents (Claude Code, Codex, any MCP cl
 - **An MCP bridge** inside Blender (or a headless Blender): the same tools the in-Blender agent uses, exposed over MCP with the same safety rules.
 - **Modeling tools** that go beyond primitives, all allow-listed and undoable: `create_mesh`, `mesh_edit`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier`, `frame_view`, `export_gltf`.
 - **Cinematic tools** to direct a shot from chat: `set_environment`, `camera_move`, `render_image`, `render_animation` (MP4).
-- **A Claude Code plugin** with three skills (`blender-game-assets`, `blender-to-godot`, `blender-cinematic-shot`) and `/blender-connect`.
+- **Character tools**: `rig_character`, `animate_character` (idle, walk, run, aim, wave, jump), camera `follow`, animated glb export.
+- **A Claude Code plugin** with four skills (`blender-game-assets`, `blender-to-godot`, `blender-cinematic-shot`, `blender-character-animation`) and `/blender-connect`.
 
 ## Security model
 
@@ -63,6 +64,8 @@ Read-only: `inspect_scene`, `inspect_selection`, `inspect_object`, `inspect_mate
 Scene and modeling (risk LOW, one undo step each): `create_primitive` (CUBE, SPHERE, PLANE, CYLINDER, CONE, ICOSPHERE, TORUS), `create_mesh`, `mesh_edit` (EXTRUDE_FACES, INSET_FACES, BEVEL_EDGES, SUBDIVIDE, TRIANGULATE, RECALC_NORMALS, MERGE_BY_DISTANCE, SCALE_TO_HEIGHT_TAPER; faces picked by normal direction), `add_modifier` (BEVEL, SUBSURF; BOOLEAN is gated), `add_shape_modifier` (MIRROR, ARRAY, SOLIDIFY, DECIMATE, TRIANGULATE), `set_material`, `assign_material`, `set_shading`, `transform_object`, `duplicate_object`, `parent_object`, `join_objects`, `apply_transform`, `set_origin`, `create_camera`, `create_light`, `import_asset`, `frame_view` (aims the viewport so `capture_viewport` shows the model), `export_gltf` (writes a `.glb`; `recenter` puts the prop at the origin so a game engine does not place it where it was modelled).
 
 Cinematic (risk LOW, files only in the export folder): `set_environment` (studio, golden_hour, overcast, night, neon: world, sun, ground, tone mapping), `camera_move` (16 presets keyframed around the subject: static, dolly_in, dolly_out, orbit, arc_left, arc_right, crane_up, crane_down, pan_left, pan_right, tilt_up, tilt_down, whip_pan, dolly_zoom, crash_zoom_in, handheld), `render_image` (one EEVEE frame as PNG, returned as an image), `render_animation` (the shot as H.264 MP4 or a PNG sequence, plus a preview frame; at most 480 frames and 1920x1080; renders keep Blender busy, about 0.1 s per frame at 960x540). The skill `blender-cinematic-shot` explains the workflow. See [HIGGSFIELD.md](HIGGSFIELD.md) for why.
+
+Characters (risk LOW, one undo step each): `rig_character` (a character built from separate parts named head, torso, arm_l, arm_r, leg_l, leg_r plus accessories: pivots go to the joints, accessories attach to the nearest part, everything hangs under `<name>_Rig`; no armature, no skinning), `animate_character` (idle, walk, run, aim, wave, jump; `distance`, `heading`, `intensity`), `camera_move` with `follow: true` (the camera keeps its framing on a moving subject), and `export_gltf` with `animations: true` (a glb with the hierarchy and its keyframes, for a game engine). The skill `blender-character-animation` explains the workflow.
 
 Gated (MEDIUM+): `delete_object`.
 

@@ -25,6 +25,7 @@ class ExportGltfTool(BaseTool):
             "apply_modifiers": {"type": "boolean", "description": "Apply modifiers (default true)."},
             "include_materials": {"type": "boolean", "description": "Export materials (default true)."},
             "y_up": {"type": "boolean", "description": "Convert to Y-up (default true)."},
+            "animations": {"type": "boolean", "description": "Also export keyframe animation (an animated character from animate_character); the parts under the named objects are included and recenter is turned off (default false)."},
             "recenter": {"type": "boolean",
                          "description": "Export as if the first object's origin were at (0, 0, 0) (default true). Without it the file "
                                         "keeps the object's position in the Blender scene and the prop appears offset in the game."},

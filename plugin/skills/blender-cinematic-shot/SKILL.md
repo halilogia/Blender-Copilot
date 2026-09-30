@@ -11,7 +11,7 @@ Every step is an allow-listed tool: no code runs, the camera moves are keyframed
 
 1. **Subject.** Model it (skill `blender-game-assets`) or bring it in with `import_asset`. Put it near the origin, real-world scale, facing +Y. One or a few objects; the camera frames all meshes unless you pass `object_names`.
 2. **Light.** `set_environment` with one of: `studio` (neutral, product shots), `golden_hour` (low warm sun, outdoor drama), `overcast` (soft even light), `night` (dark blue, moon light from behind), `neon` (dark, magenta and cyan). It also adds a ground plane; pass `ground: false` for floating objects or a `ground_color`.
-3. **Camera.** `camera_move` with a preset. Defaults frame the subject well (distance about 2.8 times its radius, 15 degrees up, 35 degrees to the side, 35 mm, 4 seconds, 24 fps). Change `duration`, `distance`, `elevation`, `azimuth`, `focal_length` only for a reason.
+3. **Camera.** `camera_move` with a preset. Defaults frame the subject well (distance chosen so the whole subject fits a 16:9 frame, 15 degrees up, 35 degrees to the side, 35 mm, 4 seconds, 24 fps). Change `duration`, `distance`, `elevation`, `azimuth`, `focal_length` only for a reason.
 4. **Look at one frame.** `render_image` (960x540 is enough) returns the picture. Check: subject fully in frame and large enough, light on the side the camera sees, no black or washed-out areas. Fix with another `set_environment` preset, `camera_move` with a different `distance` or `azimuth`, then render again.
 5. **Render the shot.** `render_animation` (mp4). Then say where the file is and how long it is.
 

@@ -57,7 +57,9 @@ DEFAULT_SYSTEM_PROMPT = (
     "Units are meters, +Z is up, the model faces +Y. Keep props under about 1500 triangles.\n\n"
     "CINEMATIC PROTOCOL (shots and videos):\n"
     "After the models exist: `set_environment` (studio, golden_hour, overcast, night, neon), `camera_move` (dolly_in, orbit, crane_up, whip_pan, dolly_zoom ...), "
-    "`render_image` to look at one frame and fix light or framing, then `render_animation` for the MP4. Call the tools one at a time."
+    "`render_image` to look at one frame and fix light or framing, then `render_animation` for the MP4. Call the tools one at a time.\n"
+    "For a moving character build it from SEPARATE parts named head, torso, arm_l, arm_r, leg_l, leg_r (plus accessories) and never join them, "
+    "call `rig_character`, then `animate_character` (idle, walk, run, aim, wave, jump) and `camera_move` with follow=true."
 )
 
 

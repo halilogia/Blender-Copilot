@@ -1,0 +1,21 @@
+{
+  "name": "shot-soldier-aim-geminiproagent",
+  "date": "20260930-105021",
+  "seconds": 152.4,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 46,
+  "tool_errors": 10,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "gÜd>Varsayılan küp silindi. Asker parçaları (gövde, kafa, kask, kollar, bacaklar, tüfek) oluşturuldu. Renk atandı. Rig bağlandı. Nişan alma animasyonu verildi. Gece ışığı kuruldu. Kamera askerin etrafında sola yay çizecek şekilde ayarlandı. 4 saniyelik render alındı.\n\nMP4 dosya yolu:\n`C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-105021-shot-soldier-aim-geminiproagent\\shot-soldier-aim-geminiproagent.mp4`",
+  "video_bytes": 195463,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

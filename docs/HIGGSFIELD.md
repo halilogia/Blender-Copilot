@@ -10,7 +10,11 @@ Steps 1 to 4 of the proposed order are built: `render_image`, `render_animation`
 - The weak link is the 3D model, not the camera: floating cone roofs, blocky soldiers, dark robots. Lighting presets needed tuning after the first renders (blown highlights on golden hour, white sky on overcast); more tuning and a look check by the model (`render_image`, then fix) is the next quality lever.
 - Found and fixed on the way: the in-Blender agent stopped a turn on the first tool error and had a fixed limit of 5 tool rounds; the image store kept 10 pictures and a long session died with `IMAGE_NOT_FOUND`.
 
-Still missing compared with Higgsfield: character motion (walk, aim, poses), a character library, text or image to 3D, effects such as slow motion and transitions, audio, a shot list UI. Realistic (diffusion) video is out of scope: this is 3D animation.
+### v1.4.0: characters move
+
+`rig_character` and `animate_character` (idle, walk, run, aim, wave, jump), camera `follow` and animated glb export were added. The character is built from separate parts (head, torso, arms, legs, accessories); no armature or skinning is needed because pivots sit at the joints and motion presets keyframe part rotations. Chat models (Gemini Pro agent, Space Bunny; Sonnet's Antigravity quota ran out during the runs) built soldiers, a robot, a knight and a zombie from one short prompt, rigged them, made them walk, run, wave or aim, and had the camera follow: `demos/shot-*` (soldier-walk, robot-wave, knight-run, soldier-aim, zombie-walk). Findings: models keep the parts separate when the prompt says so; hierarchy and pivots work on the first try; the visible weakness is still the look of the blocky models and small proportion mistakes (a small soldier in a big frame, washed-out light on white backdrops).
+
+Still missing compared with Higgsfield: a saved character library, bent limbs (elbows and knees; parts are single blocks), facial expressions, text or image to 3D, effects such as slow motion and transitions, audio, a shot list UI. Realistic (diffusion) video is out of scope: this is 3D animation.
 
 ## What Higgsfield is (from its own pages)
 

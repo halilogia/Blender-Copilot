@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] - 2026-09-30
+
+### Added
+- **Character motion** (LOW risk, one undo step each, no armature or skinning): `rig_character` (a character built from separate parts named head, torso, arm_l, arm_r, leg_l, leg_r plus accessories: pivots go to the joints, accessories attach to the nearest part, everything hangs under `<name>_Rig`) and `animate_character` (idle, walk, run, aim, wave, jump; `distance`, `heading`, `intensity`; math in `core/motion_paths.py`).
+- `camera_move` `follow`: the camera keeps its framing on a moving subject (a walking character); named objects stand for their children (a rig for its parts).
+- `export_gltf` `animations`: a glb with the hierarchy and its keyframes (recenter off) for a game engine.
+- Skill `blender-character-animation`; character rules in the in-Blender agent prompt and the MCP instructions.
+- Tests: `tests/unit/test_motion_paths.py` (10), `tests/integration/test_character_tools.py` (rig, pivots and hierarchy, keyframes, heading, follow, animated glb read back).
+- Demo bench: character shots (`shot-soldier-walk`, `shot-robot-wave`, `shot-knight-run`, `shot-soldier-aim`, `shot-zombie-walk`) by chat models through 9router.
+
+### Fixed
+- `camera_move` default distance now fits the whole subject in a 16:9 frame (tall subjects such as a standing soldier were cropped at the top); the subject is measured at the first frame of the shot.
+
+---
+
 ## [1.3.0] - 2026-09-30
 
 ### Added

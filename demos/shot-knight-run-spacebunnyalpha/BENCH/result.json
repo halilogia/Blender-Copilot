@@ -1,0 +1,21 @@
+{
+  "name": "shot-knight-run-spacebunnyalpha",
+  "date": "20260930-104238",
+  "seconds": 321.9,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 40,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 2,
+  "final_views": 4,
+  "model": "openrouter/space-bunny-alpha",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Render tamam.\n\n**Dosya:** `shot-knight-run-spacebunnyalpha.mp4` — 72 kare, 24 fps, 3.0 sn, 960x540, H.264, 201 KB, EEVEE, 6.1 sn render süresi.\n\nYol:\n`C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\`\n\n**Yapılan iş:**\n- Karakter parçaları kuruldu: `head`, `torso`, `arm_l/r`, `leg_l/r`, `sword`, `shield` — ayrı obje, join yok (rig şartı).\n- 3 malzeme: `M_Armor` (metalik zırh), `M_Skin` (kafa), `M_Steel` (kılıç/kalkan).\n- `rig_character` → `Knight_Rig`, boy 1.86 m.\n- Kılıç otomatik olarak `leg_r`'ye takılmıştı; unparent, yeniden ölçeklendi, `arm_r`'ye bağlandı.\n- `animate_character` preset `run`, 6 m yol, 3 sn, 24 fps.\n- `set_environment` → `golden_hour` (AI_Sun, AI_Ground 40 m).\n- `camera_move` → `arc_left`, follow=true, azimut 0 (önden), mesafe 4.6 m, 45 mm, 72 kare.\n\nNot: mesafe 5.87 m iken özne çok küçük, 3.6 m iken baş kadraj dışındaydı. 4.6 m denge noktası oldu; `check4` karesi doğru kadrajı gösteriyor.",
+  "video_bytes": 206010,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 72,
+  "video_seconds": 3.0
+}

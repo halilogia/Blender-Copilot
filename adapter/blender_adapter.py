@@ -24,6 +24,7 @@ from adapter.readers.mesh_reader import (
 from adapter.readers.viewport_reader import ViewportReader
 from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
 from adapter.mutators.cinema_mutator import CinemaMutator
+from adapter.mutators.character_mutator import CharacterMutator
 from adapter.mutators import (
     PrimitiveMutator,
     InvalidPrimitiveTypeError,
@@ -853,6 +854,12 @@ class BlenderAdapter:
     # ------------------------------------------------------------------
     # Cinematic (v1.3): environment presets, camera moves, EEVEE renders
     # ------------------------------------------------------------------
+    def rig_character(self, **kwargs) -> ToolResult:
+        return self._modeling("rig_character", CharacterMutator.rig_character, **kwargs)
+
+    def animate_character(self, **kwargs) -> ToolResult:
+        return self._modeling("animate_character", CharacterMutator.animate_character, **kwargs)
+
     def set_environment(self, **kwargs) -> ToolResult:
         return self._modeling("set_environment", CinemaMutator.set_environment, **kwargs)
 

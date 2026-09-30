@@ -31,10 +31,16 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-castle-orbit-claudesonnet46](shot-castle-orbit-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 3.7 dk | 56 | - | 5.0 sn video | 20260930 |
 | [shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 2.4 dk | 29 | - | 5.0 sn video | 20260930 |
 | [shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek. | 2.4 dk | 21 | - | 8.0 sn video | 20260930 |
+| [shot-knight-run-geminiproagent](shot-knight-run-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 1.6 dk | 23 | - | 4.0 sn video | 20260930 |
+| [shot-knight-run-spacebunnyalpha](shot-knight-run-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 5.4 dk | 40 | - | 3.0 sn video | 20260930 |
 | [shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek. | 5.0 dk | 49 | - | 5.0 sn video | 20260930 |
+| [shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 1.8 dk | 53 | - | 4.0 sn video | 20260930 |
+| [shot-soldier-aim-geminiproagent](shot-soldier-aim-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al. | 2.5 dk | 46 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek. | 3.7 dk | 36 | - | 4.0 sn video | 20260930 |
+| [shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al. | 6.6 dk | 58 | - | 5.0 sn video | 20260930 |
 | [shot-tank-crane-claudesonnet46](shot-tank-crane-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 2.8 dk | 29 | - | 4.0 sn video | 20260930 |
 | [shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek. | 1.8 dk | 34 | - | 4.0 sn video | 20260930 |
+| [shot-zombie-walk-geminiproagent](shot-zombie-walk-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Yeşil tenli, yırtık giysili sevimli düşük poligonlu bir zombi modelle (kafa, gövde, kollar, bacaklar ayrı parçalar olsun, birleştirme). rig_character ile bağla, yürüt (3 metre, yavaş), gece ışığı kur, kamera takip etsin (follow) ve 5 saniyelik MP4 al. | 1.7 dk | 36 | - | 5.0 sn video | 20260930 |
 | [soldier](soldier/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir asker karakteri modelle: kask, gövde, kollar, bacaklar, botlar, sırt çantası, elinde tüfek tutma pozunda kollar. Yaklaşık 1.8 m boyunda, T-pozu değil, hafif yürüyüş duruşu olsun; üniforma zeytin yeşili, kask koyu, cilt tonu ayrı. | 1.8 dk | 55 | 1504 | 1.56x3.63x4.80 m | 20260930 |
 | [spaceship](spaceship/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir uzay gemisi modelle: gövde, kokpit camı, iki kanat, iki motor ve motor alevleri, ayrı renkli şeritler. | 1.4 dk | 28 | 520 | 4.40x1.45x4.60 m | 20260930 |
 | [sword](sword/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar. | 0.9 dk | 17 | 230 | 0.16x0.98x0.05 m | 20260930 |
@@ -150,13 +156,33 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 
 ![shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/sheet.png)
 
+**shot-knight-run-geminiproagent** ([video](shot-knight-run-geminiproagent/shot-knight-run-geminiproagent.mp4))
+
+![shot-knight-run-geminiproagent](shot-knight-run-geminiproagent/sheet.png)
+
+**shot-knight-run-spacebunnyalpha** ([video](shot-knight-run-spacebunnyalpha/shot-knight-run-spacebunnyalpha.mp4))
+
+![shot-knight-run-spacebunnyalpha](shot-knight-run-spacebunnyalpha/sheet.png)
+
 **shot-robot-vertigo-spacebunnyalpha** ([video](shot-robot-vertigo-spacebunnyalpha/shot-robot-vertigo-spacebunnyalpha.mp4))
 
 ![shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/sheet.png)
 
+**shot-robot-wave-geminiproagent** ([video](shot-robot-wave-geminiproagent/shot-robot-wave-geminiproagent.mp4))
+
+![shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/sheet.png)
+
+**shot-soldier-aim-geminiproagent** ([video](shot-soldier-aim-geminiproagent/shot-soldier-aim-geminiproagent.mp4))
+
+![shot-soldier-aim-geminiproagent](shot-soldier-aim-geminiproagent/sheet.png)
+
 **shot-soldier-dolly-claudesonnet46** ([video](shot-soldier-dolly-claudesonnet46/shot-soldier-dolly-claudesonnet46.mp4))
 
 ![shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/sheet.png)
+
+**shot-soldier-walk-spacebunnyalpha** ([video](shot-soldier-walk-spacebunnyalpha/shot-soldier-walk-spacebunnyalpha.mp4))
+
+![shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/sheet.png)
 
 **shot-tank-crane-claudesonnet46** ([video](shot-tank-crane-claudesonnet46/shot-tank-crane-claudesonnet46.mp4))
 
@@ -165,6 +191,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-tank-crane-geminiproagent** ([video](shot-tank-crane-geminiproagent/shot-tank-crane-geminiproagent.mp4))
 
 ![shot-tank-crane-geminiproagent](shot-tank-crane-geminiproagent/sheet.png)
+
+**shot-zombie-walk-geminiproagent** ([video](shot-zombie-walk-geminiproagent/shot-zombie-walk-geminiproagent.mp4))
+
+![shot-zombie-walk-geminiproagent](shot-zombie-walk-geminiproagent/sheet.png)
 
 **soldier**
 

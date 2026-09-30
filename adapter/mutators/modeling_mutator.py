@@ -397,7 +397,8 @@ class ModelingMutator:
     # ------------------------------------------------------------------ export
     @classmethod
     def export_gltf(cls, object_names: Any, filename: str, export_dir: str, apply_modifiers: bool = True,
-                    include_materials: bool = True, y_up: bool = True, recenter: bool = True) -> Dict[str, Any]:
+                    include_materials: bool = True, y_up: bool = True, recenter: bool = True,
+                    animations: bool = False) -> Dict[str, Any]:
         if not isinstance(object_names, list) or not object_names:
             raise ModelingError("object_names must be a non-empty list of object names.")
         name = str(filename or "").strip()
@@ -411,6 +412,10 @@ class ModelingMutator:
             if obj is None:
                 raise ModelingError(f"Object '{n}' not found.")
             objs.append(obj)
+        if animations:
+            # an animated character is a hierarchy: take the parts under the named objects and keep their motion in place
+            objs.extend(c for o in list(objs) for c in o.children_recursive if c not in objs)
+            recenter = False
         folder = Path(export_dir).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / name
@@ -437,7 +442,7 @@ class ModelingMutator:
             view_layer.objects.active = objs[0]
             result = bpy.ops.export_scene.gltf(
                 filepath=str(path), export_format="GLB", use_selection=True, export_apply=bool(apply_modifiers),
-                export_yup=bool(y_up), export_materials="EXPORT" if include_materials else "NONE",
+                export_yup=bool(y_up), export_materials="EXPORT" if include_materials else "NONE", export_animations=bool(animations),
             )
         finally:
             for o, loc in shifted:

@@ -1,0 +1,21 @@
+{
+  "name": "shot-robot-wave-geminiproagent",
+  "date": "20260930-103217",
+  "seconds": 108.7,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 53,
+  "tool_errors": 16,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "gltfCube silindi. Robot parçaları (kafa, gövde, kollar, bacaklar, anten) yapıldı. Transformlar uygulandı. Kafa ve gövdeye bevel eklendi. Renkli malzemeler atandı. Anten kırmızı parlatıldı. \n\nParçalar rig_character ile bağlandı. animate_character ile 4 saniye el sallama eklendi. Stüdyo ışığı kuruldu. Kamera dolly_in yapıldı. Kare kontrol edildi. shot-robot-wave-geminiproagent.mp4 oluşturuldu. İşlem bitti.",
+  "video_bytes": 112815,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

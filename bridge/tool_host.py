@@ -24,7 +24,8 @@ INSTRUCTIONS = (
     "engine (Godot: copy it under res:// and call sync_project). Keep low-poly game assets under ~3000 triangles, "
     "origin at the bottom centre, real-world scale. "
     "Direct a shot like a film: set_environment (studio, golden_hour, overcast, night, neon light), camera_move (dolly, orbit, arc, crane, pan, tilt, "
-    "whip_pan, dolly_zoom, crash_zoom_in, handheld; keyframed around the subject), render_image to check one frame, render_animation for an MP4. "
+    "whip_pan, dolly_zoom, crash_zoom_in, handheld; keyframed around the subject, follow=true tracks a moving subject), render_image to check one frame, render_animation for an MP4. "
+    "Characters move too: model one from SEPARATE parts (head, torso, arm_l, arm_r, leg_l, leg_r, accessories; do not join), rig_character, then animate_character (idle, walk, run, aim, wave, jump); export_gltf with animations=true keeps the motion for a game. "
     "Tools with risk MEDIUM or higher (delete_object) need the user's approval and are refused over MCP unless the "
     "user enabled 'Allow gated tools' in the add-on preferences; tell the user instead of retrying."
 )
