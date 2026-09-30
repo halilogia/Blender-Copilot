@@ -14,7 +14,7 @@ body:
     attributes:
       label: Blender version
       description: Include the full version and whether it is a stable or daily build.
-      placeholder: 5.2.1 LTS
+      placeholder: 5.2.2 LTS
     validations:
       required: true
   - type: input

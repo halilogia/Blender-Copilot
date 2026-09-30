@@ -3,7 +3,7 @@
 bl_info = {
     "name": "Blender - Copilot",
     "author": "Halil Emre",
-    "version": (1, 1, 0),
+    "version": (1, 2, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",
@@ -106,6 +106,14 @@ def update_runtime_config(config: Config) -> None:
                 provider.http_client.timeout = effective_timeout
 
 
+def _max_tool_rounds() -> int:
+    """Tool rounds per prompt: modeling a prop takes dozens of calls (BLENDER_AI_MAX_TOOL_ROUNDS, default 100)."""
+    try:
+        return max(1, min(200, int(os.environ.get("BLENDER_AI_MAX_TOOL_ROUNDS", "100"))))
+    except ValueError:
+        return 100
+
+
 def get_runtime() -> Optional[AgentRuntime]:
     """Retrieve the active extension agent runtime."""
     return _runtime
@@ -180,6 +188,8 @@ def register(provider: Optional[BaseProvider] = None):
         provider=effective_provider,
         dispatcher=dispatcher,
         auto_approve_low_risk_plans=True,
+        max_tool_rounds=_max_tool_rounds(),
+        continue_on_tool_failure=os.environ.get("BLENDER_AI_CONTINUE_ON_TOOL_ERROR") == "1",
     )
 
     # 5. Timer Bridge for Async Event Loop

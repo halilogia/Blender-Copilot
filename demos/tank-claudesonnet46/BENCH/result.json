@@ -1,0 +1,25 @@
+{
+  "name": "tank-claudesonnet46",
+  "date": "20260930-082945",
+  "seconds": 131.2,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 34,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "✅ **Bitti.**\n\n---\n\n**Ne yapıldı:**\n\n| Parça | Yöntem | Tri |\n|---|---|---|\n| Gövde (`Tank_Hull`) | Cube → bevel → üst taper | 60 |\n| Sol palet (`Tank_Track_L`) | Cube → bevel | 60 |\n| Sağ palet (`Tank_Track_R`) | Duplicate | 60 |\n| Kule (`Tank_Turret`) | Cube → bevel → taper | 60 |\n| Namlu (`Tank_Barrel`) | Cylinder, Y ekseninde | 124 |\n| **Toplam** | | **364 tri** |\n\n**3 materyal:** koyu yeşil gövde/kule, siyah lastik palet, metal namlu.  \nTransform uygulandı, origin tabana alındı, Y-up GLB olarak export edildi.  \n**364 tri** — oyun için çok hafif.\n\n`tank-claudesonnet46.glb` → `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082945-tank-claudesonnet46\\`",
+  "triangles": 364,
+  "materials": 3,
+  "nodes": 5,
+  "size_m": [
+    4.379,
+    1.6,
+    7.4
+  ],
+  "bytes": 13272
+}

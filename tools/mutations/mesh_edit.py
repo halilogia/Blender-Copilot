@@ -32,7 +32,7 @@ class MeshEditTool(BaseTool):
             "faces": {
                 "type": "object",
                 "description": "Face selector: {'direction': '+Z' or [x, y, z], 'threshold': 0.9}. Omit for all faces.",
-                "properties": {"direction": {}, "threshold": {"type": "number"}},
+                "properties": {"direction": {"description": "Axis string \"+Z\" (also +X -X +Y -Y -Z) or an [x, y, z] array of three numbers, e.g. [0, 0, 1]."}, "threshold": {"type": "number"}},
             },
             "distance": {"type": "number", "description": "EXTRUDE_FACES: distance along the normal (negative digs in)."},
             "thickness": {"type": "number", "description": "INSET_FACES: inset width (>0)."},

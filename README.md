@@ -1,19 +1,21 @@
-# Blender - Copilot — v1.1.0
+# Blender - Copilot — v1.2.0
 
-> Autonomous Grounding Copilot & AI Agent inside Blender 5.2.1 LTS.
+> Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
 [English](#english) | [Türkçe](#türkçe)
 
 [Contributing](CONTRIBUTING.md)
 
-[![Blender Version](https://img.shields.io/badge/Blender-5.2.1%20LTS-orange.svg)](https://www.blender.org/)
+[![Blender Version](https://img.shields.io/badge/Blender-5.2%20LTS-orange.svg)](https://www.blender.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%20Zero%20Dependencies-blue.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-682%20Unit%20%7C%2025%20Integration%20Suites-brightgreen.svg)]()
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-**Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2.1 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
+**Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
 
 > v1.1.0 completes Vision (Anthropic native + `max_side` capture guard + stdlib local embedding) and adds check-only auto-update plus a local asset browser (`import_asset`). Verified with 682 passing pure-Python unit tests.
+
+> v1.2.0 adds a local MCP bridge (Claude Code and other MCP clients drive the same tools), nine modeling, view and export tools, a Claude Code plugin and a library of 33 demo props modeled by agents. Verified with 709 passing pure-Python unit tests and 27 headless Blender suites.
 
 ---
 
@@ -79,7 +81,7 @@ claude plugin marketplace add halilogia/Blender-Copilot && claude plugin install
 
 Details, security model and tool list: [docs/MCP.md](docs/MCP.md).
 
-**Demo gallery:** 24 game props (crate, barrel, house, car, watchtower, cannon, soldier, castle ...) modeled by a fresh Claude Code agent (model claude-opus-5-5) through the bridge from one short prompt each, with chats and triangle counts: [demos/](demos/README.md).
+**Demo gallery:** 33 game props (crate, barrel, house, car, watchtower, cannon, soldier, castle ...) modeled from one short prompt each, by Claude Code over MCP and by the add-on's own agent through 9router (Claude Sonnet 4.6, Gemini Pro, Space Bunny) through the bridge from one short prompt each, with chats and triangle counts: [demos/](demos/README.md).
 
 ## Architecture Overview
 
@@ -201,10 +203,10 @@ Blender AI Sidebar/
 │   ├── timer_bridge.py           # bpy.app.timers consumer & UI sync
 │   └── uilist.py                 # Custom UIList history display
 ├── tests/                        # Comprehensive test harnesses
-│   ├── integration/              # Headless Blender 5.2.1 LTS integration suites
+│   ├── integration/              # Headless Blender 5.2 LTS integration suites (25)
 │   ├── manual/                   # Live endpoint verification scripts (9Router)
-│   ├── unit/                     # Pure Python unit test suites (618 tests)
-│   ├── run_all_blender_tests.py  # Master headless test runner (23 suites)
+│   ├── unit/                     # Pure Python unit test suites (682 tests)
+│   ├── run_all_blender_tests.py  # Master headless test runner (25 suites)
 │   └── run_unit_tests.py         # Pure Python test runner
 ├── blender_manifest.toml         # Blender 5.2 Extension manifest
 ├── LICENSE                       # GNU General Public License v3.0
@@ -216,7 +218,7 @@ Blender AI Sidebar/
 ## Installation
 
 ### Prerequisites
-- **Blender**: 5.2.0 LTS or higher (tested against Blender 5.2.1 LTS).
+- **Blender**: 5.2.0 LTS or higher (tested against Blender 5.2.2 LTS).
 - **LLM Endpoint**: Any OpenAI-compatible Chat Completions endpoint (e.g. 9Router at `http://localhost:20128/v1`, Ollama, LM Studio, or OpenAI).
 
 ### Install as Extension / Addon
@@ -267,7 +269,7 @@ python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_hard
 ```
 
 ### 2. Headless Blender Integration Tests
-Runs all 23 headless integration test suites inside Blender's actual Python runtime:
+Runs all 25 headless integration test suites inside Blender's actual Python runtime:
 ```bash
 python tests/run_all_blender_tests.py
 ```
@@ -353,9 +355,9 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.1.0 durumunda 682 pure-Python unit testi ve 25 Blender integration
+v1.2.0 durumunda 709 pure-Python unit testi ve 27 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
-asset import 6/6, anthropic roundtrip). Headless 25/25 Blender 5.2.2 LTS’te
+asset import 6/6, anthropic roundtrip). Headless 27/27 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.
 
 ### Tanılama logları

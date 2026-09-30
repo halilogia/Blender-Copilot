@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar.

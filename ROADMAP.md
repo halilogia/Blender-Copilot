@@ -1,32 +1,43 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.1.0 implemented (2026-09-27) — 682 unit tests OK, hardening green, headless 25/25 SUITES PASS (Blender 5.2.2 LTS).**
-Kalan: 1 canlı GUI turu (HUD, approval kartı, Anthropic anahtarlı vision, asset undo).
-Tamamlanan işlerin geçmişi (M1–M9, v1.0, v1.1): `CHANGELOG.md`. Bu dosya sadece ileriyi gösterir.
+**CURRENT: v1.2.0 implemented (2026-09-30) — yerel MCP köprüsü + modelleme araçları + Claude Code eklentisi; 709 unit tests OK, hardening green, headless 27/27 SUITES PASS (Blender 5.2.2 LTS).**
+Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ---
 
-## v1.2 Roadmap (2026-09-27)
+## v1.2.1 — Blender-Runtime Mühürleme (sıradaki)
 
-Hedef: v1.1'i Blender-runtime'da mühürlemek + operasyonu büyütmek. Sıra: doğrulama önce, yeni özellik sonra.
+Kapsam: kod değişimi yok (gerekmedikçe); v1.1’in makinede kanıtı.
 
-### v1.2.0 — Blender-Runtime Mühürleme (öncelik 1)
-- [x] Headless suite'ler 23 -> 25: `test_asset_import.py` (6/6: import + `perform_undo`/`redo`, verifier, guardlar), `test_anthropic_roundtrip.py` (Messages SSE -> tool -> verify -> sentez) — 25/25 PASS (Blender 5.2.2 LTS).
-- [ ] Canlı GUI kabul: Anthropic anahtarıyla approval kartı, `max_side=256` vision turu, asset import undo (`Ctrl+Z`).
-- [ ] Performans: 500+ obje sahnede `AssetLibrary.refresh()` + `LocalIndex.query()` süresi (<200ms hedef, timer_bridge 5ms bütçesi korunur).
+- [ ] **Canlı GUI kabul turu** (manuel, kullanıcı):
+  1. Anthropic anahtarıyla bir `delete_object` onayı: kart görünür, `Y` onaylar + sahne değişir, `N` reddeder + LLM’ye `USER_REJECTED` döner.
+  2. `capture_viewport(max_side=256)` vision turu: `image_id` metadata döner, base64 diske düşmez.
+  3. Asset import + `Ctrl+Z`: obje gelir, undo kaldırır, redo geri getirir.
+  4. HUD çok satırlı yanıt taşmaz; N-Panel history + diagnostics görünür.
+- [ ] **Performans probu**: 500+ objeli sahnede `AssetLibrary.refresh()` + `LocalIndex.query()` <200ms; `TimerBridge` 5ms tick bütçesi korunur.
+- Kabul: yukarıdaki 4 madde işaretli + unit/headless yeşil kalır.
 
-### v1.2.1 — Asset Browser Derinleştirme
-- [ ] Preferences: asset library dizin seçici + `BLENDER_AI_ASSET_DIR` göstergesi; N-Panel arama kutusu + sonuç listesi (substring + skor).
-- [ ] Thumbnail: `.blend` önizleme için `capture_viewport(max_side=256)` isteğe bağlı üretim; disk yazımı yok (önbellek).
-- [ ] `import_asset` konumu: opsiyonel `location` argümanı (verifier'a `location` epsilon kuralı ekle).
+## v1.2.2 — Asset Browser Derinleştirme
 
-### v1.2.2 — Update Akışı + Topluluk Sürümü
+- [ ] Preferences’a asset library dizin seçici + `BLENDER_AI_ASSET_DIR` göstergesi (`ui/preferences.py`).
+- [ ] N-Panel arama kutusu + skorlu sonuç listesi (`ui/panel.py`, `agent/asset_index.py` `search()` reuse).
+- [ ] İsteğe bağlı 256px `.blend` thumbnail (`capture_viewport(max_side=256)`, yalnızca önbellek, disk yazımı yok).
+- [ ] `import_asset(location=...)` opsiyonel argümanı + verifier `location` epsilon kuralı + unit test.
+- Kabul: yeni unit testler + headless `test_asset_import.py` yeşil + 1 GUI import turu.
+
+## v1.2.3 — Update Akışı + Topluluk Sürümü
+
 - [ ] N-Panel Diagnostics: "Check for Updates" butonu + sonuç rozeti (`Up to date` / `vX.Y.Z available`); opt-in `auto_check` (default False).
-- [ ] Dağıtım: Extensions platform paketi, `blender_manifest.toml` sürüm disiplini (minor bump kuralı).
-- [ ] Dokü: video/onboarder yerine kısa EN/TR "v1.2 live verification" notu (GUI test kanıtıyla).
+- [ ] Dağıtım: Extensions platform paketi + `blender_manifest.toml` sürüm disiplini (her release’te minor bump, `bl_info` senkron).
+- [ ] Kısa EN/TR "v1.2 live verification" notu (GUI kanıtıyla; video/onboarder yok).
+- Kabul: `main`’de sürüm 1.2.3, paket kurulur + açılır, check-updates rozeti canlıda görülür.
 
-### v1.3 Adayları (deferred, söz yok)
+## v1.3 Adayları (deferred, söz yok)
+
 - Text-to-3D (`generate_3d_asset`) araştırması; harici servis seçimi yok.
-- Controlled Python yürütme katmanı (yok; `exec` yasağı sürüyor).
+- Controlled Python yürütme katmanı yok; `exec`/`eval` yasağı sürüyor.
 
-Kabul kapısı (tümü): `python tests/run_unit_tests.py` yeşil ✅ + headless 25/25 ✅ + 1 canlı GUI turu ⬜ + hardening yeşil ✅.
+---
+
+Kabul kapısı (tümü): unit yeşil ✅ + headless 25/25 ✅ + GUI turu ⬜ + hardening yeşil ✅.
+Çalışma sırası: v1.2.1 -> v1.2.2 -> v1.2.3; v1.3’e kapı kapalı.

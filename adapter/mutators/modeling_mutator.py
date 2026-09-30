@@ -35,8 +35,13 @@ class ModelingError(ValueError):
 
 
 def _vec3(value: Any, what: str) -> Vector:
+    # Some models wrap or stringify the vector: {"item": [0, 0, 1]}, "0, 0, 1". Accept the obvious forms.
+    if isinstance(value, dict) and len(value) == 1:
+        value = next(iter(value.values()))
+    if isinstance(value, str):
+        value = [part for part in value.replace(",", " ").split() if part]
     if not isinstance(value, (list, tuple)) or len(value) != 3:
-        raise ModelingError(f"{what} must be a list of three numbers.")
+        raise ModelingError(f"{what} must be a list of three numbers, for example [0, 0, 1].")
     try:
         v = [float(x) for x in value]
     except (TypeError, ValueError):

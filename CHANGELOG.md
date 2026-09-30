@@ -7,18 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [1.2.0] - 2026-09-30
 
 ### Added
 - **MCP bridge** (`bridge/`): local MCP server so Claude Code and other agents can use Blender Copilot's tools. Loopback only, bearer token, browser `Origin` refused, off by default; speaks MCP 2026-07-28 (`server/discover`, `_meta` version, `resultType`, cacheable `tools/list`, `structuredContent`, header checks) and the older `initialize` handshake; tool `annotations`; ANSI/control characters scrubbed from results; `capture_viewport` returned as an MCP image. MEDIUM+ risk tools (`delete_object`) are refused unless the user allows gated tools. N-panel section "MCP bridge (Claude Code)" and `tools/serve_mcp_headless.py` for headless use. See `docs/MCP.md`.
 - **Modeling tools without Python** (no exec/eval): `create_mesh`, `mesh_edit` (extrude / inset / bevel / subdivide / taper faces picked by normal), `join_objects`, `parent_object`, `apply_transform`, `set_origin`, `add_shape_modifier` (MIRROR, ARRAY, SOLIDIFY, DECIMATE, TRIANGULATE), `frame_view`, `export_gltf` (writes a `.glb`, recenters the prop at the origin); primitives CYLINDER, CONE, ICOSPHERE, TORUS.
 - **Claude Code plugin** (`plugin/`, marketplace in `.claude-plugin/`): skills `blender-game-assets` (with tested recipes: crate, barrel, tree, rock, sandbags, rifle, soldier) and `blender-to-godot`, plus `/blender-connect`.
-- Manifest: `files` permission and updated `network` text; build excludes the plugin folder.
+- Manifest: `files` permission and updated `network` text; build excludes the plugin, demos, scripts and archives folders.
+- **In-Blender agent, modeling readiness**: the system prompt has a modeling protocol; tool rounds per prompt come from `BLENDER_AI_MAX_TOOL_ROUNDS` (default 100, was a fixed 5); opt-in `BLENDER_AI_CONTINUE_ON_TOOL_ERROR=1` returns a failed call to the model instead of ending the turn; provider HTTP errors now show the start of the response body.
+- **Demo bench and library**: `scripts/demo_bench_mcp.py` (Claude Code over MCP, or the add-on's own agent through 9router with `--via 9router`), `scripts/agent_run_headless.py`, `demo_history.py`, `demo_promote.py`, and `demos/` (33 props with chats, views and measurements).
 
 ### Fixed
+- `set_material` with `object_name` and `material_name` and no property just assigns the existing material to the slot.
+- `mesh_edit` accepts vectors that models wrap or stringify (`{"item": [0, 0, 1]}`, `"0, 0, 1"`); the schema and error text show the accepted forms.
 - `capture_viewport` derives its view and projection matrices from the viewport parameters (`RegionView3D.view_matrix` is stale in background mode, so `frame_view` had no effect on captures).
-- `set_material` with `object_name` and `material_name` and no property now just assigns the existing material to the slot (before it needed a property change).
-- Demo bench (`scripts/demo_bench_mcp.py`, `demo_history.py`, `demo_promote.py`) and the `demos/` library: 17 props modeled by an agent through the bridge.
 
 ### Verified
 - Pure-Python unit suites `test_mcp_bridge` (protocol, gating, executor, real loopback HTTP) and `test_mcp_settings`; headless Blender suites `test_mcp_bridge_blender.py` and `test_modeling_tools.py` (a real `.glb` is written and read back); full master runner 27/27 suites.
@@ -37,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Asset browser (C, local)**:
   - `agent/asset_index.py` (scan `.blend/.glb/.obj/.fbx`, traversal guard, substring + embedding search); `import_asset` tool (`LOW` risk, main-thread, `push_undo_step`); `ChangeVerifier` `import` rule.
 - **Transport**: `HttpClient.get()` + `get_json()` with identical TLS/timeout/cancel discipline (network stays isolated in `http_client`).
+
+### Fixed
+- `.blend` asset append datablock-name fallback in `BlenderAdapter.import_asset()`: tries caller `name` then file stem, returns `ASSET_NOT_FOUND` instead of a false-positive success when nothing is appended.
 
 ### Verified
 - 682 pure-Python unit tests passing (`python tests/run_unit_tests.py` OK, hardening green).

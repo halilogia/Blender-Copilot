@@ -594,6 +594,19 @@ class TestAgentRuntimeProviderRoundTrip(unittest.TestCase):
         self.assertIn("Ghost", result.final_text)
         self.assertEqual(result.tool_results[0].error.type, "OBJECT_NOT_FOUND")
 
+    def test_tool_failure_continues_when_opted_in(self):
+        """continue_on_tool_failure: the failed call goes back to the model and the turn ends normally."""
+        self.runtime.continue_on_tool_failure = True
+        self.runtime.submit_prompt("Hatalı tool")
+        result = self._drain_and_process()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result.state, "IDLE")
+        self.assertFalse(result.tool_results[0].success)
+        self.assertEqual(result.tool_results[0].error.type, "OBJECT_NOT_FOUND")
+        tool_messages = [m for m in self.runtime.conversation.messages if m.role.value == "tool"]
+        self.assertEqual(len(tool_messages), 1)
+
     # -------------------------------------------------------------------------
     # 9. Synchronous run() execution with real provider
     # -------------------------------------------------------------------------

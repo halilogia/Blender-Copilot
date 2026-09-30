@@ -1,0 +1,25 @@
+{
+  "name": "house-spacebunnyalpha",
+  "date": "20260930-083939",
+  "seconds": 155.9,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 30,
+  "tool_errors": 0,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "openrouter/space-bunny-alpha",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti.\n\n**Ne yapıldı**\n\n- Varsayılan `Cube` silindi.\n- 7 parça kuruldu: duvar (4×2.5×3 m küp, ölçekli), çatı (6 vertex, 5 yüz — kırma çatı), kapı (+Y cephede, 1.6×0.8 m), 3 pencere (ön/sağ/arka), baca (çatıyı delip geçen kutu, z=3.9 tepe).\n- 5 malzeme: `M_Wall_Plaster`, `M_Roof_Tile`, `M_Door_Wood`, `M_Window_Glass`, `M_Chimney_Stone`. Cam malzemesi önce nesneye bağlanmadı, `assign_material` ile üç pencereye ayrıca atandı.\n- Viewport kontrolü: ISO + FRONT + BACK. FRONT görünümü −Y'den baktığı için kapı görünmedi; BACK ile kapı doğrulandı.\n- `join_objects` ile tek mesh: **80 üçgen**, 41 yüz. Ölçek/rotasyon `apply_transform` ile pişirildi, `set_origin BOTTOM_CENTER` ile origin zemin hizasına alındı.\n\n**Dışa aktarma**\n\n```\nhouse-spacebunnyalpha.glb  —  8,276 bayt, 80 üçgen, Y-up, recentered\n```\n\nDosya yolu: `C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-083939-house-spacebunnyalpha\\`\n\nNot: oyun projesi kopyalama + `sync_project` bu ortamda yok, sadece export klasörüne yazıldı. Godot/Unity'ye alırken dosyayı `res://assets/` altına kendin kopyala.",
+  "triangles": 80,
+  "materials": 5,
+  "nodes": 1,
+  "size_m": [
+    4.2,
+    3.9,
+    3.4
+  ],
+  "bytes": 8276
+}

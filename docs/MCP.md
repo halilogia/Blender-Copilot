@@ -81,7 +81,7 @@ A fresh `claude -p` process connected through `--mcp-config` (HTTP, bearer token
 
 `scripts/demo_bench_mcp.py` gives a fresh Claude Code agent one short prompt ("model a low-poly barrel") and only the `blender` MCP server, then keeps everything in `archives/bench-runs/<date>-<name>/` (git-ignored): the prompt, the raw and readable chat, every viewport capture the agent made, four final views (`sheet.png`), the `.glb` and `result.json` (calls, triangles, size, time). `scripts/demo_history.py` builds `archives/history/index.html` (zoom, chat links, "demos'a koy" picks) and `scripts/demo_promote.py <run>` copies the best runs into the tracked [`demos/`](../demos/README.md) library.
 
-All demos were made through the MCP bridge by Claude Code (`claude-opus-5-5`), not by the add-on's own in-Blender agent. The in-Blender agent (any provider, for example 9router) uses the same tools but has not been benchmarked this way yet.
+Two agents were benchmarked with the same tools. **Claude Code** (`claude-opus-5-5`) drives the bridge over MCP (24 demos). The **add-on's own in-Blender agent** runs headless through an OpenAI-compatible gateway, here 9router: `python scripts/demo_bench_mcp.py --via 9router --model ag/claude-sonnet-4-6 --only crate` (also tried: `gemini-pro-agent`, `openrouter/space-bunny-alpha`; the cheap `a` combo stopped before exporting). For that agent the run script sets `BLENDER_AI_CONTINUE_ON_TOOL_ERROR=1` (a failed call goes back to the model), the default 100 tool rounds apply (`BLENDER_AI_MAX_TOOL_ROUNDS`), and up to two follow-up messages ask it to finish and export, like a user would. The `Ajan` column of [`demos/README.md`](../demos/README.md) says which agent made each model.
 
 ## Tests
 

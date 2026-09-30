@@ -50,18 +50,20 @@ def rebuild():
         result = json.loads((folder / "BENCH" / "result.json").read_text(encoding="utf-8"))
         prompt = (folder / "BENCH" / "prompt.txt").read_text(encoding="utf-8").strip()
         size = "x".join(f"{v:.2f}" for v in result.get("size_m", [])) + " m"
-        rows.append(f"| [{folder.name}]({folder.name}/) | {prompt} | {result['seconds'] / 60:.1f} dk | "
+        who = ("Blender Copilot ajanı (9router)" if result.get("agent") == "in-Blender agent" else "Claude Code (MCP)") + f" · {result.get('model') or 'claude-opus-5-5'}"
+        rows.append(f"| [{folder.name}]({folder.name}/) | {who} | {prompt} | {result['seconds'] / 60:.1f} dk | "
                     f"{result.get('tool_calls', '-')} | {result.get('triangles', '-')} | {size} | {result['date'][:8]} |")
         gallery.append(f"**{folder.name}**\n\n![{folder.name}]({folder.name}/sheet.png)\n")
     text = (
         "# Demo kütüphanesi\n\n"
-        "Her model, boş bir Blender sahnesinde tek bir istemle **Claude Code ajanının** Blender Copilot MCP "
-        "köprüsü üzerinden (yalnız izin listeli araçlar, rastgele Python yok) modellediği bir `.glb` dosyasıdır "
+        "Her model, boş bir Blender sahnesinde tek bir istemle bir ajanın izin listeli araçlarla (rastgele Python yok) "
+        "modellediği bir `.glb` dosyasıdır: ya **Claude Code** Blender Copilot MCP köprüsü üzerinden, ya da eklentinin "
+        "**kendi Blender içi ajanı** 9router üzerinden (`Ajan` sütunu hangisi olduğunu söyler) "
         "(`scripts/demo_bench_mcp.py`). İstem, sohbet ve ölçüm her demonun `BENCH/` klasöründe. Sayfada dört görünüm: "
         "izometrik, ön, sağ, üst.\n\n"
         "Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godot: "
         "`res://assets/models/` altına at).\n\n"
-        "| Model | İstem | Süre | Araç çağrısı | Üçgen | Boyut | Tarih |\n|---|---|---|---|---|---|---|\n"
+        "| Model | Ajan | İstem | Süre | Araç çağrısı | Üçgen | Boyut | Tarih |\n|---|---|---|---|---|---|---|---|\n"
         + "\n".join(rows) + "\n\n## Galeri\n\n" + "\n".join(gallery))
     (DEMOS / "README.md").write_text(text, encoding="utf-8")
     print("rebuilt", DEMOS / "README.md")

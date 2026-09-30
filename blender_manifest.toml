@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "blender_ai_sidebar"
-version = "1.1.0"
+version = "1.2.0"
 name = "Blender - Copilot"
 tagline = "Autonomous AI Agent & Grounding Copilot for Blender"
 maintainer = "Halil Emre"

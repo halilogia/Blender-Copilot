@@ -1,0 +1,25 @@
+{
+  "name": "crate-claudesonnet46",
+  "date": "20260930-081616",
+  "seconds": 120.6,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 25,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Export tamam. **168 üçgen**, ~12KB.\n\n---\n\n**Yapılanlar:**\n\n| Adım | Detay |\n|---|---|\n| Varsayılan Cube silindi | Temiz sahne |\n| `Crate` CUBE oluşturuldu | 1×1×1m, taban Z=0 |\n| Kenar bevel (2 segment, 0.03m) | Sert köşe yok |\n| Tüm yüzlere inset + extrude | Tahta panel oyuğu görünümü |\n| `Wood_Crate` materyali | Kahverengi (#72471E), roughness 0.85 |\n| 3 yatay + 1 dikey metal şerit | `Metal_Strap` — koyu, metallic 0.9 |\n| Transform apply + origin alt-merkeze | Oyun motoru için doğru pivot |\n| `crate-claudesonnet46.glb` export | Y-up, modifiers uygulandı, 168 tri |",
+  "triangles": 168,
+  "materials": 2,
+  "nodes": 5,
+  "size_m": [
+    1.012,
+    1.517,
+    1.012
+  ],
+  "bytes": 11728
+}

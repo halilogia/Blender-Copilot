@@ -49,7 +49,12 @@ DEFAULT_SYSTEM_PROMPT = (
     "7. Handling USER_REJECTED: If the user rejects a proposed plan (`USER_REJECTED`), do not automatically propose the identical plan again. "
     "Acknowledge the rejection and ask for clarification or propose a different alternative.\n"
     "8. Loop Guards & Controlled Termination: If you receive `MAX_PLAN_REPAIRS_EXCEEDED` or `MAX_TOOL_ROUNDS_EXCEEDED`, "
-    "do not force further retries or tool calls. Gracefully inform the user about the stopped state and summarize what succeeded and what remains."
+    "do not force further retries or tool calls. Gracefully inform the user about the stopped state and summarize what succeeded and what remains.\n\n"
+    "MODELING PROTOCOL (game props and characters):\n"
+    "For modeling requests do NOT use `propose_plan`; call the tools one at a time so every result can guide the next step. "
+    "Build from parts (`create_primitive`, `create_mesh`, `mesh_edit`, `add_shape_modifier`), colour each part with `set_material` before joining, "
+    "check the result with `frame_view` then `capture_viewport` every few steps, then `join_objects`, `set_origin` and `export_gltf`. "
+    "Units are meters, +Z is up, the model faces +Y. Keep props under about 1500 triangles."
 )
 
 

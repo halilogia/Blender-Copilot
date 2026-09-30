@@ -114,6 +114,7 @@ class AgentRuntime:
         visual_verifier: Optional[VisualVerifier] = None,
         max_plan_repairs: int = 1,
         auto_approve_low_risk_plans: bool = False,
+        continue_on_tool_failure: bool = False,
     ):
         self.provider = provider
         self.dispatcher = dispatcher
@@ -148,6 +149,8 @@ class AgentRuntime:
         self.max_tool_rounds: int = max_tool_rounds
         self.max_plan_repairs: int = max_plan_repairs
         self.auto_approve_low_risk_plans: bool = bool(auto_approve_low_risk_plans)
+        # Iterative work (modeling) needs the model to see a failed call and correct it instead of ending the turn.
+        self.continue_on_tool_failure: bool = bool(continue_on_tool_failure)
         self._current_tool_round: int = 0
         self._current_plan_repairs: int = 0
         self._streaming_text: str = ""
@@ -1545,7 +1548,7 @@ class AgentRuntime:
                 )
                 self.event_queue.put(ToolResultReadyEvent(tool_result=tool_res, turn_id=event.turn_id))
 
-                if not tool_res.success:
+                if not tool_res.success and not self.continue_on_tool_failure:
                     # Tool failure: transition to ERROR and terminate
                     self.state_machine.transition_to(AgentState.ERROR)
                     if self._current_metrics:
@@ -1783,7 +1786,7 @@ class AgentRuntime:
         )
         self.event_queue.put(ToolResultReadyEvent(tool_result=tool_res, turn_id=pending.turn_id))
 
-        if not tool_res.success:
+        if not tool_res.success and not self.continue_on_tool_failure:
             self.state_machine.transition_to(AgentState.ERROR)
             if self._current_metrics:
                 self._current_metrics.t_completed = time.time()

@@ -3,6 +3,7 @@
     python scripts/demo_bench_mcp.py --only crate               # one default prompt
     python scripts/demo_bench_mcp.py --name lamp --prompt "model a street lamp"
     python scripts/demo_bench_mcp.py                            # every default prompt, one after another
+    python scripts/demo_bench_mcp.py --via 9router --only crate # the add-on's OWN in-Blender agent + 9router
 
 Per run it starts a headless Blender bridge (scratch scene, gated tools allowed), lets `claude -p` work with
 only the `blender` MCP server, and writes ``archives/bench-runs/<date>-<name>/`` (git-ignored):
@@ -277,6 +278,61 @@ def run_one(name, prompt, timeout_min, max_turns, model):
     return run_dir
 
 
+def router_env(base_url, model):
+    """Provider settings for the in-Blender agent: 9router profile of the Godot AI Sidebar store, or BLENDER_AI_* env."""
+    env = dict(os.environ)
+    if not env.get("BLENDER_AI_API_KEY"):
+        store = Path(os.environ.get("APPDATA", "")) / "Godot" / "godot_ai_sidebar" / "providers.json"
+        profiles = json.loads(store.read_text(encoding="utf-8")).get("provider_profiles", [])
+        profile = next((p for p in profiles if p.get("api_key") and base_url in p.get("base_url", "")), None)
+        if profile is None:
+            raise SystemExit(f"no provider profile with a key for {base_url}; set BLENDER_AI_API_KEY")
+        env["BLENDER_AI_API_KEY"] = profile["api_key"]
+    env["BLENDER_AI_BASE_URL"] = base_url
+    env["BLENDER_AI_MODEL"] = model
+    env.setdefault("BLENDER_AI_TIMEOUT", "180")
+    env["BLENDER_AI_CONTINUE_ON_TOOL_ERROR"] = "1"  # a failed call goes back to the model instead of ending the run
+    return env
+
+
+def run_one_agent(name, prompt, timeout_min, base_url, model):
+    """The add-on's own agent (headless Blender, OpenAI-compatible provider such as 9router) models one asset."""
+    name = f"{name}-{re.sub(r'[^A-Za-z0-9]', '', model.split('/')[-1])}"
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    run_dir = RUNS / f"{stamp}-{name}"
+    (run_dir / "shots").mkdir(parents=True)
+    (run_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
+    started = time.time()
+    try:
+        subprocess.run([BLENDER, "--background", "--python", str(ROOT / "scripts" / "agent_run_headless.py"), "--",
+                        "--prompt-file", str(run_dir / "prompt.txt"), "--out-dir", str(run_dir), "--name", name,
+                        "--timeout", str(timeout_min * 60 - 30)],
+                       env=router_env(base_url, model), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                       timeout=timeout_min * 60)
+    except subprocess.TimeoutExpired:
+        pass
+    stats_path = run_dir / "stats.json"
+    stats = json.loads(stats_path.read_text(encoding="utf-8")) if stats_path.exists() else {"status": "crashed"}
+    stats_path.unlink(missing_ok=True)
+    finals = [run_dir / "shots" / f"final-{d}.png" for d in ("iso", "front", "right", "top")]
+    if all(p.exists() for p in finals):
+        make_sheet(finals, run_dir / "sheet.png")
+    result = {"name": name, "date": stamp, "seconds": round(time.time() - started, 1), "agent": "in-Blender agent",
+              "via": base_url}
+    result.update(stats)
+    glb = run_dir / f"{name}.glb"
+    if glb.exists():
+        result.update(glb_summary(glb))
+        if result["status"] in ("error", "timeout"):
+            result["note"] = f"exported despite {result['status']}"
+    elif result["status"] == "ok":
+        result["status"] = "no-glb"
+    (run_dir / "result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"[bench] {name}: {result['status']} {result.get('triangles', '-')} tris, "
+          f"{result.get('tool_calls', '-')} calls, {result['seconds']}s -> {run_dir}", flush=True)
+    return run_dir
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--only", help="comma separated names from the default prompts")
@@ -285,6 +341,9 @@ def main():
     ap.add_argument("--timeout-min", type=int, default=20)
     ap.add_argument("--max-turns", type=int, default=90)
     ap.add_argument("--model", default="")
+    ap.add_argument("--via", choices=["claude", "9router"], default="claude",
+                    help="claude: Claude Code over MCP (default); 9router: the add-on's own in-Blender agent")
+    ap.add_argument("--router-url", default="http://localhost:20128/v1")
     args = ap.parse_args()
     if args.name and args.prompt:
         jobs = [(re.sub(r"[^A-Za-z0-9_-]", "-", args.name), args.prompt)]
@@ -292,7 +351,10 @@ def main():
         names = args.only.split(",") if args.only else list(DEFAULTS)
         jobs = [(n, DEFAULTS[n]) for n in names]
     for name, prompt in jobs:
-        run_one(name, prompt, args.timeout_min, args.max_turns, args.model)
+        if args.via == "9router":
+            run_one_agent(name, prompt, args.timeout_min, args.router_url, args.model or "a")
+        else:
+            run_one(name, prompt, args.timeout_min, args.max_turns, args.model)
 
 
 if __name__ == "__main__":

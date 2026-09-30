@@ -1,0 +1,25 @@
+{
+  "name": "campfire-claudesonnet46",
+  "date": "20260930-083159",
+  "seconds": 200.2,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 40,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Bitti. Özet:\n\n---\n\n**Ne yaptım:**\n\n| Parça | Yöntem | Tri |\n|---|---|---|\n| Taş halkası | Cylinder → inset+extrude (içi boş halka) | ~346 |\n| Toprak zemin | Yassı cylinder | ~124 |\n| 4× odun | Cylinder, eğik (X+Z rot, çapraz) | ~496 |\n| Dış alev | Cone, turuncu emisyon (×4 str) | ~62 |\n| İç alev | Cone, sarı emisyon (×8 str) | ~62 |\n| **Toplam** | | **1090 tri** |\n\n- 5 malzeme: `Mat_Stone`, `Mat_Dirt`, `Mat_Wood`, `Mat_Flame_Outer`, `Mat_Flame_Core`\n- Origin: `BOTTOM_CENTER` — oyun motorunda zemine oturur\n- Export: Y-up, modifiers uygulandı, **49 KB** → `campfire-claudesonnet46.glb`",
+  "triangles": 1090,
+  "materials": 5,
+  "nodes": 1,
+  "size_m": [
+    1.1,
+    0.55,
+    1.1
+  ],
+  "bytes": 49592
+}

@@ -1,0 +1,1 @@
+Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar.

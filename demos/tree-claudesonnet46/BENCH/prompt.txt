@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu bir çam ağacı modelle, dışa aktar.

@@ -1,0 +1,25 @@
+{
+  "name": "house-claudesonnet46",
+  "date": "20260930-082238",
+  "seconds": 152.9,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 32,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/claude-sonnet-4-6",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "✅ **Tamamlandı.**\n\n---\n\n**Ne yapıldı:**\n\n| Parça | Yöntem | Malzeme |\n|---|---|---|\n| Duvarlar | CUBE, scale [3×2.5×1.25 m] | Bej sıva |\n| Çatı | Özel mesh, üçgen prizma | Koyu kırmızı kiremit |\n| Kapı | CUBE, ön duvara yapışık | Koyu kahve ahşap |\n| 2× Pencere | CUBE × 2, alpha 0.5 cam | Yarı saydam mavi |\n| Baca | CUBE, çatı üstü | Koyu gri taş |\n\n**Sonuç:** 68 üçgen — oyun için çok hafif. Origin zemin merkezinde. Y-up dönüştürüldü (Godot/Unity uyumlu).  \n**Dosya:** `house-claudesonnet46.glb`",
+  "triangles": 68,
+  "materials": 5,
+  "nodes": 1,
+  "size_m": [
+    6.6,
+    4.8,
+    5.6
+  ],
+  "bytes": 7328
+}

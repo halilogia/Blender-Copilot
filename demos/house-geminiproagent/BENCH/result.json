@@ -1,0 +1,25 @@
+{
+  "name": "house-geminiproagent",
+  "date": "20260930-084218",
+  "seconds": 69.6,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 22,
+  "tool_errors": 2,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "ag/gemini-pro-agent",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Varsayılan Cube silindi. Küp ile ev gövdesi, özel mesh ile eğimli çatı oluşturuldu. Kapı, pencere ve baca için küpler kullanılıp konumlandırıldı. Renkli materyaller atandı. Tüm parçalar birleştirildi, adı `Village_House` yapıldı. Orijin alt merkeze ayarlandı. Model `house-geminiproagent.glb` adıyla dışa aktarıldı. (Üçgen sayısı: 56). İşlem tamam.",
+  "triangles": 56,
+  "materials": 5,
+  "nodes": 1,
+  "size_m": [
+    2.4,
+    3.5,
+    2.267
+  ],
+  "bytes": 6520
+}

@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu bir kamp ateşi modelle (taş halka, odunlar, alev), dışa aktar.
