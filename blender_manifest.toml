@@ -8,7 +8,7 @@ maintainer = "Halil Emre"
 type = "add-on"
 
 # Optional links
-website = "https://github.com/halilogia/Blender-AI-Sidebar"
+website = "https://github.com/halilogia/Blender-Copilot"
 
 # Supported Blender versions
 blender_version_min = "4.2.0"
@@ -35,4 +35,11 @@ paths_exclude_pattern = [
   "/scripts/",
   "/demos/",
   "/brain/",
+  "/tests/",
+  "/docs/",
+  "/.git/",
+  "/.claude/",
+  "/.github/",
+  "__pycache__/",
+  "*.pyc",
 ]

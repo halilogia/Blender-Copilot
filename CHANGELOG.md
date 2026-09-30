@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **`task_report`** (read only): objects added, removed, changed and new materials by meaning (`+ crate (MESH)`, `- Cube`, `~ Table: location [0, 0, 0] -> [1, 0, 0]`), headline, undo steps. Catches forgotten helper objects and accidental moves that a "command succeeded" never shows.
   - **`task_rollback`** (risk MEDIUM: approval in the add-on, refused over MCP unless gated tools are allowed): undoes exactly the task's steps in one call and verifies by a second comparison that the scene equals the snapshot; reports what remains if something changed outside the AI's steps.
   - N-panel: **What changed?** and **Undo AI task (n)** appear after a task that changed something; the runtime begins a task at every chat message.
+- Extension package: `blender_manifest.toml` now leaves out tests, docs, `.git`, `.claude`, `.github` and caches (the zip is about 380 KB instead of 53 MB) and points to the right repository.
 - Pure comparison in `core/scene_diff.py`; snapshot in `adapter/readers/scene_snapshot.py`; ledger in `adapter/task_ledger.py`; undo steps are counted in `undo_manager`.
 - Tests: `tests/unit/test_scene_diff.py`, `tests/unit/test_runtime_task.py`, `tests/integration/test_task_ledger.py` (report lists adds and material, rollback restores a deleted object and the exact scene, nothing-to-roll-back cases, counter honesty, failing tool).
 
