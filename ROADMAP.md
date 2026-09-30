@@ -14,7 +14,8 @@ Sıra (biri bitmeden sonrakine geçilmez; her adımda entegrasyon testi + ücret
 3. **UV + doku hattı**: `unwrap_uv` (smart project / seam’li), `inspect_uv`, ve **preset malzemeleri dokuya pişirme** (`bake_material`): glTF dışa aktarımında procedural malzeme kaybolmasın (Godot’ya gerçek doku gitsin).
 4. ✅ **Mesh düzenleme paketi** (araç sayısı artmaz, `mesh_edit` işlemleri derinleşir): loop cut, dissolve, bridge, boolean sonrası temizlik, normal çevirme / yeniden hesaplama, seçim (normal / alan / malzeme), ayır / birleştir.
 5. ✅ **Dağıtma (scatter) ve arazi**: yol / alan boyunca örnekleme, rastgele ölçek ve dönüş; önce Python ile bağlı kopyalar, Geometry Nodes sonra.
-6. **Gerçek armature / IK / NLA**: en son; şimdiki parça tabanlı karakter sistemi yetiyor.
+6. **Gerçek armature / IK / NLA**: bilerek bekletiliyor. Parça tabanlı karakter `.glb` olarak Godot'ya animasyonuyla gidiyor; armature için `animate_character` tümüyle kemik pozuna taşınmalı (büyük iş, sohbet modelleri için kazanç belirsiz). Bir oyunda iskelet / retarget gerçekten gerekince açılır.
+7. ✅ **Model başına ölçüm**: `scripts/model_report.py` (sonuçlar `docs/MODELS.md`), standart üç görev `bench-*`.
 
 Bırakıldı: `animate_object` (düşük değer), yeni film / müzik özellikleri.
 

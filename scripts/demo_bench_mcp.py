@@ -56,6 +56,13 @@ SUFFIX = (
 )
 
 # Shots: model, light, camera move, render an MP4. Names start with "shot-".
+# the standard model-comparison tasks (python scripts/model_report.py reads their results): the same prompt for every model
+BENCH = {
+    "bench-model-check": "create_primitive ile 3 parçalı basit bir masa yap: bir kutu tabla (scale [3,2,0.15], location [0,0,1.0]) ve iki kutu ayak (scale [0.2,0.2,1], konumlar [-1.2,0,0] ve [1.2,0,0]; ayakların alt kenarı z=-0.5'e sarkıyor, bilerek). Hiçbir malzeme verme. Sonra check_model çağır, çıkan FAIL ve WARN maddelerini söylediği araçlarla düzelt (ölçeği uygula, zemine oturt, malzeme ver), check_model ok ve temiz olana kadar tekrarla, join_objects ile birleştir, set_origin, export_gltf table.glb.",
+    "bench-baked-bench": "Bir park bankı modelle: ahşap oturma yüzeyi (kutu), ahşap sırtlık (kutu) ve iki metal ayak (kutular). Ahşap parçalara set_material preset wood, metal ayaklara preset metal ver. Parçaları join_objects ile birleştir, set_origin ile zemine oturt, check_model ile kontrol et ve FAIL'leri düzelt, bake_material ile dokuya pişir (resolution 512) ve export_gltf ile bench.glb yaz. Godot'ya gidecek.",
+    "bench-terrain-forest": "Tepeli bir manzara kur: create_terrain (size 60, height 5, flat_radius 8, seed 3) ve set_material preset grass ver. Ortada düz alana create_prop ile bir house koy. Sonra bir tree_pine üretip scatter ile araziye (ground=Terrain) 40 ağaç dağıt, evin yerini avoid ile boş bırak. Bir de ev girişinden uzanan bir yol boyunca (path) 10 lamba (lamp) dik. set_environment golden_hour, camera_move orbit ile 5 sn film çek, check_shot ile kontrol et.",
+}
+
 SHOTS = {
     "shot-castle-orbit": "Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek.",
     "shot-soldier-dolly": "Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek.",
@@ -430,7 +437,7 @@ def main():
     if args.name and args.prompt:
         jobs = [(re.sub(r"[^A-Za-z0-9_-]", "-", args.name), args.prompt)]
     else:
-        pool = {**DEFAULTS, **SHOTS}
+        pool = {**DEFAULTS, **SHOTS, **BENCH}
         names = args.only.split(",") if args.only else (list(SHOTS) if args.shots else list(DEFAULTS))
         jobs = [(n, pool[n]) for n in names]
     for name, prompt in jobs:

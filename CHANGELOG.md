@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- `scripts/model_report.py` and `docs/MODELS.md`: which chat model drives Blender Copilot, from the stored benchmark runs (finished, calls, tool errors, minutes) and three standard tasks (`bench-model-check`, `bench-baked-bench`, `bench-terrain-forest`, same prompt for every model). First numbers: DeepSeek V4 Flash, Gemini Pro agent and Space Bunny Alpha all finished all three; Gemini needed the fewest calls, Space Bunny 141 calls for the terrain scene.
+
+---
+
 ## [1.17.0] - 2026-09-30
 
 ### Added
