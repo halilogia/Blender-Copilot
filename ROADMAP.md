@@ -1,43 +1,40 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.13.0 implemented (2026-09-30) — film araçları (38 kamera hareketi, ışık ve renk ayarı, çok planlı kurgu) + yerel MCP köprüsü + modelleme araçları + sinema araçları (ışık, kamera hareketi, MP4 render) + karakter animasyonu (rig, yürüme/koşma/nişan/el sallama/zıplama) + Claude Code eklentisi; 797 unit tests OK, hardening green, headless 32/32 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.13.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot`; 811 unit tests OK, hardening green, headless 33/33 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
----
+## Yön (2026-09-30)
 
-## v1.11.1 — Blender-Runtime Mühürleme (sıradaki)
+Çekirdek ürün: **AI’nin Blender sahnesini güvenilir biçimde anlaması, modellemesi, düzenlemesi, malzeme / ışık / kamera vermesi, sonucu doğrulaması** ve gerektiğinde animasyon üretmesi. Film, müzik, karakter animasyonu isteğe bağlı paketlerdir (`core/tool_packs.py`: yalnız istekte yüklenir). **Film tarafı dondurulur:** yeni kamera preset’i, müzik özelliği, prop, film efekti eklenmez; yalnız kalite ve çekirdek boşlukları kapatılır.
 
-Kapsam: kod değişimi yok (gerekmedikçe); v1.1’in makinede kanıtı.
+Sıra (biri bitmeden sonrakine geçilmez; her adımda entegrasyon testi + ücretsiz modelle bir demo):
 
-- [ ] **Canlı GUI kabul turu** (manuel, kullanıcı):
-  1. Anthropic anahtarıyla bir `delete_object` onayı: kart görünür, `Y` onaylar + sahne değişir, `N` reddeder + LLM’ye `USER_REJECTED` döner.
-  2. `capture_viewport(max_side=256)` vision turu: `image_id` metadata döner, base64 diske düşmez.
-  3. Asset import + `Ctrl+Z`: obje gelir, undo kaldırır, redo geri getirir.
-  4. HUD çok satırlı yanıt taşmaz; N-Panel history + diagnostics görünür.
-- [ ] **Performans probu**: 500+ objeli sahnede `AssetLibrary.refresh()` + `LocalIndex.query()` <200ms; `TimerBridge` 5ms tick bütçesi korunur.
-- Kabul: yukarıdaki 4 madde işaretli + unit/headless yeşil kalır.
+1. **Belge tutarlılığı** ✅ (rozet, test sayıları, bu dosya).
+2. **`check_model`** (model kalite kontrolü, `check_shot`’ın modelleme karşılığı): ayrık geometri, non-manifold, ters normal, uygulanmamış ölçek, origin, zeminin altı, üçgen bütçesi, çakışan nesneler, sıfır hacimli parça, materyalsiz mesh, tekrarlı vertex, UV gerekli ama yok; her bulgu için düzelten araç önerisi. Ajan raporu okuyup kendi düzeltir.
+3. **UV + doku hattı**: `unwrap_uv` (smart project / seam’li), `inspect_uv`, ve **preset malzemeleri dokuya pişirme** (`bake_material`): glTF dışa aktarımında procedural malzeme kaybolmasın (Godot’ya gerçek doku gitsin).
+4. **Mesh düzenleme paketi** (araç sayısı artmaz, `mesh_edit` işlemleri derinleşir): loop cut, dissolve, bridge, boolean sonrası temizlik, normal çevirme / yeniden hesaplama, seçim (normal / alan / malzeme), ayır / birleştir.
+5. **Dağıtma (scatter)**: yol / alan boyunca örnekleme, rastgele ölçek ve dönüş; önce Python ile bağlı kopyalar, Geometry Nodes sonra.
+6. **Gerçek armature / IK / NLA**: en son; şimdiki parça tabanlı karakter sistemi yetiyor.
 
-## v1.11.2 — Asset Browser Derinleştirme
+Bırakıldı: `animate_object` (düşük değer), yeni film / müzik özellikleri.
 
-- [ ] Preferences’a asset library dizin seçici + `BLENDER_AI_ASSET_DIR` göstergesi (`ui/preferences.py`).
-- [ ] N-Panel arama kutusu + skorlu sonuç listesi (`ui/panel.py`, `agent/asset_index.py` `search()` reuse).
-- [ ] İsteğe bağlı 256px `.blend` thumbnail (`capture_viewport(max_side=256)`, yalnızca önbellek, disk yazımı yok).
-- [ ] `import_asset(location=...)` opsiyonel argümanı + verifier `location` epsilon kuralı + unit test.
-- Kabul: yeni unit testler + headless `test_asset_import.py` yeşil + 1 GUI import turu.
+## Kullanıcıya ait: Canlı GUI kabul turu (bekliyor)
 
-## v1.11.3 — Update Akışı + Topluluk Sürümü
+Kod değişimi gerektirmez; makinede kanıt:
 
-- [ ] N-Panel Diagnostics: "Check for Updates" butonu + sonuç rozeti (`Up to date` / `vX.Y.Z available`); opt-in `auto_check` (default False).
-- [ ] Dağıtım: Extensions platform paketi + `blender_manifest.toml` sürüm disiplini (her release’te minor bump, `bl_info` senkron).
-- [ ] Kısa EN/TR "v1.2 live verification" notu (GUI kanıtıyla; video/onboarder yok).
-- Kabul: `main`’de sürüm 1.11.3, paket kurulur + açılır, check-updates rozeti canlıda görülür.
+- [ ] Bir `delete_object` onayı: kart görünür, `Y` onaylar + sahne değişir, `N` reddeder + LLM’ye `USER_REJECTED` döner.
+- [ ] `capture_viewport(max_side=256)` vision turu: `image_id` döner, base64 diske düşmez.
+- [ ] Asset import + `Ctrl+Z`: obje gelir, undo kaldırır, redo geri getirir.
+- [ ] HUD çok satırlı yanıt taşmaz; N-Panel history + diagnostics görünür.
+- [ ] 500+ objeli sahnede `AssetLibrary.refresh()` + `LocalIndex.query()` <200 ms.
+- [ ] Yeni: Godot AI Sidebar → Ayarlar → Blender ile bağlantı, gerçek pencerede.
 
-## v1.12 Adayları (deferred, söz yok)
+## Sonra (söz yok)
 
-- Text-to-3D (`generate_3d_asset`) araştırması; harici servis seçimi yok.
-- Controlled Python yürütme katmanı yok; `exec`/`eval` yasağı sürüyor.
+- Asset Browser arayüzü (dizin seçici, arama kutusu, thumbnail), update akışı rozeti, Extensions paketi.
+- Serbest bpy betiği (`run_script`) yalnız sıkı kum havuzuyla (yalnız export klasörüne yazar, ağ ve silme kapalı, onaylı); `exec` / `eval` yasağı bu araç dışında sürer.
+- Sculpt, Geometry Nodes serbest düzenleme.
 
 ---
 
-Kabul kapısı (tümü): unit yeşil ✅ + headless 32/32 ✅ + GUI turu ⬜ + hardening yeşil ✅.
-Çalışma sırası: v1.11.1 -> v1.11.2 -> v1.11.3; v1.12’ye kapı kapalı.
+Kabul kapısı (tümü): unit yeşil ✅ + headless 33/33 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.
