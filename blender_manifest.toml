@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "blender_ai_sidebar"
-version = "1.7.0"
+version = "1.8.0"
 name = "Blender - Copilot"
 tagline = "Autonomous AI Agent & Grounding Copilot for Blender"
 maintainer = "Halil Emre"
@@ -24,7 +24,7 @@ copyright = [
 ]
 
 [permissions]
-network = "LLM provider access and a local-only MCP bridge (127.0.0.1)"
+network = "LLM providers, local MCP bridge, optional 3D generator"
 files = "Writes exported .glb files and the MCP bridge settings"
 
 [build]

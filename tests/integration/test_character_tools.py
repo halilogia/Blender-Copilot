@@ -344,6 +344,34 @@ def test_faces():
     print("[PASS] Test 6")
 
 
+def test_continuity():
+    print("Test 7: shots carry on where the previous shot stopped in a character animation...")
+    adapter = BlenderAdapter()
+    names = build_character(adapter)
+    assert adapter.rig_character(name="Tester", object_names=names).success
+    assert adapter.animate_character(rig="Tester_Rig", preset="walk", duration=4.0, fps=12, distance=6.0).success
+    scn = bpy.context.scene
+    assert adapter.camera_move(preset="static", object_names=["Tester_Rig"], duration=2.0, fps=12, follow=True, start_frame=25).success
+    assert (scn.frame_start, scn.frame_end) == (25, 48), (scn.frame_start, scn.frame_end)
+    cam = bpy.data.objects["ShotCamera"]
+    scn.frame_set(25)
+    assert cam.matrix_world.translation.y > 2.5, "a shot that starts at frame 25 films the character where it is by then"
+    for bad in (dict(start_frame=0), dict(start_frame="x"), dict(start_frame=10 ** 7)):
+        r = adapter.camera_move(preset="static", **bad)
+        assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
+    with tempfile.TemporaryDirectory() as tmp:
+        adapter.export_dir = tmp
+        assert adapter.set_environment(preset="studio").success
+        shots = [{"preset": "static", "object_names": ["Tester_Rig"], "duration": 2.0, "fps": 12, "follow": True},
+                 {"preset": "dolly_in", "object_names": ["Tester_Rig"], "duration": 2.0, "fps": 12, "follow": True}]
+        res = adapter.render_shots(filename="walkfilm", shots=shots, width=160, height=90, samples=2, transition="cut")
+        assert res.success, res.error
+        assert (scn.frame_start, scn.frame_end) == (25, 48), "the second shot continued at frame 25"
+        res = adapter.render_shots(filename="restart", shots=shots, width=160, height=90, samples=2, transition="cut", continuous=False)
+        assert res.success and (scn.frame_start, scn.frame_end) == (1, 24), (scn.frame_start, scn.frame_end)
+    print("[PASS] Test 7")
+
+
 def main():
     test_rig()
     test_animation()
@@ -351,6 +379,7 @@ def main():
     test_bent_limbs()
     test_library()
     test_faces()
+    test_continuity()
     print("\nALL CHARACTER TOOL INTEGRATION TESTS PASSED")
 
 

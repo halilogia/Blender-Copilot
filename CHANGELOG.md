@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-09-30
+
+### Added
+- **`generate_3d`**: text or image to 3D through a trained generator the user configures. `BLENDER_COPILOT_3D_URL` (and optional `BLENDER_COPILOT_3D_KEY`) point at a service that follows a small contract (JSON request with prompt, optional image, seed and texture; answer as `.glb` bytes, `glb_base64` or `glb_url`); the URL comes only from the environment, the network rules of the add-on apply, files over 80 MB are refused. The model is saved in the export folder, imported, scaled to a height and stood on the ground under one root object. See `docs/GENERATE_3D.md` and `scripts/mock_3d_server.py` (a stand-in that serves demo models).
+- **Shot continuity**: `camera_move` `start_frame`, and `render_shots` `continuous` (default true): each shot carries on where the previous one stopped in the characters' animation, so a spoken line or a walk continues across shots.
+- Manifest network reason mentions the optional 3D generator; MCP render and generate calls get a long wait window.
+- Tests: `tests/integration/test_generate_tools.py` (mock generator: binary, base64 and URL answers, auth, image to 3D, errors, scaling and grounding, undo), shot continuity in the character tests.
+
+---
+
 ## [1.7.0] - 2026-09-30
 
 ### Added

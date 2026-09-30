@@ -3,7 +3,7 @@
 bl_info = {
     "name": "Blender - Copilot",
     "author": "Halil Emre",
-    "version": (1, 7, 0),
+    "version": (1, 8, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",
@@ -62,6 +62,7 @@ from .tools.mutations.export_gltf import ExportGltfTool
 from .tools.mutations.add_shape_modifier import AddShapeModifierTool
 from .tools.mutations.frame_view import FrameViewTool
 from .tools.mutations.set_environment import SetEnvironmentTool
+from .tools.mutations.generate_3d import Generate3DTool
 from .tools.mutations.make_soundtrack import MakeSoundtrackTool
 from .tools.mutations.polish_model import PolishModelTool
 from .tools.mutations.character_library import CharacterLibraryTool
@@ -183,6 +184,7 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(AddShapeModifierTool())
     registry.register(FrameViewTool())
     registry.register(SetEnvironmentTool())
+    registry.register(Generate3DTool())
     registry.register(MakeSoundtrackTool())
     registry.register(PolishModelTool())
     registry.register(CharacterLibraryTool())

@@ -33,6 +33,7 @@ class CameraMoveTool(BaseTool):
             "angle": {"type": "number", "description": "orbit only: how many degrees to circle (default 120, up to 360)."},
             "intensity": {"type": "number", "description": "Strength multiplier for pan, tilt, whip_pan, handheld, dolly_left/right, jib, dutch_angle (default 1)."},
             "focal_length": {"type": "number", "description": "Lens in millimeters (default 35; 24 wide, 85 portrait)."},
+            "start_frame": {"type": "integer", "description": "First frame of the shot (default 1). Use it to film a later part of a character animation: a shot that starts at frame 73 shows what happens from frame 73 on."},
             "follow": {"type": "boolean", "description": "Keep the same framing while the subject moves (a walking character): the camera keeps its offset to the subject frame by frame. Set the subject's animation first (animate_character), pass the rig as object_names."},
         },
         "required": ["preset"],

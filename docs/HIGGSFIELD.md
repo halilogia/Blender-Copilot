@@ -32,7 +32,11 @@ Steps 1 to 4 of the proposed order are built: `render_image`, `render_animation`
 
 Higgsfield runs models trained to generate video and 3D; here chat models (ChatGPT, Claude, Gemini, free models) direct a deterministic toolset. That means the tools can be exact (camera paths, light, edit, sound, rigs) while the look of what a model *builds* depends on that model: blocky low-poly shapes, proportions that need a second look, sometimes a wrong light preset. The project answers this with strict but forgiving tools (lists wrapped by weak models, batches with approvals, string numbers all work), recipes in the skills, and ways for the model to check its own work (`render_contact_sheet`, `render_image` returns the picture). A trained text-to-3D model can sit next to this later: generate a `.glb` with an external tool, bring it in with `import_asset`, then rig, light, film and score it with the tools above.
 
-Still missing compared with Higgsfield: text or image to 3D inside the add-on (needs an external generator service, which the project has deliberately not chosen), a shot list UI, realistic materials and hair, and above all the model quality of blocky low-poly assets. Realistic (diffusion) video is out of scope: this is controllable 3D animation.
+### v1.8: a trained generator can plug in
+
+`generate_3d` is the seam for a trained text-to-3D or image-to-3D model: the user points `BLENDER_COPILOT_3D_URL` at a service (a local Hunyuan3D or TRELLIS server, a hosted API behind a small wrapper), and the chat model can ask it for organic or detailed props and static characters, then light, film and score them with the same tools ([GENERATE_3D.md](GENERATE_3D.md)). The contract is tested against a mock server; real generator wrappers are not bundled or tested, because the project does not pick one for the user. Shots of a film also carry on where the previous one stopped in a character's animation now (`render_shots` `continuous`).
+
+Still missing compared with Higgsfield: a tested bundled generator wrapper (it needs a GPU and the user's choice of engine), rigging for a generated single-mesh character (generated models are static; walking and talking characters are built from parts), a shot list UI, realistic materials and hair, and above all the look of what chat models build from primitives. Realistic (diffusion) video is out of scope: this is controllable 3D animation.
 
 ## What Higgsfield is (from its own pages)
 

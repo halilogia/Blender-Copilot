@@ -25,7 +25,7 @@ MAX_CLIPS = 12
 MAX_SHOTS = 8
 MAX_TOTAL_FRAMES = 1800
 SHOT_KEYS = {"preset", "duration", "object_names", "environment", "look", "azimuth", "elevation", "distance",
-             "focal_length", "follow", "intensity", "angle", "fps"}
+             "focal_length", "follow", "intensity", "angle", "fps", "start_frame"}
 
 
 def _strips(editor):
@@ -176,7 +176,7 @@ class VideoMutator:
     @classmethod
     def render_shots(cls, export_dir: str, filename: str, shots: Any, transition: str = "crossfade",
                      transition_seconds: float = 0.5, width: int = 960, height: int = 540, samples: int = 12,
-                     music: Any = None, music_volume: float = 0.6) -> Dict[str, Any]:
+                     music: Any = None, music_volume: float = 0.6, continuous: bool = True) -> Dict[str, Any]:
         stem = _stem(filename, "film")
         mood = str(music).strip().lower() if music else None
         if mood and mood not in MOODS and not SOUND_RX.match(str(music).strip()):
@@ -203,6 +203,7 @@ class VideoMutator:
         if total > 75:
             raise ModelingError("The shots add up to more than 75 seconds; use fewer or shorter shots.")
         clips, details = [], []
+        offset = 1
         try:
             for n, shot in enumerate(plan, 1):
                 if shot.get("environment"):
@@ -210,7 +211,10 @@ class VideoMutator:
                 if shot.get("look"):
                     LookMutator.set_look(preset=shot["look"])
                 cam_args = {k: v for k, v in shot.items() if k not in ("environment", "look")}
+                if continuous and "start_frame" not in cam_args:
+                    cam_args["start_frame"] = offset          # each shot carries on where the last one stopped
                 cam = CinemaMutator.camera_move(**cam_args)
+                offset += cam["frames"]
                 clip = CinemaMutator.render_animation(export_dir=export_dir, filename=f"{stem}_shot{n}", width=width,
                                                       height=height, samples=samples)
                 clips.append(f"{stem}_shot{n}.mp4")

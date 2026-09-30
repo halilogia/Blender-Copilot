@@ -263,7 +263,8 @@ class CinemaMutator:
     @classmethod
     def camera_move(cls, preset: str, object_names: Any = None, duration: float = 4.0, fps: int = 24,
                     distance: Any = None, elevation: float = 15.0, azimuth: float = 35.0, angle: float = 120.0,
-                    intensity: float = 1.0, focal_length: float = 35.0, follow: bool = False) -> Dict[str, Any]:
+                    intensity: float = 1.0, focal_length: float = 35.0, follow: bool = False,
+                    start_frame: Any = 1) -> Dict[str, Any]:
         key = str(preset or "").strip().lower()
         if key not in PRESETS:
             raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
@@ -283,16 +284,22 @@ class CinemaMutator:
         frames = frame_count(seconds, rate)
         objs = _scene_meshes(object_names)
         deltas = None
-        bpy.context.scene.frame_set(1)      # the subject is framed as it stands at the first frame of the shot
+        try:
+            first = int(start_frame)
+        except (TypeError, ValueError):
+            raise ModelingError("start_frame must be a whole number (1 or more).")
+        if not 1 <= first <= 100000:
+            raise ModelingError("start_frame must be between 1 and 100000.")
+        bpy.context.scene.frame_set(first)      # the subject is framed as it stands at the first frame of the shot
         if follow:
             # the subject moves (a walking character): the camera keeps the same framing relative to it
             scn_f = bpy.context.scene
             centers = []
-            for f in range(1, frames + 1):
+            for f in range(first, first + frames):
                 scn_f.frame_set(f)
                 centers.append(_bounds(objs)[0])
             deltas = [c - centers[0] for c in centers]
-            scn_f.frame_set(1)
+            scn_f.frame_set(first)
         center, radius, _ = _bounds(objs)
         distance = float(distance) if distance else _frame_distance(objs, float(focal_length))
         samples = camera_samples(key, frames, tuple(center), radius, distance,
@@ -327,7 +334,7 @@ class CinemaMutator:
         target.rotation_mode = "XYZ"
         target.rotation_euler = (0.0, 0.0, 0.0)
         for i, (pos, aim, focal) in enumerate(samples):
-            frame = 1 + i
+            frame = first + i
             cam.location = pos
             cam.keyframe_insert("location", frame=frame)
             target.location = aim
@@ -341,11 +348,11 @@ class CinemaMutator:
             cam.data.keyframe_insert("lens", frame=frame)
         scn.camera = cam
         scn.render.fps = rate
-        scn.frame_start, scn.frame_end = 1, frames
-        scn.frame_set(1)
+        scn.frame_start, scn.frame_end = first, first + frames - 1
+        scn.frame_set(first)
         push_undo_step(f"AI: Camera move {key}")
         return {"camera": cam.name, "target": target.name, "preset": key, "about": PRESETS[key], "frames": frames,
-                "fps": rate, "seconds": round(frames / rate, 2), "frame_range": [1, frames],
+                "fps": rate, "seconds": round(frames / rate, 2), "frame_range": [first, first + frames - 1],
                 "subject_center": [round(v, 3) for v in center], "subject_radius": round(radius, 3),
                 "distance": round(float(distance) if distance else radius * 2.8, 3), "follow": bool(follow)}
 
