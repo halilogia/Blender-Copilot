@@ -372,6 +372,67 @@ def test_continuity():
     print("[PASS] Test 7")
 
 
+def test_sequence():
+    print("Test 8: animate_sequence acts several motions one after another...")
+    adapter = BlenderAdapter()
+    bpy.ops.wm.read_homefile(use_empty=True)
+    bpy.context.preferences.edit.use_global_undo = True
+    for name, (loc, scale) in FACE.items():
+        assert adapter.create_primitive("CUBE", name=name, size=1.0, location=list(loc), scale=list(scale)).success
+    push_undo_step("Baseline")
+    assert adapter.rig_character(name="Act", object_names=list(FACE)).success
+    scn = bpy.context.scene
+    res = adapter.animate_sequence(rig="Act_Rig", fps=12, blend_seconds=0.25, segments=[
+        {"preset": "walk", "duration": 2.0, "distance": 3.0},
+        {"preset": "wave", "duration": 1.0},
+        {"preset": "talk", "text": "Merhaba!", "heading": 90},
+    ])
+    assert res.success, res.error
+    d = res.data
+    tl = d["timeline"]
+    assert [x["preset"] for x in tl] == ["walk", "wave", "talk"], tl
+    blend = 3                                                   # 0.25 s at 12 fps
+    assert tl[0]["start_frame"] == 1 and tl[0]["end_frame"] == 24, tl
+    assert tl[1]["start_frame"] == 24 + 1 + blend and tl[1]["end_frame"] == tl[1]["start_frame"] + 11, tl
+    assert tl[2]["start_frame"] == tl[1]["end_frame"] + 1 + blend and tl[2]["heading"] == 90, tl
+    assert scn.frame_end == d["frames"] == tl[2]["end_frame"] and scn.render.fps == 12
+    rig = bpy.data.objects["Act_Rig"]
+    rest_y = rig["rest_location"][1]          # the rig starts at the middle of the character, not at y = 0
+    scn.frame_set(24)
+    assert abs(rig.location.y - (rest_y + 3.0)) < 0.05, rig.location                     # the walk ended about 3 m along +Y
+    scn.frame_set(tl[1]["start_frame"] + 6)
+    assert abs(rig.location.y - (rest_y + 3.0)) < 1e-2 and abs(rig.location.x) < 1e-2, ("it waves where the walk stopped", tuple(rig.location))
+    assert bpy.data.objects["ArmR"].rotation_euler.x > 2.5, "the wave raises the right arm"
+    scn.frame_set(tl[2]["start_frame"] + 3)
+    assert abs(rig.rotation_euler.z - 1.5708) < 1e-3, "the last segment faces its new heading"
+    mouth = bpy.data.objects["Mouth"]
+    zs = []
+    for f in range(tl[2]["start_frame"], tl[2]["end_frame"] + 1):
+        scn.frame_set(f)
+        zs.append(mouth.scale.z)
+    assert max(zs) > min(zs) * 3, "the mouth moves while it talks"
+    # the pose glides in the blend gap: the arm is between the walk pose and the wave pose
+    scn.frame_set(24)
+    walk_arm = bpy.data.objects["ArmR"].rotation_euler.x
+    scn.frame_set(24 + 2)
+    gap_arm = bpy.data.objects["ArmR"].rotation_euler.x
+    scn.frame_set(tl[1]["start_frame"])
+    wave_arm = bpy.data.objects["ArmR"].rotation_euler.x
+    assert min(walk_arm, wave_arm) - 1e-6 <= gap_arm <= max(walk_arm, wave_arm) + 1e-6, (walk_arm, gap_arm, wave_arm)
+    # one segment only, no blend, and bad input
+    assert adapter.animate_sequence(rig="Act_Rig", segments=[{"preset": "jump"}], blend_seconds=0).success
+    for bad in (dict(segments=[]), dict(segments=[{"preset": "moonwalk"}]), dict(segments=[{"preset": "walk", "duration": 0}]),
+                dict(segments=[{"preset": "walk", "wat": 1}]), dict(segments=["walk"]), dict(segments=[{"preset": "walk"}], fps=1),
+                dict(segments=[{"preset": "walk"}], blend_seconds=9), dict(rig="Body", segments=[{"preset": "walk"}]),
+                dict(segments=[{"preset": "walk", "duration": 60}] * 12)):
+        kwargs = {"rig": "Act_Rig", **bad}
+        r = adapter.animate_sequence(**kwargs)
+        assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
+    # models wrap lists
+    assert adapter.animate_sequence(rig="Act_Rig", segments={"item": [{"preset": "idle"}]}).success
+    print("[PASS] Test 8")
+
+
 def main():
     test_rig()
     test_animation()
@@ -380,6 +441,7 @@ def main():
     test_library()
     test_faces()
     test_continuity()
+    test_sequence()
     print("\nALL CHARACTER TOOL INTEGRATION TESTS PASSED")
 
 

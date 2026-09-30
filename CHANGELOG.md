@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.0] - 2026-09-30
+
+### Added
+- **`animate_sequence`**: act a scene on one timeline: up to 12 segments (`preset`, `duration`, `distance`, `intensity`, `heading`, `text`), the character carries on from where the last one ended, a segment with a new heading turns it, a blend (default 0.3 s) glides between poses; the result lists the start and end frame of each segment.
+- **Demo proof for every feature**, run end to end by a free chat model (DeepSeek V4 Flash through 9router): `generate_3d` against the mock service, depth of field with rack focus, slow motion, crossfade and a composed soundtrack in `edit_video`, and an acting scene (walk, wave, talk) filmed in continuous shots.
+- Tests: `tests/integration/test_character_tools.py` Test 8 (timeline, position and heading carried over, glide, lip sync in the last segment, errors, wrapped lists).
+
+---
+
 ## [1.8.0] - 2026-09-30
 
 ### Added

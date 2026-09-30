@@ -872,6 +872,9 @@ class BlenderAdapter:
     def rig_character(self, **kwargs) -> ToolResult:
         return self._modeling("rig_character", CharacterMutator.rig_character, **kwargs)
 
+    def animate_sequence(self, **kwargs) -> ToolResult:
+        return self._modeling("animate_sequence", CharacterMutator.animate_sequence, **kwargs)
+
     def animate_character(self, **kwargs) -> ToolResult:
         return self._modeling("animate_character", CharacterMutator.animate_character, **kwargs)
 

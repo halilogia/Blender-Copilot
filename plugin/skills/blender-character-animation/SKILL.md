@@ -44,6 +44,7 @@ Rules: the character faces **+Y**, its right side is **+X**, it stands on Z = 0,
 | `surprised` | wide eyes, open mouth, a step back |
 | `angry` | narrowed eyes, tight mouth, clenched fists, head down and shaking |
 
+   For a scene with several actions call `animate_sequence` once instead: `segments` such as `[{"preset": "walk", "distance": 4}, {"preset": "wave"}, {"preset": "talk", "text": "Hello!", "heading": 90}]`. The character carries on from where the last segment ended, a segment with `heading` turns it, a blend glides between poses, and the result lists the start and end frame of each segment.
 3. `set_environment`, then `camera_move` with `object_names: ["Soldier_Rig"]`. For a walking or running character pass `follow: true` (the camera keeps its framing while the character moves); use `dolly_in`, `arc_left`, `static` or `crane_up` for the move. A `static` camera without follow lets the character walk out of frame.
 4. `render_image` to check a frame (character in frame, light on the front), then `render_animation`.
 

@@ -27,10 +27,12 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [robot](robot/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu sevimli bir robot karakter modelle: kutu kafa, anten, iki göz, gövde, kollar, bacaklar, göğüste bir panel. | 1.0 dk | 29 | 536 | 1.00x1.00x1.00 m | 20260930 |
 | [rock](rock/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir kaya kümesi modelle: 3 farklı boyda düzensiz, köşeli kaya, birbirine yaslı, gri tonları ve üstünde biraz yosun yeşili. Zemine oturuyor olsun (alt yüz düz). | 1.1 dk | 23 | 114 | 1.82x1.04x1.76 m | 20260930 |
 | [sailboat](sailboat/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu küçük bir yelkenli tekne modelle: gövde, güverte, direk, iki yelken, dümen. | 1.2 dk | 21 | 324 | 3.10x4.10x1.20 m | 20260930 |
+| [shot-acting-sequence-deepseekv4flash](shot-acting-sequence-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli düşük poligonlu bir robot karakter modelle: kafa, gövde, kollar, bacaklar ve yüz için EyeL, EyeR, Mouth adlı küçük kutular (ayrı parçalar, birleştirme). rig_character ile bağla, sonra animate_sequence ile sahneyi oynat: önce 3 metre yürüsün, sonra el sallasın, sonra şu cümleyi konuşsun: 'Merhaba, ben geldim!'. Sonra render_shots ile üç planlık film çek (planlar animasyonda kaldığı yerden devam etsin): 1) follow ile dolly_in (3 sn), 2) follow ile arc_left (2 sn), 3) eyes_in (3 sn); studio ışığı, cinematic look, müzik olarak 'calm'. | 7.2 dk | 74 | - | 8.33 sn video | 20260930 |
 | [shot-campfire-handheld-claudesonnet46](shot-campfire-handheld-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek. | 3.4 dk | 34 | - | 4.0 sn video | 20260930 |
 | [shot-castle-orbit-claudesonnet46](shot-castle-orbit-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 3.7 dk | 56 | - | 5.0 sn video | 20260930 |
 | [shot-castle-orbit-geminiproagent](shot-castle-orbit-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek. | 2.4 dk | 29 | - | 5.0 sn video | 20260930 |
 | [shot-film-village-spacebunnyalpha](shot-film-village-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Küçük bir köy sahnesi modelle: bir köy evi (duvar, çatı, kapı, pencere, baca) ve yanında iki çam ağacı. Sonra render_shots ile üç planlık kısa bir film çek: 1) gün batımı ışığında aerial_pullback (4 sn), 2) gün batımı ışığında dolly_left (3 sn) ve cinematic look, 3) gece ışığında hero_cam (3 sn). Planlar arası crossfade olsun. | 15.3 dk | 82 | - | 8.83 sn video | 20260930 |
+| [shot-generate-tree-deepseekv4flash](shot-generate-tree-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | generate_3d ile 'a stylised pine tree' istemiyle 4 metre boyunda bir ağaç üret (name: pine). Sonra sunset ışığı kur, spiral_in kamera hareketiyle 4 saniyelik bir MP4 çek ve üretilen modelin boyunu ve üçgen sayısını yaz. | 2.2 dk | 11 | - | 4.0 sn video | 20260930 |
 | [shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek. | 2.4 dk | 21 | - | 8.0 sn video | 20260930 |
 | [shot-knight-run-geminiproagent](shot-knight-run-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 1.6 dk | 23 | - | 4.0 sn video | 20260930 |
 | [shot-knight-run-spacebunnyalpha](shot-knight-run-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 5.4 dk | 40 | - | 3.0 sn video | 20260930 |
@@ -38,6 +40,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-robot-wave-deepseekv4flash](shot-robot-wave-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 6.2 dk | 58 | - | 4.0 sn video | 20260930 |
 | [shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 1.8 dk | 53 | - | 4.0 sn video | 20260930 |
 | [shot-runner-bent-deepseekv4flash](shot-runner-bent-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Düşük poligonlu bir koşucu modelle: kafa, gövde, üst kollar ile ön kollar (ForearmL, ForearmR), üst bacaklar ile alt bacaklar (ShinL, ShinR) ve ayakkabılar AYRI parçalar olsun (birleştirme; ön kolun ve alt bacağın üstü, üst parçanın alt ucuna denk gelsin). polish_model ile parçaları yumuşat, rig_character ile bağla, character_library ile 'Runner' adıyla kaydet, koştur (run, 8 metre), sunset ışığı ve cinematic look kur, kamera takip etsin (follow) ve 4 saniyelik MP4 al. | 4.3 dk | 66 | - | 4.0 sn video | 20260930 |
+| [shot-slowmo-dof-deepseekv4flash](shot-slowmo-dof-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Bir sandık (Crate) ile birkaç metre arkasında bir varil (Barrel) modelle. set_environment day kur. camera_settings ile f_stop 1.8 ve Crate'ten Barrel'e rack focus yap, 2 saniyelik dolly_left klibini 'clip_a' adıyla render_animation ile al; sonra 2 saniyelik crane_over klibini 'clip_b' adıyla al. edit_video ile clip_a'yı normal, clip_b'yi 0.5 hızda (yavaş çekim) crossfade ile birleştir, 'epic' bir soundtrack (make_soundtrack) ekle ve sonucu bu isimle kaydet. | 7.3 dk | 50 | - | 6.0 sn video | 20260930 |
 | [shot-soldier-aim-geminiproagent](shot-soldier-aim-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al. | 2.5 dk | 46 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-dolly-claudesonnet46](shot-soldier-dolly-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek. | 3.7 dk | 36 | - | 4.0 sn video | 20260930 |
 | [shot-soldier-walk-spacebunnyalpha](shot-soldier-walk-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al. | 6.6 dk | 58 | - | 5.0 sn video | 20260930 |
@@ -144,6 +147,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 
 ![sailboat](sailboat/sheet.png)
 
+**shot-acting-sequence-deepseekv4flash** ([video](shot-acting-sequence-deepseekv4flash/shot-acting-sequence-deepseekv4flash.mp4))
+
+![shot-acting-sequence-deepseekv4flash](shot-acting-sequence-deepseekv4flash/sheet.png)
+
 **shot-campfire-handheld-claudesonnet46** ([video](shot-campfire-handheld-claudesonnet46/shot-campfire-handheld-claudesonnet46.mp4))
 
 ![shot-campfire-handheld-claudesonnet46](shot-campfire-handheld-claudesonnet46/sheet.png)
@@ -159,6 +166,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-film-village-spacebunnyalpha** ([video](shot-film-village-spacebunnyalpha/shot-film-village-spacebunnyalpha.mp4))
 
 ![shot-film-village-spacebunnyalpha](shot-film-village-spacebunnyalpha/sheet.png)
+
+**shot-generate-tree-deepseekv4flash** ([video](shot-generate-tree-deepseekv4flash/shot-generate-tree-deepseekv4flash.mp4))
+
+![shot-generate-tree-deepseekv4flash](shot-generate-tree-deepseekv4flash/sheet.png)
 
 **shot-house-night-claudesonnet46** ([video](shot-house-night-claudesonnet46/shot-house-night-claudesonnet46.mp4))
 
@@ -187,6 +198,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-runner-bent-deepseekv4flash** ([video](shot-runner-bent-deepseekv4flash/shot-runner-bent-deepseekv4flash.mp4))
 
 ![shot-runner-bent-deepseekv4flash](shot-runner-bent-deepseekv4flash/sheet.png)
+
+**shot-slowmo-dof-deepseekv4flash** ([video](shot-slowmo-dof-deepseekv4flash/shot-slowmo-dof-deepseekv4flash.mp4))
+
+![shot-slowmo-dof-deepseekv4flash](shot-slowmo-dof-deepseekv4flash/sheet.png)
 
 **shot-soldier-aim-geminiproagent** ([video](shot-soldier-aim-geminiproagent/shot-soldier-aim-geminiproagent.mp4))
 

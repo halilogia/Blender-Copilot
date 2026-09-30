@@ -1,0 +1,21 @@
+{
+  "name": "shot-generate-tree-deepseekv4flash",
+  "date": "20260930-141225",
+  "seconds": 132.9,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 11,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "İşlem tamam. Yapılanlar:\n\n1. **Sahne temizliği** – Varsayılan `Cube` silindi (deneme sahnesi).\n2. **Model üretimi** – `generate_3d` ile \"a stylised pine tree\" (name: `pine`) üretildi. Sonuç: kök nesne `pine` (empty), altında tek parça mesh **`PineTree`**, 4 m boyunda zemine oturtulmuş.\n3. **Işık** – `set_environment` preset'i **sunset** (ufukta turuncu-kırmızı güneş, uzun gölgeler), altında `AI_Ground` düzlemi.\n4. **Kamera** – `camera_move` ile **spiral_in** (yaklaşırken dönen orbit), 4 saniye = 96 kare @ 24 fps. Kamera `ShotCamera`, hedef `ShotTarget`.\n5. **Kadraj/ışık kontrolü** – `render_image` ile 48. kare (`tree_check.png`) render edilip bakıldı; kadraj ve sunset ışığı uygun, düzeltme gerekmedi.\n6. **Video** – `render_animation` ile **`shot-generate-tree-deepseekv4flash.mp4`** alındı: 96 kare, 24 fps, 960×540, EEVEE, ~6,5 sn render süresi.\n   Yol: `…\\archives\\bench-runs\\20260930-141225-shot-generate-tree-deepseekv4flash\\shot-generate-tree-deepseekv4flash.mp4`\n\n**İstenen ölçüler:**\n- **Boy (yükseklik): 4.00 m** (sınır kutusu Z: 0.00 → 4.00; genişlik/derinlik 2.40 m)\n- **Üçgen sayısı: 310** (576 vertex, 753 kenar; hepsi üçgen, ngon/quad yok)\n\nNot: `pine` adı kök boş nesneye (empty) verildi; asıl mesh `PineTree` olarak adlandırıldı — kamera ve environment bu kök üzerinden sorunsuz çalıştı. İsterseniz `pine` root'unu veya `PineTree` mesh'ini tek nesne olarak yeniden adlandırıp `export_gltf` ile oyun motoru için Y-up `.glb` olarak da dışa aktarabilirim.",
+  "video_bytes": 218678,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 96,
+  "video_seconds": 4.0
+}

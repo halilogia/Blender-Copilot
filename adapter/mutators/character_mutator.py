@@ -254,10 +254,25 @@ class CharacterMutator:
             if role in rest_scales:
                 obj.scale = tuple(rest_scales[role])
         start = Vector(rig_obj.get("rest_location", list(rig_obj.location)))
+        cls._key_segment(rig_obj, roles, rest_scales, samples, 1, start, yaw)
+        scn = bpy.context.scene
+        scn.render.fps = rate
+        scn.frame_start, scn.frame_end = 1, frames
+        scn.frame_set(1)
+        last = samples[-1]["root"]
+        push_undo_step(f"AI: Animate {rig_obj.name} {key}")
+        return {"rig": rig_obj.name, "preset": key, "about": PRESETS[key], "frames": frames, "fps": rate,
+                "seconds": round(frames / rate, 2), "frame_range": [1, frames], "animated_parts": sorted(roles),
+                "travel_m": round(math.hypot(last[0], last[1]), 3), "heading": float(heading),
+                "face": [r for r in FACE_ROLES if r in roles], "lip_sync": speaking}
+
+    @classmethod
+    def _key_segment(cls, rig_obj, roles, rest_scales, samples, first: int, start: Vector, yaw: float) -> Vector:
+        """Keyframe one motion segment beginning at frame ``first``; returns where the rig stands at its end."""
         cos_y, sin_y = math.cos(yaw), math.sin(yaw)
         rig_obj.rotation_euler = (0.0, 0.0, yaw)
         for i, sample in enumerate(samples):
-            frame = 1 + i
+            frame = first + i
             dx, dy, dz = sample["root"]
             rig_obj.location = (start.x + dx * cos_y - dy * sin_y, start.y + dx * sin_y + dy * cos_y, start.z + dz)
             rig_obj.keyframe_insert("location", frame=frame)
@@ -270,16 +285,91 @@ class CharacterMutator:
                     base = rest_scales.get(role, [1.0, 1.0, 1.0])
                     roles[role].scale = tuple(b * m for b, m in zip(base, sample["scale"][role]))
                     roles[role].keyframe_insert("scale", frame=frame)
+        last = samples[-1]["root"]
+        return Vector((start.x + last[0] * cos_y - last[1] * sin_y, start.y + last[0] * sin_y + last[1] * cos_y, start.z))
+
+    SEGMENT_KEYS = {"preset", "duration", "distance", "intensity", "heading", "text"}
+    MAX_SEQUENCE_FRAMES = 1800
+
+    @classmethod
+    def animate_sequence(cls, rig: str, segments: Any, fps: int = 24, blend_seconds: float = 0.3) -> Dict[str, Any]:
+        """Act a scene: several motions one after another on one timeline (walk, then wave, then talk ...).
+
+        Each segment is {preset, duration?, distance?, intensity?, heading?, text?}. The character moves on from where the
+        previous segment ended and keeps its heading unless a segment gives a new one; between segments a short blend lets
+        the pose glide instead of jumping.
+        """
+        segments = as_list(segments)
+        if not isinstance(segments, list) or not (1 <= len(segments) <= 12):
+            raise ModelingError("segments must be a list of 1 to 12 objects such as {\"preset\": \"walk\", \"duration\": 3}.")
+        rig_obj = bpy.data.objects.get(str(rig or "").strip())
+        if rig_obj is None or "character_roles" not in rig_obj:
+            raise ModelingError(f"'{rig}' is not a rig made by rig_character.")
+        try:
+            rate, blend = int(fps), float(blend_seconds)
+        except (TypeError, ValueError):
+            raise ModelingError("fps and blend_seconds must be numbers.")
+        if not (8 <= rate <= 60):
+            raise ModelingError("fps must be between 8 and 60.")
+        if not (0.0 <= blend <= 1.5):
+            raise ModelingError("blend_seconds must be between 0 and 1.5.")
+        blend_frames = int(round(blend * rate))
+        height = float(rig_obj.get("character_height", 1.8))
+        plan = []
+        heading = 0.0
+        for n, seg in enumerate(segments, 1):
+            if not isinstance(seg, dict):
+                raise ModelingError(f"segment {n} must be an object such as {{\"preset\": \"walk\"}}.")
+            extra = set(seg) - cls.SEGMENT_KEYS
+            if extra:
+                raise ModelingError(f"segment {n}: unknown keys {sorted(extra)}. Allowed: {sorted(cls.SEGMENT_KEYS)}.")
+            key = str(seg.get("preset") or "").strip().lower()
+            if key not in PRESETS:
+                raise ModelingError(f"segment {n}: preset must be one of {sorted(PRESETS)}.")
+            text = seg.get("text")
+            speaking = bool(text) and key == "talk"
+            duration = seg.get("duration")
+            if duration is None:
+                duration = min(60.0, speech_seconds(str(text)) + 0.6) if speaking else 3.0
+            try:
+                seconds = float(duration)
+                if seg.get("heading") is not None:
+                    heading = float(seg["heading"])
+                intensity = float(seg.get("intensity", 1.0))
+                distance = float(seg["distance"]) if seg.get("distance") is not None else None
+            except (TypeError, ValueError):
+                raise ModelingError(f"segment {n}: duration, distance, intensity and heading must be numbers.")
+            if not (0.2 <= seconds <= 60.0):
+                raise ModelingError(f"segment {n}: duration must be between 0.2 and 60 seconds.")
+            plan.append((key, frame_count(seconds, rate), heading, intensity, distance, str(text) if speaking else None))
+        total = sum(p[1] for p in plan) + blend_frames * (len(plan) - 1)
+        if total > cls.MAX_SEQUENCE_FRAMES:
+            raise ModelingError(f"The sequence would be {total} frames; the limit is {cls.MAX_SEQUENCE_FRAMES}.")
+
+        roles = {r: bpy.data.objects.get(n) for r, n in json.loads(rig_obj["character_roles"]).items()}
+        roles = {r: o for r, o in roles.items() if o is not None}
+        _clear_animation(list(roles.values()) + [rig_obj])
+        rest_scales = json.loads(rig_obj.get("rest_scales", "{}"))
+        for role, obj in roles.items():
+            if role in rest_scales:
+                obj.scale = tuple(rest_scales[role])
+        position = Vector(rig_obj.get("rest_location", list(rig_obj.location)))
+        first, timeline = 1, []
+        for key, frames, head, intensity, distance, text in plan:
+            samples = motion_samples(key, frames, rate, height, intensity, distance, text=text)
+            position = cls._key_segment(rig_obj, roles, rest_scales, samples, first, position, math.radians(head))
+            timeline.append({"preset": key, "start_frame": first, "end_frame": first + frames - 1, "heading": head})
+            first += frames + blend_frames
+        end_frame = timeline[-1]["end_frame"]
         scn = bpy.context.scene
         scn.render.fps = rate
-        scn.frame_start, scn.frame_end = 1, frames
+        scn.frame_start, scn.frame_end = 1, end_frame
         scn.frame_set(1)
-        last = samples[-1]["root"]
-        push_undo_step(f"AI: Animate {rig_obj.name} {key}")
-        return {"rig": rig_obj.name, "preset": key, "about": PRESETS[key], "frames": frames, "fps": rate,
-                "seconds": round(frames / rate, 2), "frame_range": [1, frames], "animated_parts": sorted(roles),
-                "travel_m": round(math.hypot(last[0], last[1]), 3), "heading": float(heading),
-                "face": [r for r in FACE_ROLES if r in roles], "lip_sync": speaking}
+        push_undo_step(f"AI: Animate sequence {rig_obj.name}")
+        return {"rig": rig_obj.name, "frames": end_frame, "fps": rate, "seconds": round(end_frame / rate, 2),
+                "frame_range": [1, end_frame], "timeline": timeline,
+                "end_position": [round(v, 3) for v in position],
+                "note": "film a part of it with camera_move start_frame, or all of it with duration equal to seconds"}
 
     # ------------------------------------------------------------------ library
     LIBRARY_DIR = "characters"

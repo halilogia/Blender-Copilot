@@ -1,0 +1,1 @@
+generate_3d ile 'a stylised pine tree' istemiyle 4 metre boyunda bir ağaç üret (name: pine). Sonra sunset ışığı kur, spiral_in kamera hareketiyle 4 saniyelik bir MP4 çek ve üretilen modelin boyunu ve üçgen sayısını yaz.

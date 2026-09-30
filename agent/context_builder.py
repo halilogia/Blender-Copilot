@@ -59,7 +59,7 @@ DEFAULT_SYSTEM_PROMPT = (
     "After the models exist: `set_environment` (studio, golden_hour, overcast, night, neon), `camera_move` (dolly_in, orbit, crane_up, whip_pan, dolly_zoom ...), "
     "`render_image` (one frame) or `render_contact_sheet` (the whole move) to fix light or framing, optionally `set_look` and `camera_settings`, then `render_animation` for the MP4. For several shots use `render_shots` with `music` (calm, epic, tense, playful, night, synthwave) or `edit_video` on clips. Call the tools one at a time.\n"
     "For a moving character build it from SEPARATE parts named head, torso, arm_l, arm_r, leg_l, leg_r (optionally forearm_l/r and shin_l/r so elbows and knees bend, plus accessories) and never join them, "
-    "call `rig_character`, then `animate_character` (idle, walk, run, aim, wave, jump) and `camera_move` with follow=true."
+    "call `rig_character`, then `animate_character` (idle, walk, run, aim, wave, jump, talk, happy, surprised, angry; or `animate_sequence` for several motions in a row) and `camera_move` with follow=true."
 )
 
 
