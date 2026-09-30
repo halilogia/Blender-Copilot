@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.13.0
+# Blender - Copilot — v1.14.0
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -8,7 +8,7 @@
 
 [![Blender Version](https://img.shields.io/badge/Blender-5.2%20LTS-orange.svg)](https://www.blender.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%20Zero%20Dependencies-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-811%20Unit%20%7C%2033%20Integration%20Suites-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-818%20Unit%20%7C%2034%20Integration%20Suites-brightgreen.svg)]()
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
 **Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
@@ -31,7 +31,7 @@
 
 > v1.10.0 makes small and free models cheaper to run: tool packs. The in-Blender agent now sends the film and character tools only when the request needs them (a plain modeling request: about 5,800 tokens of tool descriptions instead of 11,000).
 
-> v1.13.0 gives chat models ready-made building blocks: `create_prop` builds a proportioned, coloured, polished crate, barrel, tree, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, or a rig-ready person or robot, in ONE call (no AI, just geometry). A free model built a village with a rigged walking person and filmed it in 18 tool calls instead of 60 to 120. Weak models' broken tool JSON (truncated, Python-style `True`) is now repaired. Verified with 811 passing pure-Python unit tests and 33 headless Blender suites.
+> v1.14.0 gives chat models ready-made building blocks: `create_prop` builds a proportioned, coloured, polished crate, barrel, tree, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, or a rig-ready person or robot, in ONE call (no AI, just geometry). A free model built a village with a rigged walking person and filmed it in 18 tool calls instead of 60 to 120. Weak models' broken tool JSON (truncated, Python-style `True`) is now repaired. Verified with 818 passing pure-Python unit tests and 34 headless Blender suites.
 
 ---
 
@@ -221,7 +221,7 @@ Blender AI Sidebar/
 ├── tests/                        # Comprehensive test harnesses
 │   ├── integration/              # Headless Blender 5.2 LTS integration suites (25)
 │   ├── manual/                   # Live endpoint verification scripts (9Router)
-│   ├── unit/                     # Pure Python unit test suites (811 tests)
+│   ├── unit/                     # Pure Python unit test suites (818 tests)
 │   ├── run_all_blender_tests.py  # Master headless test runner (25 suites)
 │   └── run_unit_tests.py         # Pure Python test runner
 ├── blender_manifest.toml         # Blender 5.2 Extension manifest
@@ -371,7 +371,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.13.0 durumunda 811 pure-Python unit testi ve 33 Blender integration
+v1.14.0 durumunda 818 pure-Python unit testi ve 34 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.

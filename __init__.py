@@ -63,6 +63,7 @@ from .tools.mutations.add_shape_modifier import AddShapeModifierTool
 from .tools.mutations.frame_view import FrameViewTool
 from .tools.mutations.set_environment import SetEnvironmentTool
 from .tools.mutations.check_shot import CheckShotTool
+from .tools.mutations.check_model import CheckModelTool
 from .tools.mutations.create_prop import CreatePropTool
 from .tools.read_only.enable_tools import EnableToolsTool
 from .tools.mutations.animate_sequence import AnimateSequenceTool
@@ -188,6 +189,7 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(FrameViewTool())
     registry.register(SetEnvironmentTool())
     registry.register(CheckShotTool())
+    registry.register(CheckModelTool())
     registry.register(CreatePropTool())
     registry.register(EnableToolsTool())
     registry.register(AnimateSequenceTool())

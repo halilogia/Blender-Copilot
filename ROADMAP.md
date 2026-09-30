@@ -1,6 +1,6 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.13.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot`; 811 unit tests OK, hardening green, headless 33/33 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.14.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 818 unit tests OK, hardening green, headless 34/34 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ## Yön (2026-09-30)
@@ -10,7 +10,7 @@ Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan i�
 Sıra (biri bitmeden sonrakine geçilmez; her adımda entegrasyon testi + ücretsiz modelle bir demo):
 
 1. **Belge tutarlılığı** ✅ (rozet, test sayıları, bu dosya).
-2. **`check_model`** (model kalite kontrolü, `check_shot`’ın modelleme karşılığı): ayrık geometri, non-manifold, ters normal, uygulanmamış ölçek, origin, zeminin altı, üçgen bütçesi, çakışan nesneler, sıfır hacimli parça, materyalsiz mesh, tekrarlı vertex, UV gerekli ama yok; her bulgu için düzelten araç önerisi. Ajan raporu okuyup kendi düzeltir.
+2. ✅ **`check_model`** (model kalite kontrolü, `check_shot`’ın modelleme karşılığı): ayrık geometri, non-manifold, ters normal, uygulanmamış ölçek, origin, zeminin altı, üçgen bütçesi, çakışan nesneler, sıfır hacimli parça, materyalsiz mesh, tekrarlı vertex, UV gerekli ama yok; her bulgu için düzelten araç önerisi. Ajan raporu okuyup kendi düzeltir.
 3. **UV + doku hattı**: `unwrap_uv` (smart project / seam’li), `inspect_uv`, ve **preset malzemeleri dokuya pişirme** (`bake_material`): glTF dışa aktarımında procedural malzeme kaybolmasın (Godot’ya gerçek doku gitsin).
 4. **Mesh düzenleme paketi** (araç sayısı artmaz, `mesh_edit` işlemleri derinleşir): loop cut, dissolve, bridge, boolean sonrası temizlik, normal çevirme / yeniden hesaplama, seçim (normal / alan / malzeme), ayır / birleştir.
 5. **Dağıtma (scatter)**: yol / alan boyunca örnekleme, rastgele ölçek ve dönüş; önce Python ile bağlı kopyalar, Geometry Nodes sonra.
@@ -37,4 +37,4 @@ Kod değişimi gerektirmez; makinede kanıt:
 
 ---
 
-Kabul kapısı (tümü): unit yeşil ✅ + headless 33/33 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.
+Kabul kapısı (tümü): unit yeşil ✅ + headless 34/34 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.14.0] - 2026-09-30
+
+### Added
+- **`check_model`** (read only, core tool): checks a model with numbers, the modelling counterpart of `check_shot`: non-manifold edges, faces pointing inward, doubled and loose vertices, zero-area faces, unapplied scale, a pivot outside the object, no material, a texture without UVs, the model sunk into the ground, two objects in the same space, and the triangle count against a budget (`max_triangles`, default 3000). Returns `ok` (false only for FAIL findings), issues with severity and the tool call that fixes each. Pure logic in `core/model_qa.py`, measurements in `adapter/mutators/model_qa_mutator.py`.
+- Tests: `tests/unit/test_model_qa.py`, `tests/integration/test_model_qa.py` (all ready-made props pass; every defect is found and the suggested tool removes it).
+
+### Changed
+- Roadmap rewritten: the core (modelling, materials, verification) comes first and the film side is frozen; README and roadmap test counts corrected.
+
+---
+
 ## [1.13.0] - 2026-09-30
 
 ### Added

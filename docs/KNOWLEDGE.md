@@ -83,7 +83,7 @@ This document serves as the persistent engineering knowledge repository for **Bl
 ### 3.1. Manifest Configuration (`blender_manifest.toml`)
 - Requires `schema_version = "1.0.0"`.
 - Must specify `type = "add-on"`.
-- Uses `id = "blender_ai_sidebar"` and `version = "1.13.0"` (bump on every release; keep `bl_info` in sync).
+- Uses `id = "blender_ai_sidebar"` and `version = "1.14.0"` (bump on every release; keep `bl_info` in sync).
 - Tagged with `"3D View"`, `"AI"`, `"Pipeline"`.
 
 ### 3.2. Addon Preferences & Security

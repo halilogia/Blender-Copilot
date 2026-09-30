@@ -20,6 +20,7 @@ from .export_gltf import ExportGltfTool
 from .add_shape_modifier import AddShapeModifierTool
 from .frame_view import FrameViewTool
 from .check_shot import CheckShotTool
+from .check_model import CheckModelTool
 from .create_prop import CreatePropTool
 from .animate_sequence import AnimateSequenceTool
 from .make_soundtrack import MakeSoundtrackTool
@@ -58,6 +59,7 @@ __all__ = [
     "AddShapeModifierTool",
     "FrameViewTool",
     "CheckShotTool",
+    "CheckModelTool",
     "CreatePropTool",
     "AnimateSequenceTool",
     "MakeSoundtrackTool",

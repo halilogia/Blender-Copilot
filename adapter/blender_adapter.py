@@ -26,6 +26,7 @@ from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
 from adapter.mutators.cinema_mutator import CinemaMutator
 from adapter.mutators.character_mutator import CharacterMutator
 from adapter.mutators.look_mutator import LookMutator
+from adapter.mutators.model_qa_mutator import ModelQaMutator
 from adapter.mutators.polish_mutator import PolishMutator
 from adapter.mutators.prop_mutator import PropMutator
 from adapter.mutators.video_mutator import VideoMutator
@@ -908,6 +909,9 @@ class BlenderAdapter:
 
     def set_look(self, **kwargs) -> ToolResult:
         return self._modeling("set_look", LookMutator.set_look, **kwargs)
+
+    def check_model(self, **kwargs) -> ToolResult:
+        return self._modeling("check_model", ModelQaMutator.check_model, **kwargs)
 
     def check_shot(self, **kwargs) -> ToolResult:
         return self._modeling("check_shot", LookMutator.check_shot, **kwargs)

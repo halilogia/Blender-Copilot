@@ -54,7 +54,7 @@ DEFAULT_SYSTEM_PROMPT = (
     "No `propose_plan` for modeling: call tools one at a time so each result guides the next. For common things (crate, house, tree, car, "
     "humanoid, robot ...) call `create_prop` first: one call gives a proportioned, coloured, polished result; then adjust. "
     "Otherwise build from parts (`create_primitive`, `create_mesh`, `mesh_edit`), colour each part with `set_material`, check with `frame_view` "
-    "then `capture_viewport`, `polish_model`, `join_objects`, `set_origin`, `export_gltf`. Meters, +Z up, the model faces +Y, under about 1500 triangles.\n\n"
+    "then `capture_viewport`, `polish_model`, `join_objects`, `set_origin`, `check_model` (fix its FAILs), `export_gltf`. Meters, +Z up, the model faces +Y, under about 1500 triangles.\n\n"
     "TOOL PACKS: film and character tools load from the request's words, or call `enable_tools`.\n\n"
     "CINEMATIC PROTOCOL (shots and videos):\n"
     "After the models exist: `set_environment`, `camera_move`, `render_image` or `render_contact_sheet` to fix light and framing "

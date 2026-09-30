@@ -19,7 +19,7 @@ INSTRUCTIONS = (
     "Model game assets without Python: create_prop first for common things (crate, barrel, trees, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, humanoid, robot: one call, proportioned, coloured, polished; humanoid and robot come as rig-ready parts), then create_primitive (cube, sphere, plane, cylinder, cone, icosphere, torus), "
     "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide / taper faces picked by normal), "
     "add_modifier (bevel, subsurf, boolean), add_shape_modifier (mirror, array, solidify, decimate, triangulate), "
-    "set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. "
+    "set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. Before exporting call check_model: it measures the model (flipped normals, doubled vertices, unapplied scale, sunk into the ground, triangle budget ...) and names the tool call that fixes each finding; repeat until ok. "
     "Finish with export_gltf (a .glb in the export folder, Y-up, modifiers applied) and hand the file path to the game "
     "engine (Godot: copy it under res:// and call sync_project). Keep low-poly game assets under ~3000 triangles, "
     "origin at the bottom centre, real-world scale. "

@@ -7,6 +7,10 @@ description: Model low-poly game assets (crates, barrels, trees, rocks, sandbags
 
 You model with allow-listed tools, not with Python: nothing here can run arbitrary code, every step is one Ctrl+Z, and delete_object needs the user's approval. Read the tool schemas first and use their exact argument names (`delete_object` takes `name`, most others `object_name` or `name`).
 
+## Check before export
+
+Call `check_model` (with `object_names` of the model) after building and before `export_gltf`. It measures instead of looking: inverted normals, non-manifold edges, doubled vertices, unapplied scale, pivot outside the object, no material, a texture without UVs, sunk into the ground, two objects in the same space, and the triangle count against `max_triangles` (default 3000). FAIL findings block `ok`; each finding names the tool call that fixes it. Fix, call again, repeat until `ok` is true; cheap WARN items (materials, merge by distance) are worth fixing too.
+
 ## Start with `create_prop`
 
 For common things one call builds a proportioned, coloured, bevelled and smooth-shaded result standing on the ground with its front toward +Y: `crate`, `barrel`, `tree_pine`, `tree_round`, `rock`, `house`, `tower`, `fence`, `lamp`, `tent`, `well`, `car`, `chest`, `table`, `chair`, `campfire`, and the characters `humanoid` and `robot` (separate parts named for `rig_character`, with forearms, shins, eyes and mouth). Pass `size` (height in meters), `location`, `colors` (for example `{"roof": [0.2, 0.3, 0.7]}`; the result lists the color names), `seed` for the rock. Place several with different `location`s to build a scene, then add what is missing with the modeling tools below. Only build from primitives what `create_prop` does not cover.
