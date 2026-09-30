@@ -81,6 +81,8 @@ A fresh `claude -p` process connected through `--mcp-config` (HTTP, bearer token
 
 `scripts/demo_bench_mcp.py` gives a fresh Claude Code agent one short prompt ("model a low-poly barrel") and only the `blender` MCP server, then keeps everything in `archives/bench-runs/<date>-<name>/` (git-ignored): the prompt, the raw and readable chat, every viewport capture the agent made, four final views (`sheet.png`), the `.glb` and `result.json` (calls, triangles, size, time). `scripts/demo_history.py` builds `archives/history/index.html` (zoom, chat links, "demos'a koy" picks) and `scripts/demo_promote.py <run>` copies the best runs into the tracked [`demos/`](../demos/README.md) library.
 
+All demos were made through the MCP bridge by Claude Code (`claude-opus-5-5`), not by the add-on's own in-Blender agent. The in-Blender agent (any provider, for example 9router) uses the same tools but has not been benchmarked this way yet.
+
 ## Tests
 
 ```bash

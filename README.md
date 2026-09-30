@@ -79,7 +79,7 @@ claude plugin marketplace add halilogia/Blender-Copilot && claude plugin install
 
 Details, security model and tool list: [docs/MCP.md](docs/MCP.md).
 
-**Demo gallery:** 17 game props (crate, barrel, house, car, watchtower, cannon ...) modeled by a fresh Claude Code agent through the bridge from one short prompt each, with chats and triangle counts: [demos/](demos/README.md).
+**Demo gallery:** 24 game props (crate, barrel, house, car, watchtower, cannon, soldier, castle ...) modeled by a fresh Claude Code agent (model claude-opus-5-5) through the bridge from one short prompt each, with chats and triangle counts: [demos/](demos/README.md).
 
 ## Architecture Overview
 

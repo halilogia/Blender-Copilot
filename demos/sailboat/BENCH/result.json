@@ -1,0 +1,22 @@
+{
+  "name": "sailboat",
+  "date": "20260930-073812",
+  "status": "ok",
+  "seconds": 70.0,
+  "model": "claude-opus-5-5",
+  "tool_calls": 21,
+  "tool_errors": 0,
+  "agent_shots": 2,
+  "triangles": 324,
+  "materials": 3,
+  "nodes": 7,
+  "size_m": [
+    3.1,
+    4.1,
+    1.2
+  ],
+  "bytes": 19140,
+  "final_message": "Yelkenli tekne hazır ve `sailboat.glb` olarak dışa aktarıldı; toplam **324 üçgen**, 19 KB.\n\n**Parçalar:**\n- **Gövde:** Kendim yazdığım 7 kenarlı bir form. Sivri bir pruvası, düz bir kıç aynası ve eğimli bir karinası var. Ölçüleri yaklaşık 2,9 × 1,2 × 0,6 m, rengi mavi.\n- **Güverte:** Gövdenin üstünde ince bir ahşap plaka.\n- **Direk ve bumba:** Direk yaklaşık 3,2 m, bumba ise ana yelkenin altında yatay duruyor. İkisi de ahşap.\n- **İki yelken:** Direğin arkasında üçgen bir ana yelken, önünde bir flok. Oyunda arkadan da görünsünler diye 2 cm kalınlık verdim. Rengi kırık beyaz.\n- **Dümen:** Kıç aynasının arkasında, suyun altına doğru inen ince bir ahşap kanat.\n\nVarsayılan Cube'u sildim. Modeli çapraz (ISO) ve yandan (FRONT) viewport'ta görüntüleyip kontrol ettim; parçaların hepsi doğru yerinde.\n\nÜçgenlerin çoğu direk ve bumbadan geliyor, çünkü ikisi de 32 kenarlı hazır silindir. Daha da düşük poligon istersen bunları az kenarlı silindirlerle değiştirebilirim; toplam 100 üçgenin altına iner.\n\nDosya konumu: `archives\\bench-runs\\20260930-073812-sailboat\\sailboat.glb` (Y-up, orijin gövdenin tabanında)",
+  "turns": 22,
+  "cost_usd": 0.37506459999999997
+}

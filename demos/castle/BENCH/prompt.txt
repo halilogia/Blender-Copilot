@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu küçük bir kale modelle: dört köşe kulesi, surlar ve mazgallar, kapı kulesi, ortada bir ana kule.
