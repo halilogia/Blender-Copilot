@@ -28,7 +28,31 @@ PRESETS: Dict[str, str] = {
     "dolly_zoom": "vertigo effect: camera pulls back while the lens zooms in, subject keeps its size",
     "crash_zoom_in": "sudden fast zoom into the subject",
     "handheld": "small hand shake around a framed subject",
+    "dolly_left": "camera trucks sideways to the left, keeping its direction",
+    "dolly_right": "camera trucks sideways to the right, keeping its direction",
+    "super_dolly_in": "long fast push-in from far to very close",
+    "super_dolly_out": "long fast pull-out from very close to far",
+    "dolly_zoom_out": "reverse vertigo: camera moves in while the lens zooms out, subject keeps its size",
+    "rapid_zoom_in": "fast smooth zoom in",
+    "rapid_zoom_out": "fast smooth zoom out",
+    "crash_zoom_out": "sudden fast zoom out",
+    "yoyo_zoom": "the lens zooms in and out twice",
+    "jib_up": "camera lifts straight up while looking at the subject",
+    "jib_down": "camera drops straight down while looking at the subject",
+    "aerial_pullback": "camera starts close and pulls back and up into a high aerial view",
+    "fpv_drone": "fast swooping fly-in like an FPV drone",
+    "bullet_time": "wide fast-slow-fast arc around the subject at low height (freeze the subject's motion for the classic look)",
+    "dutch_angle": "static shot with the horizon tilted",
+    "barrel_roll": "the camera rolls a full turn while pushing in",
+    "snorricam": "camera locked in front of the subject's upper body, moving with it (follow is on)",
+    "hero_cam": "low angle, slow push-in, subject looms",
+    "overhead": "top-down view with a slow drift",
+    "robo_arm": "precise multi-axis arc: sweeps around, rises and closes in",
+    "hyperlapse": "long fast forward flight toward the subject with a little shake",
+    "orbit_360": "a full circle around the subject",
 }
+
+FOLLOW_PRESETS = ("snorricam",)
 
 MIN_FRAMES = 2
 MAX_FRAMES = 480
@@ -127,5 +151,70 @@ def camera_samples(preset: str, frames: int, center: Sequence[float], radius: fl
             amp = d * 0.012 * k
             pos = (base[0] + amp * _noise(t * 6.0, 1.0), base[1] + amp * _noise(t * 6.0, 2.0), base[2] + amp * _noise(t * 6.0, 3.0))
             aim = (c[0] + amp * 0.6 * _noise(t * 6.0, 4.0), c[1] + amp * 0.6 * _noise(t * 6.0, 5.0), c[2] + amp * 0.6 * _noise(t * 6.0, 6.0))
+        elif preset in ("dolly_left", "dolly_right"):
+            amp = r * 1.5 * k
+            s = _mix(-amp, amp, e) * (1 if preset == "dolly_right" else -1)
+            pos = _add(base, _scale(right, s))
+            aim = _add(c, _scale(right, s))
+        elif preset in ("super_dolly_in", "super_dolly_out"):
+            a, b = (2.6, 0.4) if preset == "super_dolly_in" else (0.4, 2.6)
+            pos = camera_position(c, d * _mix(a, b, e), az, el)
+        elif preset == "dolly_zoom_out":
+            dist = d * _mix(2.0, 0.8, e)
+            pos = camera_position(c, dist, az, el)
+            focal = f0 * dist / (d * 2.0)
+        elif preset in ("rapid_zoom_in", "rapid_zoom_out"):
+            a, b = (f0, f0 * 3.0) if preset == "rapid_zoom_in" else (f0 * 3.0, f0)
+            focal = _mix(a, b, _ease(t / 0.5))
+        elif preset == "crash_zoom_out":
+            focal = _mix(f0 * 2.4, f0 * 0.7, _ease(t / 0.25))
+        elif preset == "yoyo_zoom":
+            focal = f0 * (1.0 + 1.2 * (0.5 - 0.5 * math.cos(2 * math.pi * 2 * t)))
+        elif preset in ("jib_up", "jib_down"):
+            amp = r * 1.6 * k
+            dz = _mix(-amp, amp, e) * (1 if preset == "jib_up" else -1)
+            pos = (base[0], base[1], base[2] + dz)
+        elif preset == "aerial_pullback":
+            pos = camera_position(c, d * _mix(0.5, 2.6, e), az, _mix(8.0, 55.0, e))
+        elif preset == "fpv_drone":
+            wob = math.sin(2 * math.pi * 1.5 * t)
+            pos = camera_position(c, d * _mix(2.4, 0.8, e), az + _mix(-90.0, 130.0, t), el + 12.0 * wob * k)
+            aim = (c[0] + 0.05 * r * wob, c[1], c[2])
+        elif preset == "bullet_time":
+            pos = camera_position(c, d * 0.9, az - 100.0 + 200.0 * e, 5.0)
+        elif preset == "dutch_angle":
+            pass
+        elif preset == "barrel_roll":
+            pos = camera_position(c, d * _mix(1.2, 0.9, e), az, el)
+        elif preset == "snorricam":
+            aim = (c[0], c[1], c[2] + r * 0.5)
+            pos = camera_position(aim, d * 0.35, 0.0, 8.0)
+        elif preset == "hero_cam":
+            pos = camera_position(c, d * _mix(1.1, 0.8, e), az, _mix(-8.0, -4.0, e))
+            aim = (c[0], c[1], c[2] + r * 0.15)
+        elif preset == "overhead":
+            pos = camera_position(c, d * 1.2, az + _mix(0.0, 40.0, e), 80.0)
+        elif preset == "robo_arm":
+            pos = camera_position(c, d * _mix(1.3, 0.8, e), az + _mix(-40.0, 110.0, e), _mix(10.0, 45.0, math.sin(math.pi * t)))
+        elif preset == "hyperlapse":
+            amp = d * 0.006 * k
+            pos = camera_position(c, d * _mix(3.0, 0.5, t), az, el)
+            pos = (pos[0] + amp * _noise(t * 8.0, 1.0), pos[1] + amp * _noise(t * 8.0, 2.0), pos[2] + amp * _noise(t * 8.0, 3.0))
+            focal = min(f0, 24.0)
+        elif preset == "orbit_360":
+            pos = camera_position(c, d, az + 360.0 * t, el)
         out.append((pos, aim, max(10.0, min(300.0, focal))))
     return out
+
+
+def camera_rolls(preset: str, frames: int, intensity: float = 1.0) -> List[float]:
+    """Camera roll in degrees for each frame (0 for most presets)."""
+    if preset not in PRESETS:
+        raise ValueError(f"Unknown camera preset '{preset}'.")
+    k = max(0.0, float(intensity))
+    n = max(frames - 1, 1)
+    if preset == "dutch_angle":
+        return [15.0 * k] * frames
+    if preset == "barrel_roll":
+        return [360.0 * _ease(i / n) for i in range(frames)]
+    return [0.0] * frames

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-09-30
+
+### Added
+- **38 camera presets** (was 16): dolly_left/right, super_dolly_in/out, dolly_zoom_out, rapid_zoom_in/out, crash_zoom_out, yoyo_zoom, jib_up/down, aerial_pullback, fpv_drone, bullet_time, dutch_angle and barrel_roll (camera roll through the target's Z axis), snorricam (follows automatically), hero_cam, overhead, robo_arm, hyperlapse, orbit_360.
+- **`set_look`**: colour grade and glow for renders through a compositor node group (cinematic, noir, vintage, warm, cold, vivid, neon_glow, dreamy, natural to remove; `strength`).
+- **`camera_settings`**: depth of field (`f_stop`, `focus_object`, `focus_distance`), rack focus (`rack_focus_to`, keyframed) and motion blur.
+- **`render_contact_sheet`**: several frames of the shot in one picture, returned as an image.
+- **`edit_video`**: joins clips from the export folder with cut, crossfade or wipe and per-clip speed (slow motion, fast forward) in Blender's video editor (a throw-away scene, no ffmpeg command line).
+- **`render_shots`**: a shot list (preset, duration, environment, look, ...) rendered and joined into one MP4 in one call.
+- **Environments**: `day`, `sunset`, `dawn` and `foggy` added; the sun presets use a physical sky gradient; tone mapping is highlight-safe (Khronos PBR Neutral); night and neon retuned.
+- Tests: 12 more camera unit tests, `tests/integration/test_film_tools.py` (sky, grading measured on real renders, lens, contact sheet, edit and shot list).
+
+### Fixed
+- The ground plane material had no shader in Blender 5 (an empty node tree), so ground colours were ignored and grounds looked white.
+- Presets rendered blown out (day, golden hour) or black (foggy with a world volume, removed) or neon-white; all retuned and checked on rendered pictures.
+
+---
+
 ## [1.4.0] - 2026-09-30
 
 ### Added

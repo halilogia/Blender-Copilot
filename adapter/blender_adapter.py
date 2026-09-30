@@ -25,6 +25,8 @@ from adapter.readers.viewport_reader import ViewportReader
 from adapter.mutators.modeling_mutator import ModelingError, ModelingMutator
 from adapter.mutators.cinema_mutator import CinemaMutator
 from adapter.mutators.character_mutator import CharacterMutator
+from adapter.mutators.look_mutator import LookMutator
+from adapter.mutators.video_mutator import VideoMutator
 from adapter.mutators import (
     PrimitiveMutator,
     InvalidPrimitiveTypeError,
@@ -884,6 +886,24 @@ class BlenderAdapter:
         except Exception:
             pass
         return result
+
+    def set_look(self, **kwargs) -> ToolResult:
+        return self._modeling("set_look", LookMutator.set_look, **kwargs)
+
+    def camera_settings(self, **kwargs) -> ToolResult:
+        return self._modeling("camera_settings", LookMutator.camera_settings, **kwargs)
+
+    def render_contact_sheet(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._attach_image(self._modeling("render_contact_sheet", LookMutator.render_contact_sheet, **kwargs), "path")
+
+    def edit_video(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._modeling("edit_video", VideoMutator.edit_video, **kwargs)
+
+    def render_shots(self, **kwargs) -> ToolResult:
+        kwargs.setdefault("export_dir", self.export_dir)
+        return self._modeling("render_shots", VideoMutator.render_shots, **kwargs)
 
     def render_image(self, **kwargs) -> ToolResult:
         kwargs.setdefault("export_dir", self.export_dir)

@@ -3,7 +3,7 @@
 bl_info = {
     "name": "Blender - Copilot",
     "author": "Halil Emre",
-    "version": (1, 4, 0),
+    "version": (1, 5, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Blender - Copilot / View3D > Alt+Space",
     "description": "Autonomous AI Agent & Grounding Copilot for Blender",
@@ -62,6 +62,11 @@ from .tools.mutations.export_gltf import ExportGltfTool
 from .tools.mutations.add_shape_modifier import AddShapeModifierTool
 from .tools.mutations.frame_view import FrameViewTool
 from .tools.mutations.set_environment import SetEnvironmentTool
+from .tools.mutations.set_look import SetLookTool
+from .tools.mutations.camera_settings import CameraSettingsTool
+from .tools.mutations.render_contact_sheet import RenderContactSheetTool
+from .tools.mutations.edit_video import EditVideoTool
+from .tools.mutations.render_shots import RenderShotsTool
 from .tools.mutations.rig_character import RigCharacterTool
 from .tools.mutations.animate_character import AnimateCharacterTool
 from .tools.mutations.camera_move import CameraMoveTool
@@ -175,6 +180,11 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(AddShapeModifierTool())
     registry.register(FrameViewTool())
     registry.register(SetEnvironmentTool())
+    registry.register(SetLookTool())
+    registry.register(CameraSettingsTool())
+    registry.register(RenderContactSheetTool())
+    registry.register(EditVideoTool())
+    registry.register(RenderShotsTool())
     registry.register(RigCharacterTool())
     registry.register(AnimateCharacterTool())
     registry.register(CameraMoveTool())

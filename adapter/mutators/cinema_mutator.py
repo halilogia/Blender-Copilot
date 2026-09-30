@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 import bpy
-from mathutils import Vector
+from mathutils import Quaternion, Vector
 
 from adapter.mutators.modeling_mutator import ModelingError
 from adapter.mutators.undo_manager import push_undo_step
-from core.camera_paths import PRESETS, camera_samples, frame_count
+from core.camera_paths import FOLLOW_PRESETS, PRESETS, camera_rolls, camera_samples, frame_count
 
 HELPER_PREFIX = "AI_"
 CAMERA_NAME = "ShotCamera"
@@ -29,18 +29,30 @@ ENVIRONMENTS: Dict[str, Dict[str, Any]] = {
     "studio": {"sky": (0.72, 0.72, 0.75), "sky_strength": 1.0, "sun": (1.0, 1.0, 1.0), "energy": 2.0, "elevation": 50.0,
                "azimuth": 30.0, "softness": 0.12, "ground": (0.75, 0.75, 0.75), "exposure": 0.0,
                "about": "neutral grey backdrop, soft white key light"},
-    "golden_hour": {"sky": (1.0, 0.72, 0.48), "sky_strength": 0.7, "sun": (1.0, 0.62, 0.3), "energy": 3.0, "elevation": 12.0,
-                    "azimuth": 55.0, "softness": 0.03, "ground": (0.36, 0.3, 0.2), "exposure": 0.0,
+    "golden_hour": {"sky": (1.0, 0.72, 0.48), "sky_strength": 0.4, "sun": (1.0, 0.62, 0.3), "energy": 2.6, "elevation": 12.0,
+                    "azimuth": 55.0, "softness": 0.03, "ground": (0.36, 0.3, 0.2), "exposure": 0.0, "nishita": (9.0, 55.0),
                     "about": "low warm sun, orange sky, long shadows"},
     "overcast": {"sky": (0.62, 0.66, 0.7), "sky_strength": 0.95, "sun": (1.0, 1.0, 1.0), "energy": 0.6, "elevation": 60.0,
                  "azimuth": 20.0, "softness": 0.5, "ground": (0.34, 0.37, 0.33), "exposure": 0.0,
                  "about": "grey sky, soft even light, weak shadows"},
-    "night": {"sky": (0.02, 0.03, 0.09), "sky_strength": 0.7, "sun": (0.45, 0.55, 1.0), "energy": 1.1, "elevation": 32.0,
-              "azimuth": 200.0, "softness": 0.05, "ground": (0.05, 0.06, 0.08), "exposure": 0.4,
+    "night": {"sky": (0.02, 0.03, 0.09), "sky_strength": 0.7, "sun": (0.45, 0.55, 1.0), "energy": 2.6, "elevation": 32.0,
+              "azimuth": 200.0, "softness": 0.05, "ground": (0.08, 0.1, 0.14), "exposure": 0.8,
               "about": "dark blue night with a cold moon light from behind"},
     "neon": {"sky": (0.02, 0.0, 0.05), "sky_strength": 0.4, "sun": (0.5, 0.4, 1.0), "energy": 0.05, "elevation": 40.0,
              "azimuth": 0.0, "softness": 0.1, "ground": (0.02, 0.02, 0.04), "exposure": 0.3,
              "about": "dark scene lit by a magenta and a cyan light", "point_lights": True},
+    "day": {"sky": (0.5, 0.65, 0.9), "sky_strength": 0.35, "sun": (1.0, 0.96, 0.9), "energy": 2.6, "elevation": 50.0,
+            "azimuth": 35.0, "softness": 0.05, "ground": (0.12, 0.22, 0.09), "exposure": 0.0, "nishita": (50.0, 35.0),
+            "about": "clear blue sky with a real sky gradient, high sun"},
+    "sunset": {"sky": (1.0, 0.45, 0.25), "sky_strength": 0.4, "sun": (1.0, 0.45, 0.2), "energy": 2.2, "elevation": 4.0,
+               "azimuth": 70.0, "softness": 0.03, "ground": (0.25, 0.16, 0.12), "exposure": 0.0, "nishita": (3.0, 70.0),
+               "about": "sun on the horizon, red and orange sky, deep long shadows"},
+    "dawn": {"sky": (0.7, 0.6, 0.8), "sky_strength": 0.45, "sun": (1.0, 0.7, 0.65), "energy": 1.5, "elevation": 6.0,
+             "azimuth": 300.0, "softness": 0.04, "ground": (0.22, 0.22, 0.3), "exposure": 0.0, "nishita": (5.0, 300.0),
+             "about": "cool pink and blue early light"},
+    "foggy": {"sky": (0.55, 0.6, 0.62), "sky_strength": 1.1, "sun": (1.0, 1.0, 1.0), "energy": 0.8, "elevation": 30.0,
+              "azimuth": 20.0, "softness": 0.4, "ground": (0.55, 0.6, 0.62), "exposure": 0.0,
+              "about": "grey haze: the ground melts into the sky, soft flat light"},
 }
 
 
@@ -120,10 +132,16 @@ def _material(name: str, color: Sequence[float], roughness: float) -> "bpy.types
     mat.diffuse_color = (color[0], color[1], color[2], 1.0)
     try:
         mat.use_nodes = True
-        bsdf = mat.node_tree.nodes.get("Principled BSDF")
-        if bsdf is not None:
-            bsdf.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
-            bsdf.inputs["Roughness"].default_value = roughness
+        nodes = mat.node_tree.nodes
+        bsdf = nodes.get("Principled BSDF")
+        if bsdf is None:                      # Blender 5 gives new materials an empty node tree
+            for node in list(nodes):
+                nodes.remove(node)
+            bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+            out = nodes.new("ShaderNodeOutputMaterial")
+            mat.node_tree.links.new(bsdf.outputs[0], out.inputs[0])
+        bsdf.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
+        bsdf.inputs["Roughness"].default_value = roughness
     except Exception:
         pass
     return mat
@@ -155,6 +173,25 @@ class CinemaMutator:
         bg.inputs[1].default_value = env["sky_strength"]
         out = nt.nodes.new("ShaderNodeOutputWorld")
         nt.links.new(bg.outputs[0], out.inputs[0])
+        sky_mode = "flat"
+        if env.get("nishita"):
+            # a physically based sky gradient (bright near the horizon on the sun side); the real light is the sun lamp
+            try:
+                sky = nt.nodes.new("ShaderNodeTexSky")
+                for kind in ("MULTIPLE_SCATTERING", "SINGLE_SCATTERING", "NISHITA"):
+                    try:
+                        sky.sky_type = kind
+                        break
+                    except TypeError:
+                        continue
+                sky.sun_disc = False
+                sky.sun_elevation = math.radians(env["nishita"][0])
+                sky.sun_rotation = math.radians(env["nishita"][1])
+                nt.links.new(sky.outputs[0], bg.inputs[0])
+                sky_mode = "sky"
+            except Exception:
+                sky_mode = "flat"
+        # (world volumes were tried for fog and turned the EEVEE render black, so haze is done with colours)
         scn.world = world
 
         # Sun (reused by name): rotation Z = 180 - azimuth makes the light arrive from that side (0 = +Y, the front).
@@ -176,7 +213,7 @@ class CinemaMutator:
             for name, color, sign in (("AI_NeonA", (1.0, 0.1, 0.8), 1.0), ("AI_NeonB", (0.1, 0.8, 1.0), -1.0)):
                 data = bpy.data.lights.new(name, "POINT")
                 data.color = color
-                data.energy = 1600.0 * dist * dist / 6.25
+                data.energy = 450.0 * dist * dist / 6.25
                 obj = bpy.data.objects.new(name, data)
                 obj.location = (center.x + sign * dist, center.y + dist * 0.8, center.z + dist * 0.6)
                 _link(obj)
@@ -211,13 +248,16 @@ class CinemaMutator:
 
         scn.render.engine = "BLENDER_EEVEE"
         try:
-            scn.view_settings.view_transform = "Standard"
+            try:
+                scn.view_settings.view_transform = "Khronos PBR Neutral"      # rolls highlights off, keeps colours
+            except TypeError:
+                scn.view_settings.view_transform = "Standard"
             scn.view_settings.look = "None"
         except Exception:
             pass
         scn.view_settings.exposure = env["exposure"]
         push_undo_step(f"AI: Environment {key}")
-        return {"preset": key, "about": env["about"], "lights": lights, "ground": ground_name, "world": world.name,
+        return {"preset": key, "about": env["about"], "sky": sky_mode, "lights": lights, "ground": ground_name, "world": world.name,
                 "scene_center": [round(v, 3) for v in center], "scene_radius": round(radius, 3)}
 
     @classmethod
@@ -227,6 +267,8 @@ class CinemaMutator:
         key = str(preset or "").strip().lower()
         if key not in PRESETS:
             raise ModelingError(f"preset must be one of {sorted(PRESETS)}.")
+        if key in FOLLOW_PRESETS:
+            follow = True
         if object_names is not None and not isinstance(object_names, list):
             raise ModelingError("object_names must be a list of names.")
         try:
@@ -278,12 +320,22 @@ class CinemaMutator:
         track.track_axis = "TRACK_NEGATIVE_Z"
         track.up_axis = "UP_Y"
         cam.data.clip_end = max(cam.data.clip_end, radius * 60.0)
+        rolls = camera_rolls(key, frames, float(intensity))
+        rolling = any(abs(v) > 1e-6 for v in rolls)
+        track.use_target_z = rolling          # the target's Z axis then defines "up", so tilting it rolls the camera
+        target.rotation_mode = "XYZ"
+        target.rotation_euler = (0.0, 0.0, 0.0)
         for i, (pos, aim, focal) in enumerate(samples):
             frame = 1 + i
             cam.location = pos
             cam.keyframe_insert("location", frame=frame)
             target.location = aim
             target.keyframe_insert("location", frame=frame)
+            if rolling:
+                look = (Vector(aim) - Vector(pos)).normalized()
+                up = Quaternion(look, math.radians(rolls[i])) @ Vector((0.0, 0.0, 1.0))
+                target.rotation_euler = up.to_track_quat("Z", "Y").to_euler()
+                target.keyframe_insert("rotation_euler", frame=frame)
             cam.data.lens = focal
             cam.data.keyframe_insert("lens", frame=frame)
         scn.camera = cam

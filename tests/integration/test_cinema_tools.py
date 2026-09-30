@@ -64,7 +64,7 @@ def test_camera_moves():
         start = cam.matrix_world.translation.copy()
         scn.frame_set(12)
         end = cam.matrix_world.translation.copy()
-        moves = {"static", "pan_left", "pan_right", "tilt_up", "tilt_down", "whip_pan", "crash_zoom_in"}
+        moves = {"static", "pan_left", "pan_right", "tilt_up", "tilt_down", "whip_pan", "crash_zoom_in", "crash_zoom_out", "rapid_zoom_in", "rapid_zoom_out", "yoyo_zoom", "dutch_angle", "snorricam"}
         if preset not in moves and preset != "handheld":
             assert (end - start).length > 0.2, (preset, start, end)
         assert cam.animation_data is not None and cam.data.animation_data is not None

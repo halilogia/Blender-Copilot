@@ -10,7 +10,7 @@ Every step is an allow-listed tool: no code runs, the camera moves are keyframed
 ## Workflow
 
 1. **Subject.** Model it (skill `blender-game-assets`) or bring it in with `import_asset`. Put it near the origin, real-world scale, facing +Y. One or a few objects; the camera frames all meshes unless you pass `object_names`.
-2. **Light.** `set_environment` with one of: `studio` (neutral, product shots), `golden_hour` (low warm sun, outdoor drama), `overcast` (soft even light), `night` (dark blue, moon light from behind), `neon` (dark, magenta and cyan). It also adds a ground plane; pass `ground: false` for floating objects or a `ground_color`.
+2. **Light.** `set_environment` with one of: `studio` (neutral, product shots), `day` (clear sky), `golden_hour` (low warm sun, outdoor drama), `sunset` (red horizon), `dawn` (cool pink), `overcast` (soft even light), `foggy` (air full of fog, depth), `night` (dark blue, moon light from behind), `neon` (dark, magenta and cyan). It also adds a ground plane; pass `ground: false` for floating objects or a `ground_color`.
 3. **Camera.** `camera_move` with a preset. Defaults frame the subject well (distance chosen so the whole subject fits a 16:9 frame, 15 degrees up, 35 degrees to the side, 35 mm, 4 seconds, 24 fps). Change `duration`, `distance`, `elevation`, `azimuth`, `focal_length` only for a reason.
 4. **Look at one frame.** `render_image` (960x540 is enough) returns the picture. Check: subject fully in frame and large enough, light on the side the camera sees, no black or washed-out areas. Fix with another `set_environment` preset, `camera_move` with a different `distance` or `azimuth`, then render again.
 5. **Render the shot.** `render_animation` (mp4). Then say where the file is and how long it is.
@@ -29,7 +29,34 @@ Every step is an allow-listed tool: no code runs, the camera moves are keyframed
 | Documentary, alive | `handheld` (small shake) |
 | Locked frame | `static` |
 
+More presets (38 in all):
+
+| Want | Preset |
+|---|---|
+| Truck sideways, subject slides past | `dolly_left`, `dolly_right` |
+| Big push-in or pull-out | `super_dolly_in`, `super_dolly_out` |
+| Reverse vertigo | `dolly_zoom_out` |
+| Lens only: zoom in or out, quick or sudden, or a wobble | `rapid_zoom_in`, `rapid_zoom_out`, `crash_zoom_out`, `yoyo_zoom` |
+| Lift or drop the camera straight up or down | `jib_up`, `jib_down` |
+| Opening reveal, big and airy | `aerial_pullback`, `overhead` |
+| Action, chase, drone | `fpv_drone`, `hyperlapse`, `robo_arm` |
+| Freeze-frame look (freeze or slow the subject's animation too) | `bullet_time` |
+| Tension, drunk, unease | `dutch_angle` (tilted horizon), `barrel_roll` (full roll while pushing in) |
+| Camera stuck to the character's chest looking at the face | `snorricam` (follows automatically) |
+| Villain or hero looming | `hero_cam` (low angle, slow push-in) |
+| A full circle | `orbit_360` |
+
 Move length: 2-3 s for whip_pan, crash_zoom_in, dolly_zoom; 4-6 s for dolly, arc, crane; 6-10 s for a full orbit. Slow moves read as expensive.
+
+## Look, lens and checking
+
+- `set_look` grades everything you render afterwards: `cinematic` (teal and orange), `noir`, `vintage`, `warm`, `cold`, `vivid`, `neon_glow`, `dreamy`; `natural` removes it. Pair a look with the light: `noir` with `overcast` or `night`, `cinematic` with `golden_hour` or `sunset`, `neon_glow` with `neon`.
+- `camera_settings`: `f_stop` 1.8 with `focus_object` blurs the background (portrait feel); `focus_object` plus `rack_focus_to` glides the focus from one object to another; `motion_blur` true softens fast moves. Call it after `camera_move`.
+- `render_contact_sheet` renders 4 frames of the whole move into one picture: use it instead of several `render_image` calls to check framing and motion.
+
+## Several shots, one film
+
+Either call `render_shots` with a shot list (each shot: `preset`, `duration`, optional `environment`, `look`, `object_names`, `azimuth`, `follow` ...; crossfades between them), or render clips one by one with `render_animation` and join them with `edit_video` (`clips` such as `["a.mp4", {"file": "b.mp4", "speed": 0.5}]`, `transition` cut, crossfade or wipe; speed 0.5 is slow motion, 2 is fast forward). A trailer rhythm: an establishing wide shot (aerial_pullback or dolly_in, 4 s), a mid shot with movement (arc or dolly_left, 3 s), a close hero shot (hero_cam or crash_zoom_in, 2 s), crossfade 0.5 s.
 
 ## Rules that save time
 

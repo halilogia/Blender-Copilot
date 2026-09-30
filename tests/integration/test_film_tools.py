@@ -1,0 +1,213 @@
+"""Headless integration tests for the film tools in real Blender 5.2: environment presets with sky and fog, set_look,
+camera_settings, render_contact_sheet, edit_video (cut, crossfade, speed) and render_shots."""
+
+import os
+import struct
+import sys
+import tempfile
+from pathlib import Path
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+import bpy  # noqa: E402
+
+from adapter.blender_adapter import BlenderAdapter  # noqa: E402
+from adapter.mutators.undo_manager import push_undo_step  # noqa: E402
+
+
+def scene_with_subject():
+    bpy.ops.wm.read_homefile(use_empty=True)
+    bpy.context.preferences.edit.use_global_undo = True
+    adapter = BlenderAdapter()
+    assert adapter.create_primitive("CUBE", name="Subject", size=2.0, location=[0, 0, 1]).success
+    push_undo_step("Baseline")
+    return adapter
+
+
+def mean_rgb(path):
+    img = bpy.data.images.load(str(path))
+    px = list(img.pixels)
+    n = len(px) // 4
+    out = tuple(sum(px[c::4]) / n for c in range(3))
+    bpy.data.images.remove(img)
+    return out
+
+
+def png_size(path):
+    data = Path(path).read_bytes()
+    return struct.unpack(">II", data[16:24])
+
+
+def test_environments():
+    print("Test 1: the new environment presets (sky gradient, fog)...")
+    adapter = scene_with_subject()
+    for preset, expect in (("day", "sky"), ("sunset", "sky"), ("dawn", "sky"), ("golden_hour", "sky"), ("foggy", "flat"),
+                           ("studio", "flat"), ("night", "flat")):
+        res = adapter.set_environment(preset=preset)
+        assert res.success, (preset, res.error)
+        assert res.data["sky"] == expect, (preset, res.data["sky"])
+    world = bpy.context.scene.world
+    kinds = {n.bl_idname for n in world.node_tree.nodes}
+    assert "ShaderNodeTexSky" not in kinds, "flat presets must not keep an old sky node"
+    print("[PASS] Test 1")
+
+
+def test_look_and_lens():
+    print("Test 2: set_look changes the render, camera_settings sets depth of field and rack focus...")
+    adapter = scene_with_subject()
+    assert adapter.create_primitive("CUBE", name="Far", size=1.0, location=[0, -8, 0.5]).success
+    with tempfile.TemporaryDirectory() as tmp:
+        adapter.export_dir = tmp
+        assert adapter.set_environment(preset="day").success
+        assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12).success
+        base = adapter.render_image(filename="base", width=160, height=90, samples=2)
+        assert base.success, base.error
+        base_rgb = mean_rgb(base.data["path"])
+        noir = adapter.set_look(preset="noir")
+        assert noir.success and "saturation" in noir.data["applied"], noir
+        noir_img = adapter.render_image(filename="noir", width=160, height=90, samples=2)
+        r, g, b = mean_rgb(noir_img.data["path"])
+        assert max(abs(r - g), abs(g - b)) < 0.03, (r, g, b)
+        warm_base = max(abs(base_rgb[0] - base_rgb[2]), 0.0)
+        cine = adapter.set_look(preset="cinematic")
+        assert cine.success and "gain" in cine.data["applied"], cine
+        cr, cg, cb = mean_rgb(adapter.render_image(filename="cine", width=160, height=90, samples=2).data["path"])
+        assert (cr - cb) > (base_rgb[0] - base_rgb[2]) + 0.01, ((cr, cg, cb), base_rgb)
+        assert adapter.set_look(preset="dreamy").success and adapter.set_look(preset="neon_glow").success
+        assert adapter.set_look(preset="natural").success
+        assert bpy.context.scene.compositing_node_group is None
+        for bad in (dict(preset="sepia2000"), dict(preset="noir", strength="x")):
+            res = adapter.set_look(**bad)
+            assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+        # lens
+        res = adapter.camera_settings(f_stop=1.8, focus_object="Subject")
+        assert res.success, res.error
+        cam = bpy.data.objects["ShotCamera"].data
+        assert cam.dof.use_dof and abs(cam.dof.aperture_fstop - 1.8) < 1e-6 and cam.dof.focus_object.name == "Subject"
+        res = adapter.camera_settings(focus_object="Subject", rack_focus_to="Far")
+        assert res.success and res.data["rack_focus"]["to"] == "Far", res
+        assert cam.animation_data is not None and cam.animation_data.action is not None
+        res = adapter.camera_settings(motion_blur=True, shutter=0.6)
+        assert res.success and bpy.context.scene.render.use_motion_blur
+        for bad in (dict(), dict(f_stop=0), dict(focus_object="Nope"), dict(rack_focus_to="Far")):
+            res = adapter.camera_settings(**bad)
+            assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+    print("[PASS] Test 2")
+
+
+def test_contact_sheet():
+    print("Test 3: render_contact_sheet gives one picture of several frames...")
+    adapter = scene_with_subject()
+    with tempfile.TemporaryDirectory() as tmp:
+        adapter.export_dir = tmp
+        assert adapter.set_environment(preset="studio").success
+        assert adapter.camera_move(preset="orbit", object_names=["Subject"], duration=2.0, fps=12, angle=180).success
+        res = adapter.render_contact_sheet(filename="sheet", frames=4, width=160, height=90, samples=2)
+        assert res.success, res.error
+        assert res.data["tiles"] == [2, 2] and png_size(res.data["path"]) == (320, 180), (res.data, png_size(res.data["path"]))
+        assert res.data["image_id"].startswith("rn_") and res.data["frames"][0] == 1 and res.data["frames"][-1] == 24 and len(res.data["frames"]) == 4
+        assert not list(Path(tmp).glob("_sheet_tile*")), "tile files must be cleaned up"
+        # the orbit moved: the first and last tiles differ
+        img = bpy.data.images.load(res.data["path"])
+        assert img.size[0] == 320 and img.size[1] == 180
+        bpy.data.images.remove(img)
+        for bad in (dict(frames=1), dict(frames=12), dict(width=10), dict(filename="../x")):
+            r = adapter.render_contact_sheet(**bad)
+            assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
+    print("[PASS] Test 3")
+
+
+def test_new_presets_and_roll():
+    print("Test 4: dutch angle and barrel roll tilt the camera, snorricam follows...")
+    adapter = scene_with_subject()
+    scn = bpy.context.scene
+    V = __import__("mathutils").Vector
+    assert adapter.camera_move(preset="dutch_angle", object_names=["Subject"], duration=1.0, fps=12).success
+    cam = bpy.data.objects["ShotCamera"]
+    scn.frame_set(4)
+    right = cam.matrix_world.to_3x3() @ V((1, 0, 0))            # a level camera has its right vector flat (z = 0)
+    assert abs(right.z) > 0.15, f"dutch angle must tilt the horizon, right.z={right.z}"
+    assert adapter.camera_move(preset="static", object_names=["Subject"], duration=1.0, fps=12).success
+    scn.frame_set(4)
+    right = cam.matrix_world.to_3x3() @ V((1, 0, 0))
+    assert abs(right.z) < 0.05, f"a normal shot keeps the horizon level, right.z={right.z}"
+    res = adapter.camera_move(preset="barrel_roll", object_names=["Subject"], duration=2.0, fps=12)
+    assert res.success
+    scn.frame_set(12)
+    up_mid = cam.matrix_world.to_3x3() @ V((0, 1, 0))
+    assert up_mid.z < 0.7, "half way through a barrel roll the camera is on its side or upside down"
+    res = adapter.camera_move(preset="snorricam", object_names=["Subject"], duration=1.0, fps=12)
+    assert res.success and res.data["follow"] is True
+    print("[PASS] Test 4")
+
+
+def make_clip(adapter, name, preset, seconds=1.0):
+    assert adapter.camera_move(preset=preset, object_names=["Subject"], duration=seconds, fps=12).success
+    res = adapter.render_animation(filename=name, width=160, height=90, samples=2)
+    assert res.success, res.error
+    return res
+
+
+def video_frames(path):
+    scene = bpy.data.scenes.new("probe")
+    scene.sequence_editor_create()
+    strips = scene.sequence_editor.strips
+    s = strips.new_movie("p", str(path), 1, 1)
+    frames = s.frame_final_duration
+    bpy.data.scenes.remove(scene)
+    return frames
+
+
+def test_edit_and_shots():
+    print("Test 5: edit_video (cut, crossfade, speed) and render_shots...")
+    adapter = scene_with_subject()
+    with tempfile.TemporaryDirectory() as tmp:
+        adapter.export_dir = tmp
+        assert adapter.set_environment(preset="studio").success
+        make_clip(adapter, "a", "dolly_in")
+        make_clip(adapter, "b", "orbit")
+        cut = adapter.edit_video(filename="cut", clips=["a.mp4", "b.mp4"], transition="cut")
+        assert cut.success, cut.error
+        assert cut.data["frames"] == 24 and video_frames(cut.data["path"]) == 24, cut.data
+        fade = adapter.edit_video(filename="fade", clips=["a", "b"], transition="crossfade", transition_seconds=0.5)
+        assert fade.success, fade.error
+        assert fade.data["frames"] == 24 - 6, fade.data
+        slow = adapter.edit_video(filename="slow", clips=[{"file": "a.mp4", "speed": 0.5}])
+        assert slow.success, slow.error
+        assert 22 <= slow.data["frames"] <= 26, slow.data
+        fast = adapter.edit_video(filename="fast", clips=[{"file": "a.mp4", "speed": 2.0}])
+        assert fast.success and 5 <= fast.data["frames"] <= 7, fast.data
+        assert Path(fade.data["path"]).read_bytes()[4:8] == b"ftyp"
+        for bad in (dict(clips=[]), dict(clips=["nope.mp4"]), dict(clips=["../a.mp4"]), dict(clips=["a.mp4"], transition="spin"),
+                    dict(clips=[{"file": "a.mp4", "speed": 9}]), dict(clips=["a.mp4"], filename="a/b")):
+            res = adapter.edit_video(**bad)
+            assert not res.success and res.error.type == "INVALID_ARGUMENT", (bad, res)
+        # a whole shot list in one call
+        res = adapter.render_shots(filename="film", width=160, height=90, samples=2, shots=[
+            {"preset": "dolly_in", "duration": 1.0, "environment": "sunset", "fps": 12},
+            {"preset": "orbit", "duration": 1.0, "look": "cinematic", "fps": 12},
+        ], transition="crossfade", transition_seconds=0.25)
+        assert res.success, res.error
+        assert res.data["frames"] == 24 - 3 and len(res.data["shots"]) == 2, res.data
+        assert (Path(tmp) / "film.mp4").exists()
+        assert not list(Path(tmp).glob("film_shot*")), "per-shot files must be removed"
+        for bad in (dict(shots=[]), dict(shots=[{"preset": "warp"}]), dict(shots=[{"preset": "orbit", "wat": 1}]),
+                    dict(shots=[{"preset": "orbit", "environment": "moon"}]), dict(shots=[{"preset": "orbit", "duration": 99}])):
+            r = adapter.render_shots(**bad)
+            assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
+    print("[PASS] Test 5")
+
+
+def main():
+    test_environments()
+    test_look_and_lens()
+    test_contact_sheet()
+    test_new_presets_and_roll()
+    test_edit_and_shots()
+    print("\nALL FILM TOOL INTEGRATION TESTS PASSED")
+
+
+if __name__ == "__main__":
+    main()

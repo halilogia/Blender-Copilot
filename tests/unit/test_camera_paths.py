@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from core.camera_paths import MAX_FRAMES, PRESETS, camera_position, camera_samples, frame_count
+from core.camera_paths import FOLLOW_PRESETS, MAX_FRAMES, PRESETS, camera_position, camera_rolls, camera_samples, frame_count
 
 C = (0.0, 0.0, 1.0)
 
@@ -92,6 +92,85 @@ class TestCameraPaths(unittest.TestCase):
         self.assertEqual(frame_count(5, 24), 120)
         self.assertEqual(frame_count(0.01, 24), 2)
         self.assertEqual(frame_count(9999, 60), MAX_FRAMES)
+
+    def test_there_are_at_least_thirty_five_presets(self):
+        self.assertGreaterEqual(len(PRESETS), 35)
+
+    def test_dolly_left_and_right_truck_sideways_and_keep_the_direction(self):
+        for name in ("dolly_left", "dolly_right"):
+            s = camera_samples(name, 20, C, 1.0)
+            move_cam = tuple(b - a for a, b in zip(s[0][0], s[-1][0]))
+            move_aim = tuple(b - a for a, b in zip(s[0][1], s[-1][1]))
+            self.assertGreater(math.hypot(*move_cam), 0.5, name)
+            for a, b in zip(move_cam, move_aim):
+                self.assertAlmostEqual(a, b, places=9)
+        left = camera_samples("dolly_left", 20, C, 1.0)
+        right = camera_samples("dolly_right", 20, C, 1.0)
+        az = math.radians(35.0)                      # default azimuth: the camera's right vector is (-cos az, sin az, 0)
+        rvec = (-math.cos(az), math.sin(az), 0.0)
+        along = lambda s_: sum((b - a) * r for a, b, r in zip(s_[0][0], s_[-1][0], rvec))  # noqa: E731
+        self.assertGreater(along(right), 0.5)
+        self.assertLess(along(left), -0.5)
+
+    def test_super_dolly_covers_more_ground_than_dolly(self):
+        a = camera_samples("dolly_in", 20, C, 1.0)
+        b = camera_samples("super_dolly_in", 20, C, 1.0)
+        self.assertGreater(dist(b[0][0], b[-1][0]), dist(a[0][0], a[-1][0]) * 1.5)
+
+    def test_reverse_dolly_zoom_keeps_the_subject_size(self):
+        s = camera_samples("dolly_zoom_out", 20, C, 1.0)
+        sizes = [focal / dist(pos, C) for pos, _, focal in s]
+        self.assertAlmostEqual(min(sizes), max(sizes), places=4)
+        self.assertLess(s[-1][2], s[0][2])
+
+    def test_zoom_variants_change_only_the_lens(self):
+        for name in ("rapid_zoom_in", "rapid_zoom_out", "crash_zoom_out", "yoyo_zoom"):
+            s = camera_samples(name, 24, C, 1.0)
+            self.assertEqual(s[0][0], s[-1][0], name)
+            self.assertNotEqual(min(f for _, _, f in s), max(f for _, _, f in s), name)
+        self.assertLess(camera_samples("rapid_zoom_out", 20, C, 1.0)[-1][2], camera_samples("rapid_zoom_out", 20, C, 1.0)[0][2])
+
+    def test_jib_moves_straight_up_or_down(self):
+        up = camera_samples("jib_up", 20, C, 1.0)
+        down = camera_samples("jib_down", 20, C, 1.0)
+        self.assertGreater(up[-1][0][2], up[0][0][2] + 1.0)
+        self.assertLess(down[-1][0][2], down[0][0][2] - 1.0)
+        self.assertAlmostEqual(up[0][0][0], up[-1][0][0], places=9)
+
+    def test_aerial_pullback_rises_and_backs_off(self):
+        s = camera_samples("aerial_pullback", 20, C, 1.0)
+        self.assertGreater(dist(s[-1][0], C), dist(s[0][0], C) * 3)
+        self.assertGreater(s[-1][0][2], s[0][0][2] + 1.0)
+
+    def test_orbit_360_returns_to_the_start_direction(self):
+        s = camera_samples("orbit_360", 49, C, 1.0)
+        self.assertLess(dist(s[0][0], s[-1][0]), 1e-6)
+        self.assertGreater(max(dist(p, s[0][0]) for p, _, _ in s), 2.0)
+
+    def test_hero_cam_looks_up_from_below_the_subject(self):
+        s = camera_samples("hero_cam", 10, C, 1.0)
+        self.assertLess(s[0][0][2], C[2])
+
+    def test_overhead_is_nearly_straight_down(self):
+        pos = camera_samples("overhead", 10, C, 1.0)[5][0]
+        self.assertGreater(pos[2] - C[2], 0.95 * dist(pos, C) * 0.98)
+
+    def test_rolls_are_zero_except_for_dutch_and_barrel_roll(self):
+        for name in PRESETS:
+            rolls = camera_rolls(name, 24, 1.0)
+            self.assertEqual(len(rolls), 24)
+            if name not in ("dutch_angle", "barrel_roll"):
+                self.assertTrue(all(v == 0.0 for v in rolls), name)
+        self.assertAlmostEqual(camera_rolls("dutch_angle", 5, 1.0)[2], 15.0)
+        barrel = camera_rolls("barrel_roll", 25, 1.0)
+        self.assertAlmostEqual(barrel[0], 0.0)
+        self.assertAlmostEqual(barrel[-1], 360.0)
+
+    def test_snorricam_is_a_follow_preset_and_sits_close_in_front(self):
+        self.assertIn("snorricam", FOLLOW_PRESETS)
+        pos, aim, _ = camera_samples("snorricam", 5, C, 1.0)[0]
+        self.assertGreater(pos[1], aim[1])
+        self.assertLess(dist(pos, aim), 1.5)
 
 
 if __name__ == "__main__":
