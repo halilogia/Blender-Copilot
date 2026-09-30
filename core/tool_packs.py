@@ -15,12 +15,14 @@ PACKS = {
     ),
     "characters": ("rig_character", "animate_character", "animate_sequence", "character_library"),
     "textures": ("unwrap_uv", "bake_material"),
+    "world": ("create_terrain", "scatter"),
 }
 
 ABOUT = {
     "film": "light, camera moves, render, colour looks, video editing, music",
     "characters": "rig a character made of parts and animate it: walk, talk, expressions, scenes",
     "textures": "UV unwrap and bake procedural materials into image textures (so a .glb keeps the look)",
+    "world": "terrain with hills, and scattering many copies of an object (forest, rocks, fences) over an area or along a path",
 }
 
 KEYWORDS = {
@@ -31,6 +33,8 @@ KEYWORDS = {
     "characters": ("character", "karakter", "walk", "yürü", "yuru", "run", "koş", "kos", "talk", "konuş", "konus", "rig",
                    "animate", "animasyon", "animation", "asker", "soldier", "robot", "zombi", "zombie", "insan", "human",
                    "person", "wave", "el salla", "jump", "zıpla", "zipla", "expression", "yüz", "yuz", "face", "dans", "dance"),
+    "world": ("terrain", "arazi", "tepe", "hill", "scatter", "dağıt", "dagit", "orman", "forest", "ağaçlar", "agaclar", "trees", "vegetation",
+              "bitki", "yol boyunca", "along a path", "village", "köy", "koy", "landscape", "manzara", "peyzaj"),
     "textures": ("uv map", "uv harita", "uv unwrap", "unwrap", "texture", "doku", "bake", "pişir", "pisir", "pbr", "kaplama", "glb", "gltf", "godot", "unity", "game asset", "oyun için"),
 }
 # a character request is nearly always filmed as well

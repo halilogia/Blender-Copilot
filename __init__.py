@@ -65,6 +65,8 @@ from .tools.mutations.set_environment import SetEnvironmentTool
 from .tools.mutations.check_shot import CheckShotTool
 from .tools.mutations.check_model import CheckModelTool
 from .tools.mutations.unwrap_uv import UnwrapUvTool
+from .tools.mutations.create_terrain import CreateTerrainTool
+from .tools.mutations.scatter import ScatterTool
 from .tools.mutations.bake_material import BakeMaterialTool
 from .tools.mutations.create_prop import CreatePropTool
 from .tools.read_only.enable_tools import EnableToolsTool
@@ -193,6 +195,8 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(CheckShotTool())
     registry.register(CheckModelTool())
     registry.register(UnwrapUvTool())
+    registry.register(CreateTerrainTool())
+    registry.register(ScatterTool())
     registry.register(BakeMaterialTool())
     registry.register(CreatePropTool())
     registry.register(EnableToolsTool())

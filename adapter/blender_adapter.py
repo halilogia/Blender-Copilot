@@ -28,6 +28,7 @@ from adapter.mutators.character_mutator import CharacterMutator
 from adapter.mutators.look_mutator import LookMutator
 from adapter.mutators.model_qa_mutator import ModelQaMutator
 from adapter.mutators.texture_mutator import TextureMutator
+from adapter.mutators.world_mutator import WorldMutator
 from adapter.mutators.polish_mutator import PolishMutator
 from adapter.mutators.prop_mutator import PropMutator
 from adapter.mutators.video_mutator import VideoMutator
@@ -910,6 +911,12 @@ class BlenderAdapter:
 
     def set_look(self, **kwargs) -> ToolResult:
         return self._modeling("set_look", LookMutator.set_look, **kwargs)
+
+    def create_terrain(self, **kwargs) -> ToolResult:
+        return self._modeling("create_terrain", WorldMutator.create_terrain, **kwargs)
+
+    def scatter(self, **kwargs) -> ToolResult:
+        return self._modeling("scatter", WorldMutator.scatter, **kwargs)
 
     def unwrap_uv(self, **kwargs) -> ToolResult:
         return self._modeling("unwrap_uv", TextureMutator.unwrap_uv, **kwargs)

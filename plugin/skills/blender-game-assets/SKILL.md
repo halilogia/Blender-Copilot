@@ -15,6 +15,10 @@ Beyond extrude, inset and bevel: `LOOP_CUT` (axis, cuts: evenly spaced cuts, the
 
 Call `check_model` (with `object_names` of the model) after building and before `export_gltf`. It measures instead of looking: inverted normals, non-manifold edges, doubled vertices, unapplied scale, pivot outside the object, no material, a texture without UVs, sunk into the ground, two objects in the same space, and the triangle count against `max_triangles` (default 3000). FAIL findings block `ok`; each finding names the tool call that fixes it. Fix, call again, repeat until `ok` is true; cheap WARN items (materials, merge by distance) are worth fixing too.
 
+## Landscapes (`create_terrain`, `scatter`)
+
+These load with the world pack (`enable_tools` with `world` if missing). `create_terrain` makes hills (`size`, `height`, `roughness`, `flat_radius` keeps a flat disc for a house, `seed`); give it a `set_material` preset (grass, sand). `scatter` places many linked copies of one object in a single call: `source` (an unparented prop such as a `create_prop` tree), `count`, an `area` (`{"center": [x, y], "size": [w, d]}` or `radius`) or a `path` (`[[x, y], ...]`, `spread` to each side: a tree-lined road), `ground` = the terrain so every copy stands on the surface, `avoid` = objects to keep clear (the house), `scale_range`, `seed`. Never call `create_prop` in a loop for a forest. The source stays where it is: move it out of the way or keep it as part of the scene. Copies share the mesh, so a `.glb` keeps them as cheap instances.
+
 ## Textures (`unwrap_uv`, `bake_material`)
 
 These two tools load with the textures pack (call `enable_tools` with `textures` if they are missing). `unwrap_uv` gives meshes a UV map (`smart`, or `cube` for boxes) and reports how much of the 0-1 square it covers. `bake_material` (one object, `resolution` 512 is enough for a prop) turns a procedural material into an image over the UVs and gives the object one image-textured material; flat colours are left alone because they export fine. Bake after `join_objects` and before `export_gltf`; `check_model` reports a texture without UVs.

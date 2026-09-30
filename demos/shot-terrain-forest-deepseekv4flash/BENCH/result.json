@@ -1,0 +1,21 @@
+{
+  "name": "shot-terrain-forest-deepseekv4flash",
+  "date": "20260930-195727",
+  "seconds": 310.6,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 30,
+  "tool_errors": 1,
+  "approvals": 2,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Tamamlandı. Sahne doğrulandı ve 5 saniyelik film üretildi.\n\n## Yapılanlar\n\n**Arazi**\n- Varsayılan `Cube` silindi.\n- `create_terrain`: **60 m × 60 m**, `height 5` (tepeler 4.19 m'ye kadar), `flat_radius 8` (merkezde düz daire), `seed 3`, 64×64 çözünürlük → 8192 üçgen.\n- `set_material preset grass` → `Terrain_Material` (prosedürel çim, renk varyasyonu + kabartma).\n\n**Yapılar ve ağaçlar**\n- `create_prop house` (3 m) tam merkezdeki düz alana, kapısı +Y'ye bakacak şekilde yerleştirildi → 668 üçgen.\n- `create_prop tree_pine` kaynak ağaç üretildi.\n- `scatter`: **40 çam ağacı** (scale 0.7–1.35, `seed 3`) tüm araziye `ground=Terrain` ile yerleştirildi; `avoid=[\"House\"]` sayesinde evin çevresi boş bırakıldı.\n\n**Yol boyu lambalar**\n- `create_prop lamp` kaynağından, evin girişinden (0, 2.2) başlayıp kıvrılarak uzaklaşan bir `path` üzerine `spread 1.8` ile **10 lamba** dikildi (`LampPath` koleksiyonu).\n\n**Işık ve kamera**\n- `set_environment golden_hour` → alçak sıcak güneş, turuncu gökyüzü, uzun gölgeler (terrain zaten zemin olduğu için ekstra ground plane eklenmedi).\n- `camera_move orbit`: **5 saniye / 120 kare @ 24 fps**, 140° yay, azimuth 40°, elevation 22°, mesafe 110 m, 35 mm.\n- İlk denemelerde `check_shot` \"SUBJECT_CUT / TOO_SMALL\" verdi; mesafeleri ayarlayarak (135 m ve 48 m arası) **ok: true** sonucuna ulaşıldı. Bir kare `render_image` ile de kontrol edildi.\n\n**Sonuç**\n- `render_animation` → **`shot-terrain-forest-deepseekv4flash.mp4`**\n- 960×540, 120 kare, 24 fps, EEVEE, ~9 sn render süresi.\n\nNot: Kaynak `PineTree`/`LampSrc` nesneleri kopyaların otomatik kadrajını bozmaması için görüş alanından çıkarıldı; dağıtılan 40 ağaç ve 10 lamba sahnede aktif durumda.",
+  "video_bytes": 458228,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}

@@ -22,6 +22,8 @@ from .frame_view import FrameViewTool
 from .check_shot import CheckShotTool
 from .check_model import CheckModelTool
 from .unwrap_uv import UnwrapUvTool
+from .create_terrain import CreateTerrainTool
+from .scatter import ScatterTool
 from .bake_material import BakeMaterialTool
 from .create_prop import CreatePropTool
 from .animate_sequence import AnimateSequenceTool
@@ -63,6 +65,8 @@ __all__ = [
     "CheckShotTool",
     "CheckModelTool",
     "UnwrapUvTool",
+    "CreateTerrainTool",
+    "ScatterTool",
     "BakeMaterialTool",
     "CreatePropTool",
     "AnimateSequenceTool",

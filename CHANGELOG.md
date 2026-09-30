@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.17.0] - 2026-09-30
+
+### Added
+- **World pack** (loads from words such as terrain, hill, forest, scatter, trees, village, or `enable_tools`):
+  - `create_terrain`: a hilly grid mesh (`size`, `resolution`, `height`, `roughness`, `seed`, `flat_radius` for a flat disc around the centre), deterministic for a seed.
+  - `scatter`: many linked copies of an object (or a group of objects) in one call, inside an `area` (rectangle or circle) or along a `path` with `spread`; random scale and rotation, never closer than `min_distance`, never inside the footprint of `avoid` objects, standing on a `ground` object (cast straight down at that object alone) or on `ground_z`; up to 500 copies, same seed same layout, one undo step, copies in their own collection. Copies share the mesh, so a glTF export keeps them as instances.
+- Pure logic in `core/scatter_points.py` (seeded sampling, noise, height grid), tests in `tests/unit/test_scatter_points.py` and `tests/integration/test_world_tools.py`.
+
+---
+
 ## [1.16.0] - 2026-09-30
 
 ### Added
