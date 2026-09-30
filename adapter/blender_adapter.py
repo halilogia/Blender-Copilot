@@ -677,6 +677,8 @@ class BlenderAdapter:
         emission_color: Optional[Any] = None,
         emission_strength: Optional[float] = None,
         alpha: Optional[float] = None,
+        preset: Optional[str] = None,
+        scale: Optional[float] = None,
     ) -> ToolResult:
         """Set Principled BSDF shader properties on an object slot or material.
 
@@ -697,6 +699,8 @@ class BlenderAdapter:
                 emission_color=emission_color,
                 emission_strength=emission_strength,
                 alpha=alpha,
+                preset=preset,
+                scale=scale,
             )
             return ToolResult.ok(tool_name, data)
         except ObjectNotFoundError as not_found:

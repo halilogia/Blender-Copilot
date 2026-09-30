@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.13.0] - 2026-09-30
+
+### Added
+- **`set_material` presets**: `preset` builds a procedural material in one call: wood, stone, brick, metal (brushed), gold, grass, water, sand, concrete, marble. Texture, colour variation and relief from shader nodes in object coordinates (no image files, no UVs); `scale` makes the pattern finer or coarser; explicit `roughness`, `metallic`, `base_color` still apply on top; a second preset replaces the first. Recipes are plain data in `core/material_presets.py`.
+- Fixed: with the sky presets, everything below the horizon was near black, so the edge of a small ground plane opened onto a dark blue void in every demo; it now shows the ground colour.
+- Tests: `tests/unit/test_material_presets.py`, `tests/integration/test_material_presets.py` (every preset renders with visible texture and the expected hue).
+
+---
+
 ## [1.12.0] - 2026-09-30
 
 ### Added

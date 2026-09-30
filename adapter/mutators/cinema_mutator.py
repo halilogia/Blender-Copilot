@@ -182,7 +182,25 @@ class CinemaMutator:
                 sky.sun_disc = False
                 sky.sun_elevation = math.radians(env["nishita"][0])
                 sky.sun_rotation = math.radians(env["nishita"][1])
-                nt.links.new(sky.outputs[0], bg.inputs[0])
+                # below the horizon the sky texture is near black: show the ground colour there so that the edge of a small
+                # ground plane does not open onto a dark void
+                below = env["ground"]
+                if isinstance(ground_color, (list, tuple)) and len(ground_color) >= 3:
+                    below = tuple(max(0.0, min(1.0, float(v))) for v in ground_color[:3])
+                coord = nt.nodes.new("ShaderNodeTexCoord")
+                split = nt.nodes.new("ShaderNodeSeparateXYZ")
+                ramp = nt.nodes.new("ShaderNodeMapRange")
+                ramp.inputs["From Min"].default_value = -0.02
+                ramp.inputs["From Max"].default_value = 0.02
+                ramp.clamp = True
+                mix = nt.nodes.new("ShaderNodeMix")
+                mix.data_type = "RGBA"
+                nt.links.new(coord.outputs["Generated"], split.inputs["Vector"])
+                nt.links.new(split.outputs["Z"], ramp.inputs["Value"])
+                nt.links.new(ramp.outputs["Result"], mix.inputs["Factor"])
+                mix.inputs["A"].default_value = (*below, 1.0)
+                nt.links.new(sky.outputs[0], mix.inputs["B"])
+                nt.links.new(mix.outputs["Result"], bg.inputs[0])
                 sky_mode = "sky"
             except Exception:
                 sky_mode = "flat"

@@ -1,6 +1,6 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.12.0 implemented (2026-09-30) — film araçları (38 kamera hareketi, ışık ve renk ayarı, çok planlı kurgu) + yerel MCP köprüsü + modelleme araçları + sinema araçları (ışık, kamera hareketi, MP4 render) + karakter animasyonu (rig, yürüme/koşma/nişan/el sallama/zıplama) + Claude Code eklentisi; 797 unit tests OK, hardening green, headless 32/32 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.13.0 implemented (2026-09-30) — film araçları (38 kamera hareketi, ışık ve renk ayarı, çok planlı kurgu) + yerel MCP köprüsü + modelleme araçları + sinema araçları (ışık, kamera hareketi, MP4 render) + karakter animasyonu (rig, yürüme/koşma/nişan/el sallama/zıplama) + Claude Code eklentisi; 797 unit tests OK, hardening green, headless 32/32 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ---

@@ -7,6 +7,7 @@ import bpy
 from adapter.readers.object_reader import ObjectNotFoundError
 from adapter.readers.material_reader import MaterialReader
 from adapter.mutators.undo_manager import push_undo_step
+from core.material_presets import recipe
 
 
 def find_input_socket(node: Any, *socket_names: str) -> Optional[Any]:
@@ -97,6 +98,90 @@ def ensure_principled_bsdf(mat: bpy.types.Material) -> Any:
     return bsdf_node
 
 
+def _link(tree: Any, out_sock: Any, in_sock: Any) -> None:
+    if out_sock is not None and in_sock is not None:
+        tree.links.new(out_sock, in_sock)
+
+
+def build_preset(mat: bpy.types.Material, name: Any, scale: Any = 1.0) -> Dict[str, Any]:
+    """Replace the shader network of ``mat`` with a procedural recipe (core.material_presets): texture -> colour ramp -> base colour,
+    texture -> bump -> normal, and the recipe's roughness and metallic. Object coordinates, so no UVs are needed."""
+    rec = recipe(name, scale)
+    ensure_principled_bsdf(mat)
+    tree = mat.node_tree
+    keep = {"BSDF_PRINCIPLED", "OUTPUT_MATERIAL"}
+    for node in [n for n in tree.nodes if n.type not in keep]:
+        tree.nodes.remove(node)
+    bsdf = next(n for n in tree.nodes if n.type == "BSDF_PRINCIPLED")
+    for sock_name in ("Base Color", "Normal"):
+        sock = find_input_socket(bsdf, sock_name)
+        for link in list(sock.links) if sock is not None else []:
+            tree.links.remove(link)
+
+    coord = tree.nodes.new("ShaderNodeTexCoord")
+    mapping = tree.nodes.new("ShaderNodeMapping")
+    mapping.inputs["Scale"].default_value = rec["scale"]
+    _link(tree, coord.outputs["Object"], mapping.inputs["Vector"])
+
+    ramp = tree.nodes.new("ShaderNodeValToRGB")
+    elements = ramp.color_ramp.elements
+    stops = rec["ramp"]
+    while len(elements) < len(stops):
+        elements.new(0.5)
+    for element, (pos, rgb) in zip(elements, stops):
+        element.position = pos
+        element.color = (rgb[0], rgb[1], rgb[2], 1.0)
+
+    if rec["texture"] == "brick":
+        tex = tree.nodes.new("ShaderNodeTexBrick")
+        tex.inputs["Color1"].default_value = (*stops[0][1], 1.0)
+        tex.inputs["Color2"].default_value = (*stops[-1][1], 1.0)
+        tex.inputs["Mortar"].default_value = (*rec["mortar"], 1.0)
+        tex.inputs["Scale"].default_value = 3.0
+        # the brick pattern is flat in its x and y: feed it (x + y, z) so walls facing any side get bricks
+        split = tree.nodes.new("ShaderNodeSeparateXYZ")
+        add = tree.nodes.new("ShaderNodeMath")
+        add.operation = "ADD"
+        join = tree.nodes.new("ShaderNodeCombineXYZ")
+        _link(tree, mapping.outputs["Vector"], split.inputs["Vector"])
+        _link(tree, split.outputs["X"], add.inputs[0])
+        _link(tree, split.outputs["Y"], add.inputs[1])
+        _link(tree, add.outputs["Value"], join.inputs["X"])
+        _link(tree, split.outputs["Z"], join.inputs["Y"])
+        _link(tree, join.outputs["Vector"], tex.inputs["Vector"])
+        _link(tree, tex.outputs["Color"], find_input_socket(bsdf, "Base Color"))
+        relief = tex.outputs["Fac"]
+        tree.nodes.remove(ramp)
+    else:
+        if rec["texture"] == "wave":
+            tex = tree.nodes.new("ShaderNodeTexWave")
+            tex.wave_type = "BANDS"
+            tex.bands_direction = "X"
+            tex.inputs["Scale"].default_value = 2.0
+            tex.inputs["Distortion"].default_value = rec["distortion"]
+            tex.inputs["Detail"].default_value = min(rec["detail"], 15.0)
+            fac = tex.outputs["Color"]
+        else:
+            tex = tree.nodes.new("ShaderNodeTexNoise")
+            tex.inputs["Scale"].default_value = 1.0
+            tex.inputs["Detail"].default_value = min(rec["detail"], 15.0)
+            fac = tex.outputs["Fac"]
+        _link(tree, mapping.outputs["Vector"], tex.inputs["Vector"])
+        _link(tree, fac, ramp.inputs["Fac"])
+        _link(tree, ramp.outputs["Color"], find_input_socket(bsdf, "Base Color"))
+        relief = fac
+
+    if rec["bump"] > 0:
+        bump = tree.nodes.new("ShaderNodeBump")
+        bump.inputs["Strength"].default_value = min(rec["bump"], 1.0)
+        bump.inputs["Distance"].default_value = 0.05
+        _link(tree, relief, bump.inputs["Height"])
+        _link(tree, bump.outputs["Normal"], find_input_socket(bsdf, "Normal"))
+    find_input_socket(bsdf, "Roughness").default_value = rec["roughness"]
+    find_input_socket(bsdf, "Metallic").default_value = rec["metallic"]
+    return rec
+
+
 def assign_material_to_slot(obj: bpy.types.Object, mat: bpy.types.Material, slot_index: int = 0) -> None:
     """Assign material to an object at the specified slot index, appending slots if needed."""
     if not hasattr(obj, "material_slots"):
@@ -134,6 +219,8 @@ class MaterialMutator:
         emission_color: Optional[Sequence[float]] = None,
         emission_strength: Optional[float] = None,
         alpha: Optional[float] = None,
+        preset: Optional[str] = None,
+        scale: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Set Principled BSDF shader properties on an object slot or material.
 
@@ -153,7 +240,7 @@ class MaterialMutator:
         """
         # 1. Validation: must provide at least one material property
         has_property = any(
-            v is not None for v in [base_color, metallic, roughness, emission_color, emission_strength, alpha]
+            v is not None for v in [base_color, metallic, roughness, emission_color, emission_strength, alpha, preset]
         )
         # object + material name with no property just assigns the (existing) material to the slot
         if not has_property and not (object_name and material_name):
@@ -206,10 +293,16 @@ class MaterialMutator:
                 before_snap = None
 
         # 5. Ensure Principled BSDF node and output connection
+        if preset:
+            recipe(preset, scale)   # validate before touching the material
         bsdf_node = ensure_principled_bsdf(mat)
 
         # 6. Apply mutations and collect changed field names
         changed_fields: List[str] = []
+        if preset:
+            build_preset(mat, preset, scale)
+            bsdf_node = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+            changed_fields.append("preset")
 
         if base_color is not None:
             sock = find_input_socket(bsdf_node, "Base Color", "BaseColor", "Color")

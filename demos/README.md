@@ -36,6 +36,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [shot-house-night-claudesonnet46](shot-house-night-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek. | 2.4 dk | 21 | - | 8.0 sn video | 20260930 |
 | [shot-knight-run-geminiproagent](shot-knight-run-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 1.6 dk | 23 | - | 4.0 sn video | 20260930 |
 | [shot-knight-run-spacebunnyalpha](shot-knight-run-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al. | 5.4 dk | 40 | - | 3.0 sn video | 20260930 |
+| [shot-materials-deepseekv4flash](shot-materials-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Küçük bir avlu kur: 12x12 bir plane zemin (set_material preset grass), ortada create_prop ile bir house, evin duvarına preset brick, çatısına preset wood ver (parçalara ayrı ayrı), yanında bir tree_pine, önünde küçük bir su havuzu (silindir, preset water) ve bir taş duvar parçası (kutu, preset stone). set_environment golden_hour, camera_move orbit ile 5 sn'lik film çek, check_shot ile kontrol et. | 4.1 dk | 27 | - | 5.0 sn video | 20260930 |
 | [shot-robot-vertigo-spacebunnyalpha](shot-robot-vertigo-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek. | 5.0 dk | 49 | - | 5.0 sn video | 20260930 |
 | [shot-robot-wave-deepseekv4flash](shot-robot-wave-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 6.2 dk | 58 | - | 4.0 sn video | 20260930 |
 | [shot-robot-wave-geminiproagent](shot-robot-wave-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al. | 1.8 dk | 53 | - | 4.0 sn video | 20260930 |
@@ -183,6 +184,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **shot-knight-run-spacebunnyalpha** ([video](shot-knight-run-spacebunnyalpha/shot-knight-run-spacebunnyalpha.mp4))
 
 ![shot-knight-run-spacebunnyalpha](shot-knight-run-spacebunnyalpha/sheet.png)
+
+**shot-materials-deepseekv4flash** ([video](shot-materials-deepseekv4flash/shot-materials-deepseekv4flash.mp4))
+
+![shot-materials-deepseekv4flash](shot-materials-deepseekv4flash/sheet.png)
 
 **shot-robot-vertigo-spacebunnyalpha** ([video](shot-robot-vertigo-spacebunnyalpha/shot-robot-vertigo-spacebunnyalpha.mp4))
 

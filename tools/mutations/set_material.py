@@ -12,7 +12,10 @@ class SetMaterialTool(BaseTool):
     description = (
         "Set or update Principled BSDF shader properties (base_color, metallic, roughness, "
         "emission_color, emission_strength, alpha) on a Blender material or object slot. "
-        "Creates material if missing. Every modification records an atomic undo point."
+        "Creates material if missing. `preset` builds a procedural material in one call (wood, stone, brick, metal, gold, grass, "
+        "water, sand, concrete, marble): texture, colour variation and relief, no image files or UVs needed; `scale` makes the "
+        "pattern finer (2) or coarser (0.5); base_color/roughness/metallic given as well are applied on top. Every modification "
+        "records an atomic undo point."
     )
     input_schema = {
         "type": "object",
@@ -60,6 +63,14 @@ class SetMaterialTool(BaseTool):
                 "type": "number",
                 "description": "Alpha transparency factor in range [0.0, 1.0].",
             },
+            "preset": {
+                "type": "string",
+                "description": "Procedural material: wood, stone, brick, metal, gold, grass, water, sand, concrete, marble.",
+            },
+            "scale": {
+                "type": "number",
+                "description": "With preset: pattern size, 1 = default, 2 = twice as fine, 0.5 = twice as coarse (0.05-50).",
+            },
         },
         "required": [],
         "additionalProperties": False,
@@ -88,4 +99,6 @@ class SetMaterialTool(BaseTool):
             emission_color=emission_color,
             emission_strength=emission_strength,
             alpha=alpha,
+            preset=kwargs.get("preset"),
+            scale=kwargs.get("scale"),
         )

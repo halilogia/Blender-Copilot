@@ -106,7 +106,9 @@ class TestMaterialDispatcherExecution(unittest.TestCase):
             emission_color=None,
             emission_strength=None,
             alpha=None,
-        )
+        preset=None,
+        scale=None,
+    )
 
     def test_set_material_dispatch_by_material_name_all_fields(self):
         self.mock_adapter.set_material.return_value = ToolResult.ok(
@@ -140,7 +142,9 @@ class TestMaterialDispatcherExecution(unittest.TestCase):
             emission_color=[0.0, 0.0, 0.0],
             emission_strength=0.0,
             alpha=1.0,
-        )
+        preset=None,
+        scale=None,
+    )
 
     def test_set_material_unexpected_argument_rejected(self):
         tc = ToolCall(

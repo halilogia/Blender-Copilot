@@ -1,0 +1,21 @@
+{
+  "name": "shot-materials-deepseekv4flash",
+  "date": "20260930-164551",
+  "seconds": 243.9,
+  "agent": "in-Blender agent",
+  "via": "http://localhost:20128/v1",
+  "status": "ok",
+  "tool_calls": 27,
+  "tool_errors": 1,
+  "approvals": 1,
+  "followups": 0,
+  "final_views": 4,
+  "model": "cmc/deepseek/deepseek-v4-flash",
+  "provider_url": "http://localhost:20128/v1",
+  "final_message": "Avlu kuruldu ve film çekildi. Yaptıklarım:\n\n**Model (avlu)**\n- Varsayılan `Cube` silindi.\n- `Courtyard_Ground`: 12×12 m plane, `grass` preset materyali.\n- `House`: `create_prop` ile köy evi (2.95 × 2.30 × 2.88 m, 668 üçgen, 5 malzeme yuvası). Parça parça malzeme verildi:\n  - **duvar** yuvası (`house_wall`) → `brick` preset\n  - **çatı** yuvası (`house_roof`) → `wood` preset\n  - kapı, taş temel ve cam yuvaları orijinal renklerinde bırakıldı.\n- `PineTree`: `create_prop` pine (4.16 m, 660 üçgen).\n- `Pool`: silindir (Z'de yassılaştırılmış, 2.2 m çap) → `water` preset (roughness 0.04, parlak yüzey).\n- `StoneWall`: kutu (4.4 × 0.5 × 1.0 m) → `stone` preset, `polish_model` ile pahlandırıldı.\n\n**Işık ve kamera**\n- `set_environment golden_hour` (alçak sıcak güneş, turuncu gökyüzü, uzun gölgeler). Avlu zaten 12 m'lik grass plane olduğu için ekstra `AI_Ground` açılmadı (`ground=false`) — zemin tekrarı olmasın.\n- `camera_move orbit`, 160° yay, 5 saniye, 120 kare @ 24 fps, 16 m mesafe, 35 mm.\n- `check_shot` → **ok**, sorun yok. Nesne kadrajda %32–37, kenarlardan taşma yok, parlaklık ortalaması ~0.34 (ne siyah ne patlamış).\n- `render_image` ile 30. kareye bakıp kadrajı/ışığı doğruladım.\n\n**Çıktı**\n- `shot-materials-deepseekv4flash.mp4` — 960×540, 120 kare, 24 fps, 5.0 sn, 16 EEVEE örnek, ~10.7 sn render süresi.\n\nNot: Sahnedeki orijinal `Camera` ve `Light` nesnelerine dokunmadım; filmde `ShotCamera` ve `AI_Sun` kullanılıyor.",
+  "video_bytes": 768749,
+  "video_width": 960,
+  "video_height": 540,
+  "video_frames": 120,
+  "video_seconds": 5.0
+}
