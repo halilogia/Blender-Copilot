@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.16.0] - 2026-09-30
+
+### Added
+- **Deeper `mesh_edit`** (no new tool, eight new operations): `FLIP_NORMALS`, `DELETE_FACES`, `DISSOLVE_PLANAR` (angle; cleans up after a boolean), `LOOP_CUT` (axis, cuts 1-8), `KNIFE_PLANE` (axis, position, keep both / above / below; the cut is capped and closed), `BRIDGE_FACES` (two selected faces removed and joined by a tunnel), `SEPARATE` (loose parts or material into objects), `APPLY_MODIFIERS` (bakes bevel, boolean, mirror into the mesh).
+- Face selectors can also pick by `material` (name or slot), `min_area` / `max_area` and `near` (+ `radius`), combined with the normal direction; all given conditions must hold.
+- Tests: `tests/integration/test_mesh_edit_pack.py` (flipped normals are found by `check_model` and fixed, loop cut vertex count and positions, knife plane leaves a closed mesh, bridge face count, separate, apply modifiers, selectors, errors, undo).
+
+---
+
 ## [1.15.0] - 2026-09-30
 
 ### Added

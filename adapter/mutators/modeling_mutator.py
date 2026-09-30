@@ -175,18 +175,41 @@ class ModelingMutator:
 
     # ------------------------------------------------------------------ mesh_edit
     OPERATIONS = ("EXTRUDE_FACES", "INSET_FACES", "BEVEL_EDGES", "SUBDIVIDE", "TRIANGULATE", "RECALC_NORMALS",
-                  "MERGE_BY_DISTANCE", "SCALE_TO_HEIGHT_TAPER")
+                  "MERGE_BY_DISTANCE", "SCALE_TO_HEIGHT_TAPER", "FLIP_NORMALS", "DELETE_FACES", "DISSOLVE_PLANAR",
+                  "LOOP_CUT", "KNIFE_PLANE", "BRIDGE_FACES", "SEPARATE", "APPLY_MODIFIERS")
+    AXES = {"X": 0, "Y": 1, "Z": 2}
 
     @classmethod
-    def _select_faces(cls, bm: "bmesh.types.BMesh", selector: Any) -> List["bmesh.types.BMFace"]:
+    def _select_faces(cls, bm: "bmesh.types.BMesh", selector: Any, obj: Any = None) -> List["bmesh.types.BMFace"]:
+        """Faces by normal direction, and/or material, area, nearness to a point (all given conditions must hold)."""
         if selector in (None, {}, "ALL"):
             return list(bm.faces)
         if not isinstance(selector, dict):
             raise ModelingError("faces selector must be an object like {\"direction\": \"+Z\", \"threshold\": 0.9}.")
+        bm.faces.ensure_lookup_table()
+        picked = list(bm.faces)
+        if selector.get("material") is not None:
+            want = selector["material"]
+            names = [s.material.name if s.material else "" for s in obj.material_slots] if obj is not None else []
+            if isinstance(want, str) and not want.strip().lstrip("-").isdigit():
+                if want not in names:
+                    raise ModelingError(f"material '{want}' is not on this object (slots: {names}).")
+                index = names.index(want)
+            else:
+                index = int(want)
+            picked = [f for f in picked if f.material_index == index]
+        if selector.get("min_area") is not None:
+            picked = [f for f in picked if f.calc_area() >= float(selector["min_area"])]
+        if selector.get("max_area") is not None:
+            picked = [f for f in picked if f.calc_area() <= float(selector["max_area"])]
+        if selector.get("near") is not None:
+            point = _vec3(selector["near"], "near")
+            radius = float(selector.get("radius", 0.25))
+            picked = [f for f in picked if (f.calc_center_median() - point).length <= radius]
         direction = selector.get("direction")
         threshold = float(selector.get("threshold", 0.9))
         if direction is None:
-            return list(bm.faces)
+            return picked
         if isinstance(direction, str):
             key = direction.strip().upper()
             if key not in DIRECTION_AXES:
@@ -197,27 +220,29 @@ class ModelingMutator:
             if axis.length == 0:
                 raise ModelingError("direction must not be a zero vector.")
             axis.normalize()
-        bm.faces.ensure_lookup_table()
-        picked = [f for f in bm.faces if f.normal.dot(axis) >= threshold]
-        return picked
+        return [f for f in picked if f.normal.dot(axis) >= threshold]
 
     @classmethod
     def mesh_edit(cls, object_name: str, operation: str, faces: Any = None, distance: Optional[float] = None,
                   thickness: Optional[float] = None, depth: Optional[float] = None, width: Optional[float] = None,
                   segments: Optional[int] = None, cuts: Optional[int] = None, merge_distance: Optional[float] = None,
-                  sharp_angle: Optional[float] = None, top_scale: Optional[float] = None) -> Dict[str, Any]:
+                  sharp_angle: Optional[float] = None, top_scale: Optional[float] = None, axis: Any = None,
+                  position: Optional[float] = None, keep: Any = None, faces_b: Any = None, angle: Optional[float] = None,
+                  by: Any = None) -> Dict[str, Any]:
         op = str(operation or "").strip().upper()
         if op not in cls.OPERATIONS:
             raise ModelingError(f"operation must be one of {list(cls.OPERATIONS)}.")
         obj = _mesh_object(object_name)
         mesh = _unique_mesh(obj)
+        if op in ("SEPARATE", "APPLY_MODIFIERS"):
+            return cls._object_level_edit(obj, op, by)
         bm = bmesh.new()
         try:
             bm.from_mesh(mesh)
             bm.faces.ensure_lookup_table()
             touched = 0
             if op in ("EXTRUDE_FACES", "INSET_FACES"):
-                picked = cls._select_faces(bm, faces)
+                picked = cls._select_faces(bm, faces, obj)
                 if not picked:
                     raise ModelingError("No face matches the selector (check direction / threshold).")
                 touched = len(picked)
@@ -270,6 +295,80 @@ class ModelingMutator:
                 before = len(bm.verts)
                 bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=d)
                 touched = before - len(bm.verts)
+            elif op in ("FLIP_NORMALS", "DELETE_FACES"):
+                picked = cls._select_faces(bm, faces, obj)
+                if not picked:
+                    raise ModelingError("No face matches the selector (check direction / threshold / material / near).")
+                touched = len(picked)
+                if op == "FLIP_NORMALS":
+                    bmesh.ops.reverse_faces(bm, faces=picked)
+                else:
+                    if len(picked) == len(bm.faces):
+                        raise ModelingError("That would delete every face; narrow the selector.")
+                    bmesh.ops.delete(bm, geom=picked, context="FACES")
+            elif op == "DISSOLVE_PLANAR":
+                limit = float(angle if angle is not None else 5.0)
+                if not 0.0 <= limit <= 90.0:
+                    raise ModelingError("angle must be between 0 and 90 degrees.")
+                before = len(bm.faces)
+                bmesh.ops.dissolve_limit(bm, angle_limit=math.radians(limit), verts=list(bm.verts), edges=list(bm.edges))
+                touched = before - len(bm.faces)
+            elif op in ("LOOP_CUT", "KNIFE_PLANE"):
+                key = str(axis or "").strip().upper()
+                if key not in cls.AXES:
+                    raise ModelingError("axis must be X, Y or Z (the cut runs across that axis, in the object's local space).")
+                ai = cls.AXES[key]
+                normal = Vector((1.0 if ai == 0 else 0.0, 1.0 if ai == 1 else 0.0, 1.0 if ai == 2 else 0.0))
+                before = len(bm.verts)
+                values = [v.co[ai] for v in bm.verts]
+                if not values:
+                    raise ModelingError("The mesh is empty.")
+                lo, hi = min(values), max(values)
+                if op == "LOOP_CUT":
+                    n = int(cuts if cuts is not None else 1)
+                    if not 1 <= n <= 8:
+                        raise ModelingError("cuts must be between 1 and 8.")
+                    positions = [lo + (hi - lo) * (i + 1) / (n + 1) for i in range(n)]
+                    side = None
+                else:
+                    if position is None:
+                        raise ModelingError("KNIFE_PLANE needs position (the local coordinate along the axis).")
+                    positions = [float(position)]
+                    side = str(keep or "both").strip().lower()
+                    if side not in ("both", "above", "below"):
+                        raise ModelingError("keep must be both, above or below.")
+                for where in positions:
+                    geom = list(bm.verts) + list(bm.edges) + list(bm.faces)
+                    bmesh.ops.bisect_plane(bm, geom=geom, plane_co=normal * where, plane_no=normal, dist=1e-6,
+                                           clear_inner=side == "above", clear_outer=side == "below")
+                if side in ("above", "below"):
+                    if not bm.faces:
+                        raise ModelingError("The cut left nothing: position is outside the mesh on the wrong side.")
+                    hole = [e for e in bm.edges if len(e.link_faces) == 1]
+                    if hole:
+                        bmesh.ops.holes_fill(bm, edges=hole, sides=64)
+                    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+                touched = len(bm.verts) - before
+            elif op == "BRIDGE_FACES":
+                group_a = cls._select_faces(bm, faces, obj)
+                group_b = cls._select_faces(bm, faces_b, obj)
+                if faces in (None, {}, "ALL") or faces_b in (None, {}, "ALL"):
+                    raise ModelingError("BRIDGE_FACES needs two selectors: faces and faces_b (use near: [x, y, z] to pick one face among parallel ones).")
+                if not group_a or not group_b:
+                    raise ModelingError("A selector matched no face (faces / faces_b: check direction, threshold and near).")
+                if set(group_a) & set(group_b):
+                    raise ModelingError("faces and faces_b pick the same face; make them select different sides.")
+                touched = len(group_a) + len(group_b)
+                edges = {e for f in group_a + group_b for e in f.edges}
+                bmesh.ops.delete(bm, geom=group_a + group_b, context="FACES_ONLY")
+                loops = [e for e in edges if e.is_valid and len(e.link_faces) == 1]
+                if len(loops) < 6:
+                    raise ModelingError("Nothing to bridge: the two face groups have no open outline.")
+                try:
+                    bmesh.ops.bridge_loops(bm, edges=loops, use_pairs=False, use_cyclic=False, use_merge=False)
+                except Exception as err:
+                    raise ModelingError(f"The two openings cannot be bridged (they need the same number of edges): {err}")
+                bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
             elif op == "SCALE_TO_HEIGHT_TAPER":
                 # Taper: scale each vertex's X/Y toward the centre line as a linear function of its height,
                 # from 1.0 at the bottom to top_scale at the top (a chimney, a wheel arch, a tree trunk).
@@ -297,6 +396,44 @@ class ModelingMutator:
         push_undo_step(f"AI: Mesh edit {op} ({obj.name})")
         out = _summary(obj)
         out.update({"operation": op, "elements_affected": touched})
+        return out
+
+    @classmethod
+    def _object_level_edit(cls, obj: "bpy.types.Object", op: str, by: Any) -> Dict[str, Any]:
+        """SEPARATE (split loose parts or materials into objects) and APPLY_MODIFIERS (bake modifiers into the mesh)."""
+        if op == "APPLY_MODIFIERS":
+            if not obj.modifiers:
+                raise ModelingError(f"'{obj.name}' has no modifiers to apply.")
+            count = len(obj.modifiers)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            baked = bpy.data.meshes.new_from_object(obj.evaluated_get(depsgraph), depsgraph=depsgraph)
+            old = obj.data
+            obj.modifiers.clear()
+            obj.data = baked
+            if old.users == 0:
+                bpy.data.meshes.remove(old)
+            bpy.context.view_layer.update()
+            push_undo_step(f"AI: Apply modifiers ({obj.name})")
+            out = _summary(obj)
+            out.update({"operation": op, "elements_affected": count})
+            return out
+        kind = str(by or "loose").strip().lower()
+        if kind not in ("loose", "material"):
+            raise ModelingError("by must be loose (disconnected parts) or material.")
+        from adapter.mutators.texture_mutator import _isolated_selection
+        before = {o.name for o in bpy.data.objects}
+        with _isolated_selection(obj):
+            bpy.ops.object.mode_set(mode="EDIT")
+            try:
+                bpy.ops.mesh.select_all(action="SELECT")
+                bpy.ops.mesh.separate(type="LOOSE" if kind == "loose" else "MATERIAL")
+            finally:
+                bpy.ops.object.mode_set(mode="OBJECT")
+        created = sorted(o.name for o in bpy.data.objects if o.name not in before)
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Separate {kind} ({obj.name})")
+        out = _summary(obj)
+        out.update({"operation": op, "elements_affected": len(created), "created_objects": created})
         return out
 
     # ------------------------------------------------------------------ join / parent / transform / origin

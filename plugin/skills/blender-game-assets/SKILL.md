@@ -7,6 +7,10 @@ description: Model low-poly game assets (crates, barrels, trees, rocks, sandbags
 
 You model with allow-listed tools, not with Python: nothing here can run arbitrary code, every step is one Ctrl+Z, and delete_object needs the user's approval. Read the tool schemas first and use their exact argument names (`delete_object` takes `name`, most others `object_name` or `name`).
 
+## Deeper mesh editing (`mesh_edit`)
+
+Beyond extrude, inset and bevel: `LOOP_CUT` (axis, cuts: evenly spaced cuts, then extrude or inset the new faces for panels and steps), `KNIFE_PLANE` (axis, position, keep above/below: half a shape, capped and closed), `BRIDGE_FACES` (two faces joined by a tunnel: doorways, handles, pipes; pick each face with a selector such as `{"direction": "+Y", "min_area": 0.9}` or `{"near": [x, y, z]}`), `DELETE_FACES`, `FLIP_NORMALS`, `DISSOLVE_PLANAR` (clean up after a boolean), `SEPARATE` (loose parts or materials into objects) and `APPLY_MODIFIERS` (bake bevel, boolean, mirror into the mesh). The selector also takes `material` and `max_area` / `min_area`.
+
 ## Check before export
 
 Call `check_model` (with `object_names` of the model) after building and before `export_gltf`. It measures instead of looking: inverted normals, non-manifold edges, doubled vertices, unapplied scale, pivot outside the object, no material, a texture without UVs, sunk into the ground, two objects in the same space, and the triangle count against `max_triangles` (default 3000). FAIL findings block `ok`; each finding names the tool call that fixes it. Fix, call again, repeat until `ok` is true; cheap WARN items (materials, merge by distance) are worth fixing too.

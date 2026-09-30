@@ -1,6 +1,6 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.15.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 818 unit tests OK, hardening green, headless 35/35 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.16.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 818 unit tests OK, hardening green, headless 36/36 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ## Yön (2026-09-30)
@@ -12,7 +12,7 @@ Sıra (biri bitmeden sonrakine geçilmez; her adımda entegrasyon testi + ücret
 1. **Belge tutarlılığı** ✅ (rozet, test sayıları, bu dosya).
 2. ✅ **`check_model`** (model kalite kontrolü, `check_shot`’ın modelleme karşılığı): ayrık geometri, non-manifold, ters normal, uygulanmamış ölçek, origin, zeminin altı, üçgen bütçesi, çakışan nesneler, sıfır hacimli parça, materyalsiz mesh, tekrarlı vertex, UV gerekli ama yok; her bulgu için düzelten araç önerisi. Ajan raporu okuyup kendi düzeltir.
 3. **UV + doku hattı**: `unwrap_uv` (smart project / seam’li), `inspect_uv`, ve **preset malzemeleri dokuya pişirme** (`bake_material`): glTF dışa aktarımında procedural malzeme kaybolmasın (Godot’ya gerçek doku gitsin).
-4. **Mesh düzenleme paketi** (araç sayısı artmaz, `mesh_edit` işlemleri derinleşir): loop cut, dissolve, bridge, boolean sonrası temizlik, normal çevirme / yeniden hesaplama, seçim (normal / alan / malzeme), ayır / birleştir.
+4. ✅ **Mesh düzenleme paketi** (araç sayısı artmaz, `mesh_edit` işlemleri derinleşir): loop cut, dissolve, bridge, boolean sonrası temizlik, normal çevirme / yeniden hesaplama, seçim (normal / alan / malzeme), ayır / birleştir.
 5. **Dağıtma (scatter)**: yol / alan boyunca örnekleme, rastgele ölçek ve dönüş; önce Python ile bağlı kopyalar, Geometry Nodes sonra.
 6. **Gerçek armature / IK / NLA**: en son; şimdiki parça tabanlı karakter sistemi yetiyor.
 
@@ -37,4 +37,4 @@ Kod değişimi gerektirmez; makinede kanıt:
 
 ---
 
-Kabul kapısı (tümü): unit yeşil ✅ + headless 35/35 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.
+Kabul kapısı (tümü): unit yeşil ✅ + headless 36/36 ✅ + GUI turu ⬜ (kullanıcı) + hardening yeşil ✅.

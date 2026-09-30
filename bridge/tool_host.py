@@ -17,7 +17,7 @@ INSTRUCTIONS = (
     "Look before you change: inspect_scene, inspect_object, inspect_mesh; verify by frame_view (aim the viewport: ISO / FRONT / TOP, "
     "clean overlays off) then capture_viewport (returns an image) after every few edits. Every mutation is one Ctrl+Z step. "
     "Model game assets without Python: create_prop first for common things (crate, barrel, trees, rock, house, tower, fence, lamp, tent, well, car, chest, table, chair, campfire, humanoid, robot: one call, proportioned, coloured, polished; humanoid and robot come as rig-ready parts), then create_primitive (cube, sphere, plane, cylinder, cone, icosphere, torus), "
-    "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide / taper faces picked by normal), "
+    "create_mesh (your own vertices and faces), mesh_edit (extrude / inset / bevel / subdivide / taper, loop cut, knife plane, bridge two faces, delete / flip faces, dissolve, separate, apply modifiers; faces picked by normal, material, area or nearness), "
     "add_modifier (bevel, subsurf, boolean), add_shape_modifier (mirror, array, solidify, decimate, triangulate), "
     "set_material / assign_material, set_shading, parent_object, join_objects, apply_transform, set_origin. Before exporting call check_model: it measures the model (flipped normals, doubled vertices, unapplied scale, sunk into the ground, triangle budget ...) and names the tool call that fixes each finding; repeat until ok. "
     "Finish with export_gltf (a .glb in the export folder, Y-up, modifiers applied) and hand the file path to the game "
