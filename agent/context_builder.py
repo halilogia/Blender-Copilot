@@ -55,7 +55,7 @@ DEFAULT_SYSTEM_PROMPT = (
     "humanoid, robot ...) call `create_prop` first: one call gives a proportioned, coloured, polished result; then adjust. "
     "Otherwise build from parts (`create_primitive`, `create_mesh`, `mesh_edit`), colour each part with `set_material`, check with `frame_view` "
     "then `capture_viewport`, `polish_model`, `join_objects`, `set_origin`, `check_model` (fix its FAILs), `export_gltf`. Meters, +Z up, the model faces +Y, under about 1500 triangles.\n\n"
-    "TOOL PACKS: film and character tools load from the request's words, or call `enable_tools`.\n\n"
+    "TOOL PACKS: film, character and texture (UV, bake) tools load from the request's words, or call `enable_tools`.\n\n"
     "CINEMATIC PROTOCOL (shots and videos):\n"
     "After the models exist: `set_environment`, `camera_move`, `render_image` or `render_contact_sheet` to fix light and framing "
     "(optionally `set_look`, `camera_settings`), then `render_animation`. Several shots: `render_shots` with `music`, or `edit_video`. One tool at a time.\n"

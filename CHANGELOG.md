@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.15.0] - 2026-09-30
+
+### Added
+- **Textures pack** (loads from words such as uv, unwrap, texture, bake, glb, godot, unity, or `enable_tools`): `unwrap_uv` (smart project or cube project, replaces the active UV map, reports coverage of the 0-1 square and whether it lies inside) and `bake_material` (paints the look of a procedural `set_material` preset into an image over the UV map and gives the object one image-textured material). A glTF export keeps only the flat base colour of a procedural material; after `bake_material` the `.glb` carries a real texture (tested by reading the exported file). Flat-colour objects are left alone. Unwraps by itself when the mesh has no UVs; Cycles settings are restored; one undo step each.
+- Tests: `tests/integration/test_texture_tools.py` (UV in bounds, baked image is brown and grainy, the .glb has images and a base colour texture, undo, errors), pack keyword tests.
+
+### Changed
+- `check_model` names `unwrap_uv` for a texture without UVs; skills and the Godot sidebar skill no longer say that presets are lost in glTF.
+
+---
+
 ## [1.14.0] - 2026-09-30
 
 ### Added

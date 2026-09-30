@@ -21,6 +21,8 @@ from .add_shape_modifier import AddShapeModifierTool
 from .frame_view import FrameViewTool
 from .check_shot import CheckShotTool
 from .check_model import CheckModelTool
+from .unwrap_uv import UnwrapUvTool
+from .bake_material import BakeMaterialTool
 from .create_prop import CreatePropTool
 from .animate_sequence import AnimateSequenceTool
 from .make_soundtrack import MakeSoundtrackTool
@@ -60,6 +62,8 @@ __all__ = [
     "FrameViewTool",
     "CheckShotTool",
     "CheckModelTool",
+    "UnwrapUvTool",
+    "BakeMaterialTool",
     "CreatePropTool",
     "AnimateSequenceTool",
     "MakeSoundtrackTool",

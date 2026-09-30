@@ -11,14 +11,15 @@ class EnableToolsTool(BaseTool):
 
     name = "enable_tools"
     description = (
-        "Load more tools when you need them. Packs: film (light, camera moves, render, colour looks, video editing, music) and "
-        "characters (rig a character made of parts and animate it: walk, talk, expressions, scenes). They load by themselves when "
+        "Load more tools when you need them. Packs: film (light, camera moves, render, colour looks, video editing, music), "
+        "characters (rig a character made of parts and animate it: walk, talk, expressions, scenes) and textures (UV unwrap, bake "
+        "procedural materials into image textures). They load by themselves when "
         "the request mentions video, camera, characters and so on; call this if you need them anyway."
     )
     input_schema = {
         "type": "object",
         "properties": {
-            "packs": {"type": "array", "items": {"type": "string", "enum": ["film", "characters"]},
+            "packs": {"type": "array", "items": {"type": "string", "enum": ["film", "characters", "textures"]},
                       "description": "Packs to load."},
         },
         "required": ["packs"],

@@ -14,11 +14,13 @@ PACKS = {
         "render_animation", "render_shots", "edit_video", "make_soundtrack", "check_shot",
     ),
     "characters": ("rig_character", "animate_character", "animate_sequence", "character_library"),
+    "textures": ("unwrap_uv", "bake_material"),
 }
 
 ABOUT = {
     "film": "light, camera moves, render, colour looks, video editing, music",
     "characters": "rig a character made of parts and animate it: walk, talk, expressions, scenes",
+    "textures": "UV unwrap and bake procedural materials into image textures (so a .glb keeps the look)",
 }
 
 KEYWORDS = {
@@ -29,6 +31,7 @@ KEYWORDS = {
     "characters": ("character", "karakter", "walk", "yürü", "yuru", "run", "koş", "kos", "talk", "konuş", "konus", "rig",
                    "animate", "animasyon", "animation", "asker", "soldier", "robot", "zombi", "zombie", "insan", "human",
                    "person", "wave", "el salla", "jump", "zıpla", "zipla", "expression", "yüz", "yuz", "face", "dans", "dance"),
+    "textures": ("uv map", "uv harita", "uv unwrap", "unwrap", "texture", "doku", "bake", "pişir", "pisir", "pbr", "kaplama", "glb", "gltf", "godot", "unity", "game asset", "oyun için"),
 }
 # a character request is nearly always filmed as well
 IMPLIES = {"characters": ("film",)}

@@ -64,6 +64,8 @@ from .tools.mutations.frame_view import FrameViewTool
 from .tools.mutations.set_environment import SetEnvironmentTool
 from .tools.mutations.check_shot import CheckShotTool
 from .tools.mutations.check_model import CheckModelTool
+from .tools.mutations.unwrap_uv import UnwrapUvTool
+from .tools.mutations.bake_material import BakeMaterialTool
 from .tools.mutations.create_prop import CreatePropTool
 from .tools.read_only.enable_tools import EnableToolsTool
 from .tools.mutations.animate_sequence import AnimateSequenceTool
@@ -190,6 +192,8 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(SetEnvironmentTool())
     registry.register(CheckShotTool())
     registry.register(CheckModelTool())
+    registry.register(UnwrapUvTool())
+    registry.register(BakeMaterialTool())
     registry.register(CreatePropTool())
     registry.register(EnableToolsTool())
     registry.register(AnimateSequenceTool())

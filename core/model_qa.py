@@ -52,7 +52,7 @@ def object_issues(stats: Dict[str, Any]) -> List[Dict[str, Any]]:
                           "set_material with base_color", [name]))
     if stats.get("uses_image_texture") and not stats.get("uv_layers", 0):
         out.append(_issue(WARN, "MISSING_UV", f"{name}: the material uses an image texture but the mesh has no UV map.",
-                          "add UVs (unwrap) before texturing", [name]))
+                          "unwrap_uv (in the textures pack: enable_tools if it is missing) before texturing", [name]))
     if stats.get("z_max", 0.0) < -SINK_TOLERANCE:
         out.append(_issue(FAIL, "BELOW_GROUND", f"{name}: the whole object is below the ground (top at {stats['z_max']:.2f} m).",
                           "transform_object to raise it so its bottom rests on z = 0", [name]))

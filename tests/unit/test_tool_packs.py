@@ -29,6 +29,10 @@ class TestToolPacks(unittest.TestCase):
         self.assertEqual(packs_for_text("Make a low poly crate and export it"), set())
         self.assertIn("film", packs_for_text("gün batımında 5 saniyelik bir MP4 çek"))
         self.assertIn("film", packs_for_text("orbit around the castle and render a video"))
+        self.assertIn("textures", packs_for_text("unwrap the crate and bake the wood for Godot"))
+        self.assertIn("textures", packs_for_text("bu sandığı Godot'ya götüreceğim, doku pişir"))
+        self.assertNotIn("textures", packs_for_text("evin duvarını kırmızı yap"))
+        self.assertEqual(pack_of("bake_material"), "textures")
         self.assertEqual(packs_for_text("bir asker modelle ve yürüt"), {"characters", "film"})
         self.assertEqual(packs_for_text("make a zombie walk"), {"characters", "film"})
 

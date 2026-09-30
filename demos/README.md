@@ -22,6 +22,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [house-geminiproagent](house-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 1.2 dk | 22 | 56 | 2.40x3.50x2.27 m | 20260930 |
 | [house-spacebunnyalpha](house-spacebunnyalpha/) | Blender Copilot ajanı (9router) · openrouter/space-bunny-alpha | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 2.6 dk | 30 | 80 | 4.20x3.90x3.40 m | 20260930 |
 | [lamp](lamp/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir sokak lambası modelle (direk, kol, abajur), dışa aktar. | 0.7 dk | 20 | 402 | 1.38x4.00x0.55 m | 20260930 |
+| [model-baked-bench-deepseekv4flash](model-baked-bench-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Bir park bankı modelle: ahşap oturma yüzeyi (kutu), ahşap sırtlık (kutu) ve iki metal ayak (kutular). Ahşap parçalara set_material preset wood, metal ayaklara preset metal ver. Parçaları join_objects ile birleştir, set_origin ile zemine oturt, check_model ile kontrol et ve FAIL'leri düzelt, bake_material ile dokuya pişir (resolution 512) ve export_gltf ile bench.glb yaz. Godot'ya gidecek. | 3.6 dk | 32 | 48 | 1.60x0.85x0.50 m | 20260930 |
 | [model-check-fix-deepseekv4flash](model-check-fix-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | create_primitive ile 3 parçalı basit bir masa yap: bir kutu tabla (scale [3,2,0.15], location [0,0,1.0]) ve iki kutu ayak (scale [0.2,0.2,1], konumlar [-1.2,0,0] ve [1.2,0,0]; ayakların alt kenarı z=-0.5'e sarkıyor, bilerek). Hiçbir malzeme verme. Sonra check_model çağır, çıkan FAIL ve WARN maddelerini söylediği araçlarla düzelt (ölçeği uygula, zemine oturt, malzeme ver), check_model ok ve temiz olana kadar tekrarla, join_objects ile birleştir, set_origin, export_gltf table.glb. | 3.1 dk | 27 | 36 | 3.00x1.07x2.00 m | 20260930 |
 | [mushroom](mushroom/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu büyük bir mantar modelle: kırmızı şapka, beyaz benekler, krem gövde. | 1.0 dk | 27 | 1644 | 2.00x1.84x2.00 m | 20260930 |
 | [rifle](rifle/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir savaş dönemi tüfeği modelle: ahşap dipçik, metal namlu, sürgü, tetik koruması, nişangah, kayış. Namlu ileri (+Y) baksın, 1.1 m uzunlukta. | 1.6 dk | 34 | 1196 | 0.13x0.24x1.10 m | 20260930 |
@@ -129,6 +130,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **lamp**
 
 ![lamp](lamp/sheet.png)
+
+**model-baked-bench-deepseekv4flash**
+
+![model-baked-bench-deepseekv4flash](model-baked-bench-deepseekv4flash/sheet.png)
 
 **model-check-fix-deepseekv4flash**
 
