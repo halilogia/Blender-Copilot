@@ -14,6 +14,10 @@ Blender Copilot can be driven by external agents (Claude Code, Codex, any MCP cl
 - **A Claude Code plugin** with four skills (`blender-game-assets`, `blender-to-godot`, `blender-cinematic-shot`, `blender-character-animation`) and `/blender-connect`.
 - Which model drives it best: [MODELS.md](MODELS.md).
 
+## Working principle: tool-first for Blender state, file-first for external files
+
+A `.blend` file is binary, so an outside agent cannot edit a scene the way it edits a `.gd` or `.tscn` file. Everything that lives in the Blender scene (meshes, materials, modifiers, rigs, animation, cameras) is therefore built with these tools: each call is validated, has a risk level, is one undo step and shows up in `task_report`. Ordinary files stay file-first: textures, JSON, reference images, glTF or OBJ assets are written with the agent's own file tools and brought in with `import_asset`; models leave Blender with `export_gltf` and the engine side takes over (for Godot: copy the `.glb` under `res://` and `sync_project`). Godot's bridge works the other way round on purpose, because a Godot project is mostly text. The common rule: do not make the bridge repeat what the outside agent already does well; expose only what the host application alone can do. Arbitrary Python is not exposed.
+
 ## Security model
 
 - **Fail-closed exposure list.** Only tools listed in `bridge/exposure_policy.py` are visible and callable over MCP (read only, safe mutation, gated mutation). A tool added to the add-on is not reachable from outside until somebody classifies it there; a unit test fails for any registered tool that is not classified, for a name that does not exist, and for a category that contradicts the tool's risk level. The add-on's own plan and pack tools (`propose_plan`, `enable_tools`) are never exposed.

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+- Docs: the working principle "tool-first for Blender state, file-first for external files" in `docs/MCP.md`.
+
+---
+
 ## [1.18.1] - 2026-10-01
 
 ### Security
