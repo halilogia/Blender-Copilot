@@ -9,6 +9,7 @@ import bpy
 
 
 _pushed = 0
+last_undo_error = ""   # why the last undo did not happen (for the task ledger's note)
 
 
 def undo_counter() -> int:
@@ -108,12 +109,14 @@ def perform_undo() -> bool:
     Returns:
         bool: True if undo succeeded, False otherwise.
     """
+    global last_undo_error
+    last_undo_error = ""
     try:
         if bpy.ops.ed.undo.poll():
             bpy.ops.ed.undo()
             return True
-    except Exception:
-        pass
+    except Exception as exc:
+        last_undo_error = f"direct undo: {exc}"
 
     try:
         wm = getattr(bpy.context, "window_manager", None)
@@ -142,9 +145,13 @@ def perform_undo() -> bool:
                 region=region,
             ):
                 res = bpy.ops.ed.undo()
+                if "FINISHED" not in res:
+                    last_undo_error = f"undo returned {set(res)}"
                 return "FINISHED" in res
-    except Exception:
-        pass
+        else:
+            last_undo_error = "no Blender window to run undo in (a headless session without a window)"
+    except Exception as exc:
+        last_undo_error = f"undo with window context: {exc}"
 
     return False
 

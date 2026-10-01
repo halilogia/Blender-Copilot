@@ -12,6 +12,7 @@ import urllib.error
 import urllib.request
 
 from bridge import protocol
+from bridge.exposure_policy import ExposurePolicy
 from bridge.http_server import BridgeServer
 from bridge.main_thread import MainThreadExecutor
 from bridge.tool_host import RegistryToolHost
@@ -60,6 +61,11 @@ class _ShotTool(BaseTool):
         return ToolResult.ok(self.name, {"image_id": "vp_1", "width": 4})
 
 
+def _open(registry):
+    """Made-up test tools are not in the production exposure list: let this host show all of them."""
+    return ExposurePolicy.allow_all_except(tool.name for tool in registry.list())
+
+
 class _Adapter:
     def get_image_bytes(self, image_id):
         return b"\x89PNGfake" if image_id == "vp_1" else None
@@ -69,7 +75,7 @@ def _host(allow_gated=False):
     registry = ToolRegistry()
     for tool in (_ReadTool(), _MakeTool(), _DeleteTool(), _ShotTool()):
         registry.register(tool)
-    return RegistryToolHost(registry, _Adapter(), submit=lambda fn, timeout=60.0: fn(), allow_gated=lambda: allow_gated)
+    return RegistryToolHost(registry, _Adapter(), exposure=_open(registry), submit=lambda fn, timeout=60.0: fn(), allow_gated=lambda: allow_gated)
 
 
 def _rpc(method, params=None, msg_id=1):
@@ -160,7 +166,7 @@ class TestGating(unittest.TestCase):
     def test_excluded_tool_is_hidden(self):
         registry = ToolRegistry()
         registry.register(_ReadTool())
-        host = RegistryToolHost(registry, _Adapter(), submit=lambda fn, timeout=60.0: fn(), exclude={"zeta_read"})
+        host = RegistryToolHost(registry, _Adapter(), exposure=_open(registry), submit=lambda fn, timeout=60.0: fn(), exclude={"zeta_read"})
         self.assertFalse(host.has_tool("zeta_read"))
         self.assertEqual(host.list_tools(), [])
 
@@ -171,13 +177,13 @@ class TestGating(unittest.TestCase):
         def slow(fn, timeout=60.0):
             raise TimeoutError("late")
 
-        res = RegistryToolHost(registry, _Adapter(), submit=slow).call_tool("zeta_read", {})
+        res = RegistryToolHost(registry, _Adapter(), exposure=_open(registry), submit=slow).call_tool("zeta_read", {})
         self.assertEqual(res["error"]["type"], "TIMEOUT")
 
         def boom(fn, timeout=60.0):
             raise RuntimeError("x")
 
-        res = RegistryToolHost(registry, _Adapter(), submit=boom).call_tool("zeta_read", {})
+        res = RegistryToolHost(registry, _Adapter(), exposure=_open(registry), submit=boom).call_tool("zeta_read", {})
         self.assertEqual(res["error"]["type"], "BRIDGE_ERROR")
 
 
@@ -234,7 +240,7 @@ class TestHttpServer(unittest.TestCase):
         self.executor = MainThreadExecutor()
         registry = ToolRegistry()
         registry.register(_MakeTool())
-        host = RegistryToolHost(registry, _Adapter(), submit=self.executor.submit)
+        host = RegistryToolHost(registry, _Adapter(), exposure=_open(registry), submit=self.executor.submit)
         self.server = BridgeServer(protocol.McpProtocol(host, "9.9.9"), self.TOKEN, 0)
         self.port = self.server.start()
         self._stop = threading.Event()

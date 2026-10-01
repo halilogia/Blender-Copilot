@@ -1,6 +1,6 @@
 # Project Roadmap — Blender Copilot (güncel)
 
-**CURRENT: v1.18.0 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 835 unit tests OK, hardening green, headless 38/38 SUITES PASS (Blender 5.2.2 LTS).**
+**CURRENT: v1.18.1 implemented (2026-09-30) — modelleme + malzeme presetleri + sinema / film + karakter + yerel MCP köprüsü + Claude Code eklentisi + `check_shot` + `check_model`; 843 unit tests OK, hardening green, headless 38/38 SUITES PASS (Blender 5.2.2 LTS).**
 Bitmiş işlerin kaydı `CHANGELOG.md`’de tutulur; bu dosya yalnızca kalan işi gösterir.
 
 ## Yön (2026-09-30)

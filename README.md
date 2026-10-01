@@ -1,4 +1,4 @@
-# Blender - Copilot — v1.18.0
+# Blender - Copilot — v1.18.1
 
 > Autonomous Grounding Copilot & AI Agent inside Blender 5.2 LTS.
 
@@ -8,7 +8,7 @@
 
 [![Blender Version](https://img.shields.io/badge/Blender-5.2%20LTS-orange.svg)](https://www.blender.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%20Zero%20Dependencies-blue.svg)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-835%20Unit%20%7C%2038%20Integration%20Suites-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-843%20Unit%20%7C%2038%20Integration%20Suites-brightgreen.svg)]()
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
 **Blender - Copilot** is a native, extensible AI agent built specifically for Blender 5.2 LTS. It connects modern Large Language Models (LLMs) directly to Blender's internal data model using deterministic grounding tools, safe scene mutations with atomic undo, strict policy-driven human approval gates, and a lightweight native GPU Viewport overlay.
@@ -28,7 +28,7 @@
 - **v1.2** local MCP bridge for Claude Code and other MCP clients, modeling tools, `export_gltf`, Claude Code plugin.
 - **v1.0 to v1.1** grounding, safe mutations with undo, approval gate, vision, asset import, check-only updates.
 
-Which chat model drives it best: [docs/MODELS.md](docs/MODELS.md). Verified with 835 pure-Python unit tests and 38 headless Blender suites; every feature since v1.4 was run end to end by a free chat model (demos in [demos/](demos/README.md)).
+Which chat model drives it best: [docs/MODELS.md](docs/MODELS.md). Verified with 843 pure-Python unit tests and 38 headless Blender suites; every feature since v1.4 was run end to end by a free chat model (demos in [demos/](demos/README.md)).
 
 The Godot side: [Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar) can use this add-on from its own settings (Settings > Blender) to get 3D models as `.glb` files.
 
@@ -190,7 +190,7 @@ Blender Copilot/
 ├── demos/                        # Models and films made by chat models, with chats and triangle counts
 ├── docs/                         # MCP.md, MODELS.md, HIGGSFIELD.md, KNOWLEDGE.md
 ├── tests/
-│   ├── unit/                     # Pure Python suites (835 tests)
+│   ├── unit/                     # Pure Python suites (843 tests)
 │   ├── integration/              # Headless Blender 5.2 suites (38)
 │   └── run_all_blender_tests.py  # Runs every headless suite
 ├── blender_manifest.toml         # Blender 5.2 Extension manifest
@@ -345,7 +345,7 @@ Odaklanmış test çalıştırmak için:
 python tests/run_unit_tests.py tests.unit.test_prompt_queue tests.unit.test_event_router
 ```
 
-v1.18.0 durumunda 835 pure-Python unit testi ve 38 Blender integration
+v1.18.1 durumunda 843 pure-Python unit testi ve 38 Blender integration
 test dosyası bulunmaktadır (+4 yeni unit suite, +2 yeni headless suite:
 asset import 6/6, anthropic roundtrip). Headless 31/31 Blender 5.2.2 LTS’te
 doğrulanmıştır; canlı GUI turu v1.2 kabul kapısındadır.

@@ -62,6 +62,8 @@ class TaskLedger:
         out = {"rolled_back": remaining["empty"], "undo_steps_done": done, "undo_steps_expected": steps,
                "undone": before["summary"], "remaining_differences": remaining["summary"],
                "verified": remaining["empty"]}
+        if done < steps and undo_manager.last_undo_error:
+            out["undo_error"] = undo_manager.last_undo_error
         if not remaining["empty"]:
             out["note"] = ("The scene is not exactly as it was: something changed outside the AI's steps (manual edits) or a step "
                            "could not be undone. Check the remaining differences; Ctrl+Z in Blender continues from here.")

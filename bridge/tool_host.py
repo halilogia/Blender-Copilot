@@ -9,6 +9,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 from agent.models import ToolCall
 from agent.policy import ApprovalDecision, ApprovalPolicy
+from bridge.exposure_policy import ExposurePolicy
 from core.types import RiskLevel, ToolResult
 from tools.registry import ToolRegistry
 
@@ -59,19 +60,22 @@ class RegistryToolHost:
         allow_gated: Callable[[], bool] = lambda: False,
         exclude: Optional[set] = None,
         policy: Optional[ApprovalPolicy] = None,
+        exposure: Optional[ExposurePolicy] = None,
         call_timeout: float = 60.0,
     ):
         self.registry = registry
         self.adapter = adapter
         self.submit = submit
         self.allow_gated = allow_gated
-        self.exclude = set(exclude or {"propose_plan", "enable_tools"})   # MCP clients see every tool anyway
+        # fail-closed: only tools listed in bridge/exposure_policy.py are visible; `exclude` can hide more
+        self.exposure = exposure or ExposurePolicy.production()
+        self.exclude = set(exclude or ())
         self.policy = policy or ApprovalPolicy()
         self.call_timeout = call_timeout
         self._counter = 0
 
     def has_tool(self, name: str) -> bool:
-        return name not in self.exclude and self.registry.exists(name)
+        return name not in self.exclude and self.exposure.is_exposed(name) and self.registry.exists(name)
 
     @staticmethod
     def annotations_for(tool: Any) -> Dict[str, Any]:
@@ -88,7 +92,7 @@ class RegistryToolHost:
     def list_tools(self) -> List[Dict[str, Any]]:
         out = []
         for tool in self.registry.list():
-            if tool.name in self.exclude:
+            if tool.name in self.exclude or not self.exposure.is_exposed(tool.name):
                 continue
             out.append({
                 "name": tool.name,

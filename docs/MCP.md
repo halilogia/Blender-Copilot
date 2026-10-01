@@ -16,6 +16,9 @@ Blender Copilot can be driven by external agents (Claude Code, Codex, any MCP cl
 
 ## Security model
 
+- **Fail-closed exposure list.** Only tools listed in `bridge/exposure_policy.py` are visible and callable over MCP (read only, safe mutation, gated mutation). A tool added to the add-on is not reachable from outside until somebody classifies it there; a unit test fails for any registered tool that is not classified, for a name that does not exist, and for a category that contradicts the tool's risk level. The add-on's own plan and pack tools (`propose_plan`, `enable_tools`) are never exposed.
+- **Environment overrides are for one run.** `--allow-gated`, the port and the token given to a headless run apply to that run only and are never written to the add-on's settings file.
+
 - Listens on **127.0.0.1 only**, and only when you start it. Off by default.
 - Every request needs `Authorization: Bearer <token>` (constant-time comparison). Requests carrying an `Origin` header (browsers) are refused. Only `POST /mcp`, bodies up to 4 MB.
 - **No arbitrary code.** There is no exec/eval tool. Modeling is done with bounded, validated operations (vertex and face limits, allow-listed mesh operations, file names without folders).

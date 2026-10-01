@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.18.1] - 2026-10-01
+
+### Security
+- **A headless run no longer changes the user's saved MCP settings.** Environment overrides (`--allow-gated` / `BLENDER_COPILOT_MCP_ALLOW_GATED`, `BLENDER_COPILOT_MCP`, port, token, export folder) were written back to `mcp_bridge.json` when the bridge started, so one benchmark run with `--allow-gated` switched "Allow gated tools" on for good and made the bridge start by itself the next time Blender opened. Overrides now apply to that run only; a change made on purpose in the panel is kept (`tests/unit/test_mcp_settings.py`).
+- **The MCP bridge is fail-closed.** `bridge/exposure_policy.py` lists the tools an outside agent may see (read only, safe mutation, gated mutation, internal only). Before, every registered tool except two was exposed automatically. A new test fails for any registered tool that is not classified, any listed name that does not exist, and any category that contradicts the tool's risk level (`tests/unit/test_mcp_exposure.py`). Over MCP the list is unchanged: 51 tools.
+
+### Fixed
+- `task_rollback` now says why an undo could not run (`undo_error`) instead of only reporting that nothing was undone; in a headless session Blender's undo can be unavailable, so it needs a normal Blender window.
+
+---
+
 ## [1.18.0] - 2026-09-30
 
 ### Added

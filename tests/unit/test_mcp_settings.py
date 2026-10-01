@@ -58,6 +58,29 @@ class TestBridgeSettings(unittest.TestCase):
         self.assertFalse(load_settings(self.path, env={"BLENDER_COPILOT_MCP": "0"}).enabled)
         self.assertEqual(load_settings(self.path, env={"BLENDER_COPILOT_MCP_PORT": "99"}).port, 6600)
 
+    def test_environment_overrides_are_never_written_back(self):
+        save_settings(BridgeSettings(enabled=False, port=6600, token="filetoken", allow_gated=False, export_dir="A"), self.path)
+        env = {"BLENDER_COPILOT_MCP": "1", "BLENDER_COPILOT_MCP_PORT": "6650", "BLENDER_COPILOT_MCP_TOKEN": "envtoken",
+               "BLENDER_COPILOT_MCP_ALLOW_GATED": "1", "BLENDER_COPILOT_EXPORT_DIR": "B"}
+        s = load_settings(self.path, env=env)
+        self.assertTrue(s.allow_gated)                                    # in force for this run
+        save_settings(s, self.path)                                       # what the controller does when it starts
+        on_disk = json.loads(self.path.read_text(encoding="utf-8"))
+        self.assertEqual((on_disk["enabled"], on_disk["port"], on_disk["token"], on_disk["allow_gated"], on_disk["export_dir"]),
+                         (False, 6600, "filetoken", False, "A"))
+        again = load_settings(self.path, env={})
+        self.assertFalse(again.allow_gated)
+        self.assertFalse(again.enabled)
+
+    def test_a_deliberate_change_is_kept_even_when_an_override_was_active(self):
+        save_settings(BridgeSettings(allow_gated=False), self.path)
+        s = load_settings(self.path, env={"BLENDER_COPILOT_MCP_ALLOW_GATED": "1"})
+        s.set("allow_gated", False)                                       # the user switches it off in the panel
+        s.set("export_dir", "C")
+        save_settings(s, self.path)
+        on_disk = json.loads(self.path.read_text(encoding="utf-8"))
+        self.assertEqual((on_disk["allow_gated"], on_disk["export_dir"]), (False, "C"))
+
     def test_mask_token_never_returns_the_full_secret(self):
         token = "abcdef0123456789"
         masked = mask_token(token)

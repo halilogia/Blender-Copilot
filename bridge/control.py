@@ -15,7 +15,7 @@ from bridge.settings import BridgeSettings, ensure_token, load_settings, save_se
 from bridge.tool_host import INSTRUCTIONS, RegistryToolHost
 
 PUMP_INTERVAL = 0.02
-VERSION = "1.18.0"
+VERSION = "1.18.1"
 
 
 class BridgeController:
@@ -40,7 +40,7 @@ class BridgeController:
     def update_settings(self, **changes: Any) -> None:
         for key, value in changes.items():
             if hasattr(self.settings, key):
-                setattr(self.settings, key, value)
+                self.settings.set(key, value)
         save_settings(self.settings, self.settings_path)
         self.apply_settings_to_adapter()
 
