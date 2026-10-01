@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Docs: the Claude Code skill `blender-game-assets` (8.8 KB to 4.7 KB) and the MCP `INSTRUCTIONS` text (about 5.5 KB to 2 KB) no longer repeat what the tool schemas already say (mesh_edit operations, tool arguments, create_prop kinds); they keep the order of work and the things a schema cannot tell (startup cube, per-part colour before join, presets lost in glTF, scatter instead of create_prop loops, task_report / check_model / gated tools).
 - Docs: the working principle "tool-first for Blender state, file-first for external files" in `docs/MCP.md`.
 
 ---

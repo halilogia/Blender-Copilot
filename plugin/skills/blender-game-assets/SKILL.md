@@ -5,50 +5,30 @@ description: Model low-poly game assets (crates, barrels, trees, rocks, sandbags
 
 # Blender game assets through MCP
 
-You model with allow-listed tools, not with Python: nothing here can run arbitrary code, every step is one Ctrl+Z, and delete_object needs the user's approval. Read the tool schemas first and use their exact argument names (`delete_object` takes `name`, most others `object_name` or `name`).
+You model with allow-listed tools, not with Python: every step is one Ctrl+Z and nothing runs arbitrary code. The tool schemas say what each tool and argument does; this file only gives the order of work and the things a schema cannot tell you.
 
-## Deeper mesh editing (`mesh_edit`)
+## Order of work
 
-Beyond extrude, inset and bevel: `LOOP_CUT` (axis, cuts: evenly spaced cuts, then extrude or inset the new faces for panels and steps), `KNIFE_PLANE` (axis, position, keep above/below: half a shape, capped and closed), `BRIDGE_FACES` (two faces joined by a tunnel: doorways, handles, pipes; pick each face with a selector such as `{"direction": "+Y", "min_area": 0.9}` or `{"near": [x, y, z]}`), `DELETE_FACES`, `FLIP_NORMALS`, `DISSOLVE_PLANAR` (clean up after a boolean), `SEPARATE` (loose parts or materials into objects) and `APPLY_MODIFIERS` (bake bevel, boolean, mirror into the mesh). The selector also takes `material` and `max_area` / `min_area`.
+1. **Spec.** Size in meters (a crate 1 m, a door 2 m, a soldier 1.8 m), a triangle budget (props 100-800, characters 500-2500, trees 300-800), 3 to 5 colours. Flat-shaded low-poly reads best.
+2. **Look first.** `inspect_scene`. The startup scene has a 2 m `Cube`, a camera and a light; the cube hides small props in screenshots. Ask before deleting it (`delete_object` needs the user's approval) or build away from the origin.
+3. **Start with `create_prop`** for anything it covers (one call: proportioned, coloured, standing on the ground, front toward +Y). Build from `create_primitive` / `create_mesh` / `mesh_edit` only what it does not cover. Do `apply_transform` after scaling or rotating a part.
+4. **Colour per part before `join_objects`**: the joined mesh keeps one material slot per part. Reuse one `material_name` for parts that share a colour.
+5. **Procedural presets (wood, brick ...) do not survive glTF**: the exporter keeps only a flat colour. For a game asset join the parts, then `bake_material` the object (it unwraps UVs itself), or use flat colours.
+6. **Check by looking every few steps**: `frame_view` then `capture_viewport`; fix proportions before adding detail. `polish_model` once shapes are right.
+7. **Check by measuring before export**: `check_model` on the model, fix its FAIL items (and the cheap WARNs), repeat until `ok`.
+8. **Finish**: `join_objects`, `set_origin` (BOTTOM_CENTER for props, BOUNDS_CENTER for weapons), `export_gltf` with a plain file name. Check `triangle_count` in the result.
+9. **At the end of a piece of work call `task_report`**: it lists what you really changed. Look for what you did not intend (a helper object, an accidental move). `task_rollback` takes the whole task back, needs the user's approval and is refused over MCP unless gated tools are allowed; use it when the work went wrong beyond a quick fix.
 
-## Check the task as a whole (`task_report`, `task_rollback`)
+## Landscapes and many copies
 
-A task is everything since the last `task_report` (or the user's message). `task_report` says by meaning what changed: `+ crate (MESH)`, `- Cube`, `~ Table: location [0, 0, 0] -> [1, 0, 0]`, new materials, and the undo steps used. Call it after a piece of work and look for things you did not intend: a helper object you forgot to delete, an object moved by accident, a material you did not mean to create. `task_rollback` (needs the user's approval, refused over MCP unless gated tools are allowed) undoes the whole task in one step and verifies the scene is back as it was; use it when the work went wrong beyond a quick fix, instead of deleting things one by one.
-
-## Check before export
-
-Call `check_model` (with `object_names` of the model) after building and before `export_gltf`. It measures instead of looking: inverted normals, non-manifold edges, doubled vertices, unapplied scale, pivot outside the object, no material, a texture without UVs, sunk into the ground, two objects in the same space, and the triangle count against `max_triangles` (default 3000). FAIL findings block `ok`; each finding names the tool call that fixes it. Fix, call again, repeat until `ok` is true; cheap WARN items (materials, merge by distance) are worth fixing too.
-
-## Landscapes (`create_terrain`, `scatter`)
-
-These load with the world pack (`enable_tools` with `world` if missing). `create_terrain` makes hills (`size`, `height`, `roughness`, `flat_radius` keeps a flat disc for a house, `seed`); give it a `set_material` preset (grass, sand). `scatter` places many linked copies of one object in a single call: `source` (an unparented prop such as a `create_prop` tree), `count`, an `area` (`{"center": [x, y], "size": [w, d]}` or `radius`) or a `path` (`[[x, y], ...]`, `spread` to each side: a tree-lined road), `ground` = the terrain so every copy stands on the surface, `avoid` = objects to keep clear (the house), `scale_range`, `seed`. Never call `create_prop` in a loop for a forest. The source stays where it is: move it out of the way or keep it as part of the scene. Copies share the mesh, so a `.glb` keeps them as cheap instances.
-
-## Textures (`unwrap_uv`, `bake_material`)
-
-These two tools load with the textures pack (call `enable_tools` with `textures` if they are missing). `unwrap_uv` gives meshes a UV map (`smart`, or `cube` for boxes) and reports how much of the 0-1 square it covers. `bake_material` (one object, `resolution` 512 is enough for a prop) turns a procedural material into an image over the UVs and gives the object one image-textured material; flat colours are left alone because they export fine. Bake after `join_objects` and before `export_gltf`; `check_model` reports a texture without UVs.
-
-## Start with `create_prop`
-
-For common things one call builds a proportioned, coloured, bevelled and smooth-shaded result standing on the ground with its front toward +Y: `crate`, `barrel`, `tree_pine`, `tree_round`, `rock`, `house`, `tower`, `fence`, `lamp`, `tent`, `well`, `car`, `chest`, `table`, `chair`, `campfire`, and the characters `humanoid` and `robot` (separate parts named for `rig_character`, with forearms, shins, eyes and mouth). Pass `size` (height in meters), `location`, `colors` (for example `{"roof": [0.2, 0.3, 0.7]}`; the result lists the color names), `seed` for the rock. Place several with different `location`s to build a scene, then add what is missing with the modeling tools below. Only build from primitives what `create_prop` does not cover.
-
-## Workflow (one asset)
-
-1. **Spec first.** Size in meters (a crate 1 m, a door 2 m, a soldier 1.8 m), triangle budget (props 100-800, character 500-2500, tree 300-800), style (flat-shaded low-poly reads best without textures), 3 to 5 colours.
-2. **Look at the scene.** `inspect_scene`. The default startup scene has a 2 m `Cube`, a camera and a light: the cube hides small props in screenshots. Ask before removing it (`delete_object` is gated), or build the asset away from the origin and frame it.
-3. **Build from parts.** `create_primitive` (CUBE, SPHERE, PLANE, CYLINDER, CONE, ICOSPHERE, TORUS; `scale` shapes a box into a plank or a post, `rotation` in radians) then `apply_transform` so rotation is 0 and scale is 1. For shapes primitives cannot make: `create_mesh` with your own `vertices` and `faces` (counter-clockwise seen from outside).
-4. **Detail with edits.** `mesh_edit`: INSET_FACES (with negative `depth` sinks a panel), EXTRUDE_FACES, BEVEL_EDGES (`sharp_angle` bevels only hard edges), SCALE_TO_HEIGHT_TAPER (trunks, chimneys), SUBDIVIDE, MERGE_BY_DISTANCE. Pick faces by direction: `faces: {"direction": "+Z", "threshold": 0.9}`. `add_shape_modifier`: MIRROR (half a prop), ARRAY (fences, rows), SOLIDIFY (thin walls), DECIMATE (budget), TRIANGULATE.
-5. **Colour.** `set_material` with `object_name`, `material_name`, `base_color` [r, g, b, 1], `roughness`, `metallic`. Do it per part BEFORE `join_objects`: the joined mesh keeps one material slot per part. Reuse the same `material_name` for parts that share a colour. For a surface with texture use `preset` instead of a flat colour: wood, stone, brick, metal, gold, grass, water, sand, concrete, marble (`scale` 2 = finer pattern); no image files needed, but the glTF exporter cannot read shader nodes and would keep only a flat colour: for a game asset join the parts, then `bake_material` the object (it unwraps UVs if needed and paints the look into one image the `.glb` carries), or use flat colours.
-6. **Check by looking, every few steps.** `frame_view` (`direction` ISO / FRONT / TOP, `shading` MATERIAL, `overlays` false) then `capture_viewport`. Also `inspect_mesh` for dimensions and triangle count. Fix proportions before adding detail.
-7. **Polish.** `polish_model` on the parts (or the joined prop): bevels every hard corner so light catches the edges and shades smooth with sharp edges kept. It is what makes a blocky model look finished; run it once shapes and proportions are right.
-8. **Finish.** `join_objects` into one object, `set_origin` BOTTOM_CENTER (props) or BOUNDS_CENTER (weapons), then `export_gltf` (a plain file name such as `crate.glb`; `recenter` is on so the prop lands at the origin whatever its position in the Blender scene). Check `triangle_count` in the result.
+`create_terrain` and `scatter` load with the world pack, `unwrap_uv` and `bake_material` with the textures pack: call `enable_tools` if they are missing. Never call `create_prop` in a loop for a forest: `scatter` one source object (unparented; it stays where it is, so move it away) with `ground` set to the terrain and `avoid` set to the house. Copies share one mesh, so a `.glb` keeps them as cheap instances.
 
 ## Rules that save time
 
 - Units are meters, +Z is up, +Y is the model's forward. glTF export converts to Y-up: Blender +Y becomes Godot -Z, the forward direction.
 - Real-world scale and one shared scale across assets; do not scale in the game to fix proportions.
-- Symmetric things: build half and MIRROR. Repeated things: ARRAY. Keep the triangle count honest: `export_gltf` warns above 5000.
-- One `create_*` per named part with a clear name (`CrPost0`, `RifleBarrel`); names are how you address them later.
-- `join_objects` removes the source objects. Use a fresh name for the result via `new_name` if you need the original names again.
+- Symmetric things: build half and MIRROR. Repeated things: ARRAY. `export_gltf` warns above 5000 triangles.
+- Name every part clearly (`CrPost0`, `RifleBarrel`); names are how you address them later. `join_objects` removes the sources; use `new_name` if you need the old names again.
 - Do not model what the engine does better: use engine lights, physics shapes and materials; export meshes with colours only.
 - If a tool answers `APPROVAL_REQUIRED`, stop and ask the user; do not look for a way around it.
 
