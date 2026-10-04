@@ -2,6 +2,11 @@
   "governance": {
     "enforceDocObligations": true,
     "docGovernedDirs": ["agent", "adapter", "bridge", "core", "tools", "ui"],
-    "docObligationPatterns": ["__init__.py"]
+    "docObligationPatterns": [
+      "__init__.py",
+      "plugin/skills/**/*.md",
+      "plugin/commands/**/*.md",
+      "plugin/.claude-plugin/*.json"
+    ]
   }
 }
