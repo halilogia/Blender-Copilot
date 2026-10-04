@@ -1,0 +1,7 @@
+{
+  "governance": {
+    "enforceDocObligations": true,
+    "docGovernedDirs": ["agent", "adapter", "bridge", "core", "tools", "ui"],
+    "docObligationPatterns": ["__init__.py"]
+  }
+}
