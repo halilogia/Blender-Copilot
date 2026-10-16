@@ -38,6 +38,7 @@ TESTS = [
     "tests/integration/test_polish_tools.py",
     "tests/integration/test_prop_tools.py",
     "tests/integration/test_material_presets.py",
+    "tests/integration/test_character_shading.py",
     "tests/integration/test_model_qa.py",
     "tests/integration/test_texture_tools.py",
     "tests/integration/test_mesh_edit_pack.py",

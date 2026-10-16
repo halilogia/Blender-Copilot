@@ -683,8 +683,9 @@ class BlenderAdapter:
         alpha: Optional[float] = None,
         preset: Optional[str] = None,
         scale: Optional[float] = None,
+        **layer_args: Any,
     ) -> ToolResult:
-        """Set Principled BSDF shader properties on an object slot or material.
+        """Set Principled BSDF shader properties (and character shading layers) on an object slot or material.
 
         Returns:
             ToolResult conforming to set_material contract.
@@ -705,6 +706,7 @@ class BlenderAdapter:
                 alpha=alpha,
                 preset=preset,
                 scale=scale,
+                **layer_args,
             )
             return ToolResult.ok(tool_name, data)
         except ObjectNotFoundError as not_found:

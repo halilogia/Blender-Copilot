@@ -200,22 +200,32 @@ class LookMutator:
 
     @classmethod
     def render_contact_sheet(cls, export_dir: str, filename: str = "sheet", frames: int = 4, width: int = 480,
-                             height: int = 270, samples: int = 8) -> Dict[str, Any]:
+                             height: int = 270, samples: int = 8, transparent: bool = False,
+                             columns: Any = None) -> Dict[str, Any]:
         import numpy as np
 
         stem = _stem(filename, "sheet")
         try:
             count = int(frames)
         except (TypeError, ValueError):
-            raise ModelingError("frames must be a whole number between 2 and 9.")
-        if not (2 <= count <= 9):
-            raise ModelingError("frames must be between 2 and 9.")
+            raise ModelingError("frames must be a whole number between 2 and 16.")
+        if not (2 <= count <= 16):
+            raise ModelingError("frames must be between 2 and 16.")
         if not (64 <= int(width) <= 960 and 64 <= int(height) <= 540):
             raise ModelingError("width must be 64-960 and height 64-540 (each tile).")
         w, h = int(width), int(height)
+        if columns is not None:
+            try:
+                cols = int(columns)
+            except (TypeError, ValueError):
+                raise ModelingError("columns must be a whole number.")
+            if not (1 <= cols <= count):
+                raise ModelingError(f"columns must be between 1 and frames ({count}); {count} gives one row, a sprite strip.")
+        else:
+            cols = math.ceil(math.sqrt(count))
         folder = Path(export_dir).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
-        scn, saved = CinemaMutator._render_setup(w, h, samples)
+        scn, saved = CinemaMutator._render_setup(w, h, samples, transparent)
         tiles = []
         first, last = saved["start"], saved["end"]
         picks = [round(first + (last - first) * i / (count - 1)) for i in range(count)]
@@ -233,16 +243,15 @@ class LookMutator:
                 bpy.data.images.remove(img)
         finally:
             CinemaMutator._render_restore(scn, saved)
-        cols = math.ceil(math.sqrt(count))
         rows = math.ceil(count / cols)
         sheet = np.zeros((rows * h, cols * w, 4), dtype=np.float32)
-        sheet[..., 3] = 1.0
+        sheet[..., 3] = 0.0 if transparent else 1.0
         for i, tile in enumerate(tiles):
             row_from_top, col = divmod(i, cols)
             y0 = (rows - 1 - row_from_top) * h        # image rows run bottom to top
             sheet[y0:y0 + h, col * w:(col + 1) * w] = tile
         path = folder / f"{stem}.png"
-        out = bpy.data.images.new(f"{stem}_sheet", cols * w, rows * h, alpha=False)
+        out = bpy.data.images.new(f"{stem}_sheet", cols * w, rows * h, alpha=bool(transparent))
         out.pixels.foreach_set(sheet.ravel())
         out.filepath_raw = str(path)
         out.file_format = "PNG"
@@ -251,7 +260,7 @@ class LookMutator:
         for tmp in temp_files:
             tmp.unlink(missing_ok=True)
         return {"path": str(path), "filename": path.name, "frames": picks, "tiles": [cols, rows], "width": cols * w,
-                "height": rows * h, "bytes": path.stat().st_size}
+                "height": rows * h, "bytes": path.stat().st_size, "transparent": bool(transparent)}
 
     @classmethod
     def check_shot(cls, object_names: Any = None, samples: Any = 3, render: Any = True) -> Dict[str, Any]:

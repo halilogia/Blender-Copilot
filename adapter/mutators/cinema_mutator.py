@@ -19,6 +19,7 @@ from core.camera_paths import FOLLOW_PRESETS, PRESETS, camera_rolls, camera_samp
 HELPER_PREFIX = "AI_"
 CAMERA_NAME = "ShotCamera"
 TARGET_NAME = "ShotTarget"
+RENDER_ENGINES = {"eevee": "BLENDER_EEVEE", "cycles": "CYCLES"}
 MAX_WIDTH, MAX_HEIGHT = 1920, 1080
 MIN_SIDE = 64
 STEM_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_\-]{0,60}$")
@@ -371,20 +372,29 @@ class CinemaMutator:
 
     # ------------------------------------------------------------------ rendering
     @classmethod
-    def _render_setup(cls, width: int, height: int, samples: int):
+    def _render_setup(cls, width: int, height: int, samples: int, transparent: bool = False, engine: str = "eevee"):
         scn = bpy.context.scene
         if scn.camera is None:
             raise ModelingError("The scene has no active camera. Call camera_move (or create_camera) first.")
+        key = str(engine or "eevee").strip().lower()
+        if key not in RENDER_ENGINES:
+            raise ModelingError(f"engine must be one of {sorted(RENDER_ENGINES)}.")
         r = scn.render
         saved = {"engine": r.engine, "x": r.resolution_x, "y": r.resolution_y, "pct": r.resolution_percentage,
                  "path": r.filepath, "frame": scn.frame_current, "start": scn.frame_start, "end": scn.frame_end,
-                 "media": getattr(r.image_settings, "media_type", None), "fmt": r.image_settings.file_format}
-        r.engine = "BLENDER_EEVEE"
+                 "media": getattr(r.image_settings, "media_type", None), "fmt": r.image_settings.file_format,
+                 "transparent": r.film_transparent, "color_mode": r.image_settings.color_mode}
+        r.engine = RENDER_ENGINES[key]
         r.resolution_x, r.resolution_y, r.resolution_percentage = width, height, 100
-        try:
-            scn.eevee.taa_render_samples = max(1, min(64, int(samples)))
-        except Exception:
-            pass
+        r.film_transparent = bool(transparent)
+        if key == "cycles":
+            scn.cycles.samples = max(1, min(1024, int(samples)))
+            scn.cycles.use_denoising = True
+        else:
+            try:
+                scn.eevee.taa_render_samples = max(1, min(64, int(samples)))
+            except Exception:
+                pass
         return scn, saved
 
     @classmethod
@@ -401,6 +411,8 @@ class CinemaMutator:
         except Exception:
             pass
         r.filepath = saved["path"]
+        r.film_transparent = saved["transparent"]
+        r.image_settings.color_mode = saved["color_mode"]
         scn.frame_start, scn.frame_end = saved["start"], saved["end"]
         scn.frame_set(saved["frame"])
 
@@ -410,6 +422,7 @@ class CinemaMutator:
         if hasattr(r.image_settings, "media_type"):
             r.image_settings.media_type = "IMAGE"
         r.image_settings.file_format = "PNG"
+        r.image_settings.color_mode = "RGBA" if r.film_transparent else "RGB"
         r.filepath = str(path)
         bpy.ops.render.render(write_still=True)
         if not path.exists():
@@ -417,13 +430,13 @@ class CinemaMutator:
 
     @classmethod
     def render_image(cls, export_dir: str, filename: str = "shot", width: int = 960, height: int = 540,
-                     frame: Any = None, samples: int = 16) -> Dict[str, Any]:
+                     frame: Any = None, samples: int = 16, transparent: bool = False, engine: str = "eevee") -> Dict[str, Any]:
         stem = _stem(filename, "shot")
         w, h = _size(width, height)
         folder = Path(export_dir).expanduser()
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / f"{stem}.png"
-        scn, saved = cls._render_setup(w, h, samples)
+        scn, saved = cls._render_setup(w, h, samples, transparent, engine)
         try:
             if frame is not None:
                 scn.frame_set(int(max(scn.frame_start, min(scn.frame_end, int(frame)))))
@@ -432,7 +445,8 @@ class CinemaMutator:
         finally:
             cls._render_restore(scn, saved)
         return {"path": str(path), "filename": path.name, "width": w, "height": h, "frame": used_frame,
-                "bytes": path.stat().st_size, "format": "PNG", "engine": "EEVEE"}
+                "bytes": path.stat().st_size, "format": "PNG", "engine": RENDER_ENGINES[str(engine or "eevee").strip().lower()],
+                "transparent": bool(transparent)}
 
     @classmethod
     def render_animation(cls, export_dir: str, filename: str = "shot", width: int = 960, height: int = 540,

@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Docs: the Claude Code skill `blender-game-assets` (8.8 KB to 4.7 KB) and the MCP `INSTRUCTIONS` text (about 5.5 KB to 2 KB) no longer repeat what the tool schemas already say (mesh_edit operations, tool arguments, create_prop kinds); they keep the order of work and the things a schema cannot tell (startup cube, per-part colour before join, presets lost in glTF, scatter instead of create_prop loops, task_report / check_model / gated tools).
 - Docs: the working principle "tool-first for Blender state, file-first for external files" in `docs/MCP.md`.
+- **Character look in `set_material`** (`core/shader_layers.py`): `subsurface`, `coat` / `coat_roughness`, `thin_film` (soap-bubble iridescence, nm), `gradient_colors` (2-4 colours bottom to top, or `gradient_axis` x, y, diagonal; object bounds, no UVs) and `rim_colors` / `rim_strength` (a glowing Fresnel silhouette driving the emission). Layers go on top of a flat colour or a preset (not gradient with a preset); applying a gradient or rim again replaces that group's nodes. The middle gradient colour stays on the socket for an unbaked glTF.
+- **`render_image`**: `transparent` (RGBA PNG cut-out) and `engine` `cycles` (path traced, denoised, 1-1024 samples) for a beauty shot; the scene's film and colour mode are restored afterwards.
+- **`render_contact_sheet`**: `transparent` and `columns` (columns = frames is a game sprite strip); up to 16 frames (was 9).
+- **`bake_material`** keeps coat, coat roughness and thin film on the baked material (glTF clearcoat).
+- **`export_gltf` with `animations`** writes the actions playing now as one clip (`ACTIVE_ACTIONS`): a rig's motion and its face's shape-key blink stay in step in the engine instead of becoming separate clips.
+- `scripts/generate_gravi.py`: the Antigravity mascot GRAVI built headless with these tools (lathe body, ray-cast face visor, pill eyes with Blink and Happy shape keys, levitation pads, orb with ring, armature with an Idle loop): `.blend`, a 1024 px transparent Cycles render, turntable and idle sprite strips and a baked `.glb` (`tests/integration/test_character_shading.py`, `tests/unit/test_shader_layers.py`).
 
 ---
 

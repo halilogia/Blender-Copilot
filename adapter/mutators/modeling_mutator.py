@@ -602,6 +602,8 @@ class ModelingMutator:
             result = bpy.ops.export_scene.gltf(
                 filepath=str(path), export_format="GLB", use_selection=True, export_apply=bool(apply_modifiers),
                 export_yup=bool(y_up), export_materials="EXPORT" if include_materials else "NONE", export_animations=bool(animations),
+                # what plays now is one clip: a rig's motion and its face's shape keys stay in step in the engine
+                **({"export_animation_mode": "ACTIVE_ACTIONS"} if animations else {}),
             )
         finally:
             for o, loc in shifted:

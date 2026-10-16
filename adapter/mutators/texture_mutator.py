@@ -42,6 +42,9 @@ def _isolated_selection(obj: "bpy.types.Object"):
         view_layer.objects.active = previous_active
 
 
+CARRIED_INPUTS = {"coat": "Coat Weight", "coat_roughness": "Coat Roughness", "thin_film": "Thin Film Thickness"}
+
+
 def _has_procedural(obj: "bpy.types.Object") -> bool:
     for slot in obj.material_slots:
         tree = getattr(slot.material, "node_tree", None) if slot.material else None
@@ -89,7 +92,13 @@ def _principled_values(obj: "bpy.types.Object") -> Dict[str, float]:
         tree = getattr(slot.material, "node_tree", None) if slot.material else None
         node = next((n for n in tree.nodes if n.type == "BSDF_PRINCIPLED"), None) if tree else None
         if node is not None:
-            return {"roughness": float(node.inputs["Roughness"].default_value), "metallic": float(node.inputs["Metallic"].default_value)}
+            values = {"roughness": float(node.inputs["Roughness"].default_value), "metallic": float(node.inputs["Metallic"].default_value)}
+            # glTF carries these too (clearcoat, iridescence): keep them on the baked material
+            for key, name in CARRIED_INPUTS.items():
+                sock = node.inputs.get(name)
+                if sock is not None and not sock.is_linked:
+                    values[key] = float(sock.default_value)
+            return values
     return {"roughness": 0.7, "metallic": 0.0}
 
 
@@ -200,6 +209,9 @@ class TextureMutator:
         tree.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
         bsdf.inputs["Roughness"].default_value = values["roughness"]
         bsdf.inputs["Metallic"].default_value = values["metallic"]
+        for key, name in CARRIED_INPUTS.items():
+            if key in values and bsdf.inputs.get(name) is not None:
+                bsdf.inputs[name].default_value = values[key]
         obj.data.materials.clear()
         obj.data.materials.append(mat)
         bpy.context.view_layer.update()

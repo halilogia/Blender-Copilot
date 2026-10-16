@@ -8,6 +8,7 @@ from adapter.readers.object_reader import ObjectNotFoundError
 from adapter.readers.material_reader import MaterialReader
 from adapter.mutators.undo_manager import push_undo_step
 from core.material_presets import recipe
+from core.shader_layers import LAYER_KEYS, axis_vector, even_stops, normalize_layers
 
 
 def find_input_socket(node: Any, *socket_names: str) -> Optional[Any]:
@@ -182,6 +183,103 @@ def build_preset(mat: bpy.types.Material, name: Any, scale: Any = 1.0) -> Dict[s
     return rec
 
 
+LAYER_SOCKETS = {"subsurface": "Subsurface Weight", "coat": "Coat Weight", "coat_roughness": "Coat Roughness",
+                 "thin_film": "Thin Film Thickness"}
+
+
+def _clear_group(tree: Any, label: str) -> None:
+    for node in [n for n in tree.nodes if n.label == label]:
+        tree.nodes.remove(node)
+
+
+def _ramp(tree: Any, stops: Sequence[Any], label: str) -> Any:
+    ramp = tree.nodes.new("ShaderNodeValToRGB")
+    ramp.label = label
+    elements = ramp.color_ramp.elements
+    while len(elements) < len(stops):
+        elements.new(0.5)
+    for element, (pos, rgb) in zip(elements, stops):
+        element.position = pos
+        element.color = (rgb[0], rgb[1], rgb[2], 1.0)
+    return ramp
+
+
+def build_layers(mat: bpy.types.Material, layers: Dict[str, Any]) -> List[str]:
+    """Add the character shading layers (core.shader_layers) to ``mat``'s Principled BSDF; returns the layer names set.
+    Re-applying a gradient or rim replaces that group's nodes; the rest of the network is kept."""
+    bsdf = ensure_principled_bsdf(mat)
+    tree = mat.node_tree
+    done: List[str] = []
+    for key, socket_name in LAYER_SOCKETS.items():
+        if key in layers:
+            sock = find_input_socket(bsdf, socket_name)
+            if sock is None:
+                raise ValueError(f"This Blender has no '{socket_name}' on the Principled BSDF.")
+            sock.default_value = layers[key]
+            done.append(key)
+    if "subsurface" in layers:
+        # a toy-sized character: light travels a few centimetres, warmer in red
+        radius = find_input_socket(bsdf, "Subsurface Radius")
+        scale = find_input_socket(bsdf, "Subsurface Scale")
+        if radius is not None:
+            radius.default_value = (1.0, 0.55, 0.4)
+        if scale is not None:
+            scale.default_value = 0.05
+    if "gradient_colors" in layers:
+        label = "BC_GRADIENT"
+        _clear_group(tree, label)
+        axis = axis_vector(layers.get("gradient_axis"))
+        span = sum(abs(v) for v in axis) or 1.0
+        coord = tree.nodes.new("ShaderNodeTexCoord")
+        centre = tree.nodes.new("ShaderNodeVectorMath")
+        centre.operation = "SUBTRACT"
+        centre.inputs[1].default_value = (0.5, 0.5, 0.5)
+        along = tree.nodes.new("ShaderNodeVectorMath")
+        along.operation = "DOT_PRODUCT"
+        along.inputs[1].default_value = axis
+        to_unit = tree.nodes.new("ShaderNodeMath")
+        to_unit.operation = "MULTIPLY_ADD"
+        to_unit.inputs[1].default_value = 1.0 / span
+        to_unit.inputs[2].default_value = 0.5
+        ramp = _ramp(tree, even_stops(layers["gradient_colors"]), label)
+        for node in (coord, centre, along, to_unit):
+            node.label = label
+        _link(tree, coord.outputs["Generated"], centre.inputs[0])
+        _link(tree, centre.outputs["Vector"], along.inputs[0])
+        _link(tree, along.outputs["Value"], to_unit.inputs[0])
+        _link(tree, to_unit.outputs["Value"], ramp.inputs["Fac"])
+        base = find_input_socket(bsdf, "Base Color")
+        for link in list(base.links):
+            tree.links.remove(link)
+        _link(tree, ramp.outputs["Color"], base)
+        # the middle colour stays on the socket: what a glTF export without bake_material keeps
+        mid = layers["gradient_colors"][len(layers["gradient_colors"]) // 2]
+        base.default_value = (*mid, 1.0)
+        done.append("gradient")
+    if "rim_colors" in layers:
+        label = "BC_RIM"
+        _clear_group(tree, label)
+        weight = tree.nodes.new("ShaderNodeLayerWeight")
+        weight.inputs["Blend"].default_value = 0.5
+        # facing 1 = the silhouette: first colour there, the last one further in
+        ramp = _ramp(tree, even_stops(list(reversed(layers["rim_colors"])), 0.35, 1.0), label)
+        falloff = tree.nodes.new("ShaderNodeMath")
+        falloff.operation = "POWER"
+        falloff.inputs[1].default_value = 3.0
+        gain = tree.nodes.new("ShaderNodeMath")
+        gain.operation = "MULTIPLY"
+        gain.inputs[1].default_value = layers["rim_strength"]
+        for node in (weight, falloff, gain):
+            node.label = label
+        _link(tree, weight.outputs["Facing"], ramp.inputs["Fac"])
+        _link(tree, weight.outputs["Facing"], falloff.inputs[0])
+        _link(tree, falloff.outputs["Value"], gain.inputs[0])
+        _link(tree, ramp.outputs["Color"], find_input_socket(bsdf, "Emission Color", "Emission"))
+        _link(tree, gain.outputs["Value"], find_input_socket(bsdf, "Emission Strength"))
+        done.append("rim")
+    return done
+
+
 def assign_material_to_slot(obj: bpy.types.Object, mat: bpy.types.Material, slot_index: int = 0) -> None:
     """Assign material to an object at the specified slot index, appending slots if needed."""
     if not hasattr(obj, "material_slots"):
@@ -221,6 +319,7 @@ class MaterialMutator:
         alpha: Optional[float] = None,
         preset: Optional[str] = None,
         scale: Optional[float] = None,
+        **layer_args: Any,
     ) -> Dict[str, Any]:
         """Set Principled BSDF shader properties on an object slot or material.
 
@@ -234,12 +333,19 @@ class MaterialMutator:
             emission_color: Optional emission RGB/RGBA sequence in [0, 1].
             emission_strength: Optional emission strength factor (>= 0.0).
             alpha: Optional alpha transparency factor in [0, 1].
+            layer_args: character shading layers (core.shader_layers.LAYER_KEYS): subsurface, coat, thin_film, gradient, rim.
 
         Returns:
             Dict[str, Any]: Execution result containing before/after/actual material snapshots.
         """
         # 1. Validation: must provide at least one material property
-        has_property = any(
+        unknown = sorted(set(layer_args) - set(LAYER_KEYS))
+        if unknown:
+            raise ValueError(f"Unknown material argument(s): {', '.join(unknown)}.")
+        layers = normalize_layers(**layer_args)
+        if layers.get("gradient_colors") and preset:
+            raise ValueError("gradient_colors replaces the base colour a preset paints: use one of preset or gradient_colors.")
+        has_property = bool(layers) or any(
             v is not None for v in [base_color, metallic, roughness, emission_color, emission_strength, alpha, preset]
         )
         # object + material name with no property just assigns the (existing) material to the slot
@@ -340,6 +446,9 @@ class MaterialMutator:
                 raise ValueError(f"Socket 'Emission Strength' not found on Principled BSDF of material '{mat.name}'.")
             sock.default_value = normalize_emission_strength(emission_strength)
             changed_fields.append("emission_strength")
+
+        if layers:
+            changed_fields.extend(build_layers(mat, layers))
 
         if alpha is not None:
             sock = find_input_socket(bsdf_node, "Alpha")

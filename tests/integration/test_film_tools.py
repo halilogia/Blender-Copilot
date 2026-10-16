@@ -117,7 +117,7 @@ def test_contact_sheet():
         img = bpy.data.images.load(res.data["path"])
         assert img.size[0] == 320 and img.size[1] == 180
         bpy.data.images.remove(img)
-        for bad in (dict(frames=1), dict(frames=12), dict(width=10), dict(filename="../x")):
+        for bad in (dict(frames=1), dict(frames=17), dict(columns=0), dict(width=10), dict(filename="../x")):
             r = adapter.render_contact_sheet(**bad)
             assert not r.success and r.error.type == "INVALID_ARGUMENT", (bad, r)
     print("[PASS] Test 3")
