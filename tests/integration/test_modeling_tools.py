@@ -350,7 +350,76 @@ def test_frame_view():
     print("[PASS] Test 9")
 
 
+def _volume(obj):
+    """Signed volume from the divergence theorem: positive only for a closed solid whose normals point out."""
+    return sum(p.center.dot(p.normal) * p.area for p in obj.data.polygons) / 3.0
+
+
+def test_extrusion_and_beam():
+    print("Test 10: create_extrusion and create_beam...")
+    clean_scene()
+    adapter = BlenderAdapter()
+
+    gable = adapter.create_extrusion(name="Gable", profile=[[-3, 0], [3, 0], [0, 2]], axis="Y", start=-2, end=2)
+    assert gable.success, gable.error
+    d = gable.data
+    assert d["vertex_count"] == 6 and d["face_count"] == 5, d
+    assert near(d["dimensions"][0], 6.0) and near(d["dimensions"][1], 4.0) and near(d["dimensions"][2], 2.0), d
+    assert abs(_volume(bpy.data.objects["Gable"]) - 24.0) < 0.01, "extrusion must be closed with outward normals"
+
+    taper = adapter.create_extrusion(name="Tower", profile=[[-1, -1], [1, -1], [1, 1], [-1, 1]], axis="Z", start=0, end=4, taper=0.5)
+    assert taper.success, taper.error
+    top = max(v.co.x for v in bpy.data.objects["Tower"].data.vertices if abs(v.co.z - 4) < 1e-6)
+    assert near(top, 0.5), top
+    assert near(taper.data["dimensions"][2], 4.0)
+
+    side = adapter.create_extrusion(name="Wall", profile=[[0, 0], [5, 0], [5, 3], [0, 3]], axis="X", start=-1, end=1)
+    assert side.success and near(side.data["dimensions"][0], 2.0) and near(side.data["dimensions"][1], 5.0), side.data
+
+    for bad, why in (
+        (dict(profile=[[0, 0], [1, 0]]), "two points"),
+        (dict(profile=[[0, 0], [1, 0], [0, 1]], axis="W"), "axis"),
+        (dict(profile=[[0, 0], [1, 0], [0, 1]], start=1, end=1), "same"),
+        (dict(profile=[[0, 0], [1, 0], [0, 1]], taper=0), "taper"),
+        (dict(profile=[[0, 0], [1, float("nan")], [0, 1]]), "nan"),
+    ):
+        r = adapter.create_extrusion(**bad)
+        assert not r.success and r.error.type == "INVALID_ARGUMENT", (why, r)
+
+    rail = adapter.create_beam(name="Rail", start=[0, 0, 1], end=[4, 0, 1], width=0.2, thickness=0.1)
+    assert rail.success, rail.error
+    assert near(rail.data["length"], 4.0)
+    dims = rail.data["dimensions"]
+    assert near(dims[0], 4.0) and near(dims[1], 0.2) and near(dims[2], 0.1), dims
+    assert abs(_volume(bpy.data.objects["Rail"]) - 4.0 * 0.2 * 0.1) < 1e-4
+
+    pole = adapter.create_beam(name="Pole", start=[0, 0, 0], end=[0, 0, 3], width=0.2, shape="CYLINDER", segments=16)
+    assert pole.success and pole.data["vertex_count"] == 32 and pole.data["face_count"] == 18, pole.data
+    assert near(pole.data["dimensions"][2], 3.0)
+
+    leg = adapter.create_beam(name="Leg", start=[0, 0, 0], end=[0, 0, 8], width=1.0, end_width=0.4, end_thickness=0.4)
+    assert leg.success and near(leg.data["dimensions"][2], 8.0), leg.data
+
+    for bad, why in (
+        (dict(start=[0, 0, 0], end=[0, 0, 0]), "zero length"),
+        (dict(start=[0, 0, 0], end=[1, 0, 0], shape="CUBE"), "shape"),
+        (dict(start=[0, 0, 0], end=[1, 0, 0], width=0), "width"),
+        (dict(start=[0, 0], end=[1, 0, 0]), "vec"),
+    ):
+        r = adapter.create_beam(**bad)
+        assert not r.success and r.error.type == "INVALID_ARGUMENT", (why, r)
+
+    before = len(bpy.data.objects)
+    push_undo_step("before beam undo")
+    assert adapter.create_beam(name="UndoBeam", start=[0, 0, 0], end=[1, 0, 0]).success
+    assert len(bpy.data.objects) == before + 1
+    perform_undo()
+    assert "UndoBeam" not in bpy.data.objects, "create_beam must be one Ctrl+Z step"
+    print("[PASS] Test 10")
+
+
 def main():
+    test_extrusion_and_beam()
     test_new_primitives()
     test_create_mesh()
     test_mesh_edit()

@@ -11,6 +11,8 @@ from .delete_object import DeleteObjectTool
 from .set_material import SetMaterialTool
 from .assign_material import AssignMaterialTool
 from .create_mesh import CreateMeshTool
+from .create_extrusion import CreateExtrusionTool
+from .create_beam import CreateBeamTool
 from .mesh_edit import MeshEditTool
 from .join_objects import JoinObjectsTool
 from .parent_object import ParentObjectTool
@@ -55,6 +57,8 @@ __all__ = [
     "SetMaterialTool",
     "AssignMaterialTool",
     "CreateMeshTool",
+    "CreateExtrusionTool",
+    "CreateBeamTool",
     "MeshEditTool",
     "JoinObjectsTool",
     "ParentObjectTool",

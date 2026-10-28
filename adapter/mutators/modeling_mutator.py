@@ -173,6 +173,141 @@ class ModelingMutator:
         out["created"] = True
         return out
 
+    # ------------------------------------------------------------------ lofted solids (create_extrusion, create_beam)
+    @classmethod
+    def _loft(cls, ring0: Sequence[Vector], ring1: Sequence[Vector], base: str, cap: bool, smooth: bool,
+              location: Any, rotation: Any, scale: Any, undo_label: str) -> "bpy.types.Object":
+        """A closed solid from two rings of equal size: side quads plus (optionally) both end caps, normals pointing out."""
+        if len(ring0) != len(ring1) or len(ring0) < 3:
+            raise ModelingError("A solid needs two rings of at least three points each.")
+        if len(ring0) * 2 > MAX_VERTICES:
+            raise ModelingError(f"Too large: at most {MAX_VERTICES} vertices per call.")
+        bm = bmesh.new()
+        try:
+            a = [bm.verts.new(tuple(p)) for p in ring0]
+            b = [bm.verts.new(tuple(p)) for p in ring1]
+            n = len(a)
+            for i in range(n):
+                j = (i + 1) % n
+                bm.faces.new((a[i], a[j], b[j], b[i]))
+            if cap:
+                bm.faces.new(a[::-1])
+                bm.faces.new(b)
+            bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+            mesh = bpy.data.meshes.new(f"{base}_mesh")
+            bm.to_mesh(mesh)
+        finally:
+            bm.free()
+        mesh.update()
+        if smooth:
+            for poly in mesh.polygons:
+                poly.use_smooth = True
+        obj = bpy.data.objects.new(base, mesh)
+        _link(obj)
+        if location is not None:
+            obj.location = _vec3(location, "location")
+        if rotation is not None:
+            r = _vec3(rotation, "rotation")
+            obj.rotation_euler = Euler((r.x, r.y, r.z), "XYZ")
+        if scale is not None:
+            obj.scale = _vec3(scale, "scale")
+        bpy.context.view_layer.update()
+        push_undo_step(f"{undo_label} ({obj.name})")
+        return obj
+
+    @classmethod
+    def create_extrusion(cls, profile: Any, axis: str = "Y", start: float = 0.0, end: float = 1.0, taper: float = 1.0,
+                         cap: bool = True, name: Optional[str] = None, location: Any = None, rotation: Any = None,
+                         scale: Any = None, smooth: bool = False) -> Dict[str, Any]:
+        """Extrude a 2D outline along an axis: a gable roof, a truck body, a building wing in one call."""
+        pts = as_list(profile)
+        if not isinstance(pts, list) or not 3 <= len(pts) <= 64:
+            raise ModelingError("profile must be a list of 3 to 64 [u, v] points (the outline, in order around it).")
+        poly: List[tuple] = []
+        for i, p in enumerate(pts):
+            if isinstance(p, dict) and len(p) == 1:
+                p = next(iter(p.values()))
+            if not isinstance(p, (list, tuple)) or len(p) != 2:
+                raise ModelingError(f"profile[{i}] must be [u, v].")
+            try:
+                u, v = float(p[0]), float(p[1])
+            except (TypeError, ValueError):
+                raise ModelingError(f"profile[{i}] must contain numbers only.")
+            if not (math.isfinite(u) and math.isfinite(v)):
+                raise ModelingError(f"profile[{i}] must be finite numbers.")
+            poly.append((u, v))
+        ax = str(axis).strip().upper().lstrip("+")
+        if ax not in ("X", "Y", "Z"):
+            raise ModelingError("axis must be X, Y or Z: the direction the outline is extruded along.")
+        try:
+            a0, a1, k = float(start), float(end), float(taper)
+        except (TypeError, ValueError):
+            raise ModelingError("start, end and taper must be numbers.")
+        if not all(math.isfinite(x) for x in (a0, a1, k)) or a0 == a1:
+            raise ModelingError("start and end must be different finite numbers.")
+        if k <= 0:
+            raise ModelingError("taper must be greater than 0 (1 = straight; 0.5 = the far end is half size).")
+
+        def place(u: float, v: float, a: float) -> Vector:
+            # axis Y: outline in the XZ plane; axis X: in the YZ plane; axis Z: in the XY plane
+            return Vector((u, a, v)) if ax == "Y" else Vector((a, u, v)) if ax == "X" else Vector((u, v, a))
+
+        cu = sum(p[0] for p in poly) / len(poly)
+        cv = sum(p[1] for p in poly) / len(poly)
+        ring0 = [place(u, v, a0) for u, v in poly]
+        ring1 = [place(cu + (u - cu) * k, cv + (v - cv) * k, a1) for u, v in poly]
+        base = name.strip()[:MAX_NAME_LEN] if isinstance(name, str) and name.strip() else "Extrusion"
+        obj = cls._loft(ring0, ring1, base, bool(cap), bool(smooth), location, rotation, scale, "AI: Create extrusion")
+        out = _summary(obj)
+        out["created"] = True
+        return out
+
+    @classmethod
+    def create_beam(cls, start: Any, end: Any, width: float = 0.1, thickness: Optional[float] = None, shape: str = "BOX",
+                    segments: int = 12, end_width: Optional[float] = None, end_thickness: Optional[float] = None,
+                    up: Any = None, name: Optional[str] = None, smooth: bool = False) -> Dict[str, Any]:
+        """A straight bar between two points (a beam, brace, pole, axle, wheel, pipe): BOX or CYLINDER, optionally tapered."""
+        p0, p1 = _vec3(start, "start"), _vec3(end, "end")
+        d = p1 - p0
+        length = d.length
+        if length < 1e-6:
+            raise ModelingError("start and end are the same point.")
+        d = d / length
+        try:
+            w0 = float(width)
+            t0 = float(thickness) if thickness is not None else w0
+            w1 = float(end_width) if end_width is not None else w0
+            t1 = float(end_thickness) if end_thickness is not None else t0
+        except (TypeError, ValueError):
+            raise ModelingError("width, thickness, end_width and end_thickness must be numbers.")
+        if not all(math.isfinite(x) and x > 0 for x in (w0, t0, w1, t1)):
+            raise ModelingError("width and thickness must be greater than 0.")
+        kind = str(shape).strip().upper()
+        if kind not in ("BOX", "CYLINDER"):
+            raise ModelingError("shape must be BOX or CYLINDER.")
+        ref = _vec3(up, "up") if up is not None else Vector((0, 0, 1))
+        if ref.length < 1e-9:
+            raise ModelingError("up must not be the zero vector.")
+        ref.normalize()
+        if abs(d.dot(ref)) > 0.999:   # beam parallel to the reference: pick another one
+            ref = Vector((1, 0, 0)) if abs(d.x) < 0.9 else Vector((0, 1, 0))
+        side = d.cross(ref).normalized()   # the width runs along this axis
+        nrm = side.cross(d).normalized()   # the thickness runs along this one
+        if kind == "BOX":
+            corners = [(-1, -1), (-1, 1), (1, 1), (1, -1)]
+        else:
+            n = max(3, min(48, int(segments)))
+            corners = [(math.cos(2 * math.pi * i / n), math.sin(2 * math.pi * i / n)) for i in range(n)]
+        # unit corners are +-1 (box) or on the unit circle; half the size makes width / thickness the full extent
+        ring0 = [p0 + side * (cu * w0 * 0.5) + nrm * (cv * t0 * 0.5) for cu, cv in corners]
+        ring1 = [p1 + side * (cu * w1 * 0.5) + nrm * (cv * t1 * 0.5) for cu, cv in corners]
+        base = name.strip()[:MAX_NAME_LEN] if isinstance(name, str) and name.strip() else "Beam"
+        obj = cls._loft(ring0, ring1, base, True, bool(smooth), None, None, None, "AI: Create beam")
+        out = _summary(obj)
+        out["created"] = True
+        out["length"] = round(length, 4)
+        return out
+
     # ------------------------------------------------------------------ mesh_edit
     OPERATIONS = ("EXTRUDE_FACES", "INSET_FACES", "BEVEL_EDGES", "SUBDIVIDE", "TRIANGULATE", "RECALC_NORMALS",
                   "MERGE_BY_DISTANCE", "SCALE_TO_HEIGHT_TAPER", "FLIP_NORMALS", "DELETE_FACES", "DISSOLVE_PLANAR",

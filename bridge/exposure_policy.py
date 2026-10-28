@@ -15,7 +15,7 @@ READ_ONLY = frozenset({
 
 # low risk, one undo step, no arbitrary code: an outside agent may call these freely
 SAFE_MUTATION = frozenset({
-    "create_primitive", "create_mesh", "create_prop", "create_terrain", "scatter", "mesh_edit", "polish_model",
+    "create_primitive", "create_mesh", "create_extrusion", "create_beam", "create_prop", "create_terrain", "scatter", "mesh_edit", "polish_model",
     "add_modifier", "add_shape_modifier", "join_objects", "parent_object", "apply_transform", "set_origin",
     "transform_object", "duplicate_object", "create_camera", "create_light", "frame_view", "import_asset",
     "set_material", "assign_material", "set_shading", "unwrap_uv", "bake_material",

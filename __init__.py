@@ -53,6 +53,8 @@ from .tools.mutations.set_material import SetMaterialTool
 from .tools.mutations.assign_material import AssignMaterialTool
 from .tools.mutations.import_asset import ImportAssetTool
 from .tools.mutations.create_mesh import CreateMeshTool
+from .tools.mutations.create_extrusion import CreateExtrusionTool
+from .tools.mutations.create_beam import CreateBeamTool
 from .tools.mutations.mesh_edit import MeshEditTool
 from .tools.mutations.join_objects import JoinObjectsTool
 from .tools.mutations.parent_object import ParentObjectTool
@@ -185,6 +187,8 @@ def register(provider: Optional[BaseProvider] = None):
     registry.register(AssignMaterialTool())
     registry.register(ImportAssetTool())
     registry.register(CreateMeshTool())
+    registry.register(CreateExtrusionTool())
+    registry.register(CreateBeamTool())
     registry.register(MeshEditTool())
     registry.register(JoinObjectsTool())
     registry.register(ParentObjectTool())

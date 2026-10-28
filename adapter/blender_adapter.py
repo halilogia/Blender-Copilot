@@ -840,6 +840,12 @@ class BlenderAdapter:
     def create_mesh(self, **kwargs) -> ToolResult:
         return self._modeling("create_mesh", ModelingMutator.create_mesh, **kwargs)
 
+    def create_extrusion(self, **kwargs) -> ToolResult:
+        return self._modeling("create_extrusion", ModelingMutator.create_extrusion, **kwargs)
+
+    def create_beam(self, **kwargs) -> ToolResult:
+        return self._modeling("create_beam", ModelingMutator.create_beam, **kwargs)
+
     def mesh_edit(self, **kwargs) -> ToolResult:
         return self._modeling("mesh_edit", ModelingMutator.mesh_edit, **kwargs)
 

@@ -39,7 +39,7 @@ The Godot side: [Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar
 ## Key Features
 
 - **What a chat model can do with it (53 tools, loaded by need):**
-  - **Model**: `create_prop` (18 ready-made props), `create_primitive`, `create_mesh`, `mesh_edit` (extrude, inset, bevel, loop cut, knife plane, bridge, dissolve, separate, apply modifiers ...), `add_modifier`, `add_shape_modifier`, `polish_model`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`.
+  - **Model**: `create_prop` (18 ready-made props), `create_primitive`, `create_mesh`, `create_extrusion` (outline along an axis to a solid), `create_beam` (box or cylinder bar between two points), `mesh_edit` (extrude, inset, bevel, loop cut, knife plane, bridge, dissolve, separate, apply modifiers ...), `add_modifier`, `add_shape_modifier`, `polish_model`, `join_objects`, `parent_object`, `apply_transform`, `set_origin`.
   - **Look**: `set_material` (colour, or a procedural preset), `unwrap_uv`, `bake_material`, `set_shading`, `set_environment`, `set_look`.
   - **Check (numbers instead of eyes)**: `check_model`, `check_shot`, `task_report`, `frame_view`, `capture_viewport`, `visual_verify`; `task_rollback` takes a whole AI task back.
   - **World**: `create_terrain`, `scatter`.
