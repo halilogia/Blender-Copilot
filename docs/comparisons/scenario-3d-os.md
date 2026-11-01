@@ -41,7 +41,7 @@ cut with EXACT booleans, an angle-limited micro bevel with Harden Normals and We
 | Wheels | outside the body ("arcade" look, no arches) | in cut arches, on axles |
 | Edges | hard, flat shaded | bevelled, catch light |
 
-Contact sheets (silhouette, matcap, wire): [old](scenario-3d-os/car_old_sheet.png), [new](scenario-3d-os/car_new_sheet.png).
+Four angles, same light: [car_views.png](scenario-3d-os/car_views.png). Contact sheets (silhouette, matcap, wire): [old](scenario-3d-os/car_old_sheet.png), [new](scenario-3d-os/car_new_sheet.png).
 The file: [car_hardsurface.glb](scenario-3d-os/car_hardsurface.glb).
 
 The shading audit helped during the build, not only at the end: the first try put the door seams over the curved roof
