@@ -11,9 +11,10 @@ class CheckModelTool(BaseTool):
     name = "check_model"
     description = (
         "Check a model with numbers instead of eyes, the way check_shot checks a shot: surface problems (edges shared by 3+ "
-        "faces, faces pointing inward, doubled or loose vertices, zero-area faces), unapplied scale, a pivot outside the "
-        "object, no material, a texture without UVs, the model sunk into the ground, two objects in the same space, and the "
-        "triangle count against a budget. Returns ok (false only for FAIL findings), issues with severity FAIL or WARN, the "
+        "faces, faces pointing inward, also for one closed piece inside a joined object, doubled or loose vertices, zero-area "
+        "faces), unapplied scale, a pivot outside the object, no material, a texture without UVs, the model sunk into the "
+        "ground, two objects in the same space, parts that touch nothing of the main body (floating), coplanar faces of two "
+        "parts that flicker (z-fighting), and the triangle count against a budget. Returns ok (false only for FAIL findings), issues with severity FAIL or WARN, the "
         "objects concerned and the tool call that fixes each. Cheap and read only: call it after building or editing a model "
         "and before export_gltf, fix the FAIL items and the cheap WARN items, and repeat until ok."
     )

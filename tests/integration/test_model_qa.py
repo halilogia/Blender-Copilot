@@ -120,8 +120,49 @@ def test_budget_duplicates_and_errors():
     print("[PASS] Test 3")
 
 
+def test_parts_floating_zfight_inverted_piece():
+    print("Test 4: floating parts, z-fighting between parts, an inside-out piece of an open object...")
+    adapter = fresh()
+    colored_cube(adapter, "Base", location=[0, 0, 0.5])
+    colored_cube(adapter, "Floater", location=[0, 0, 5.0])
+    check = adapter.check_model(object_names=["Base", "Floater"])
+    assert "FLOATING_PART" in codes(check) and check.data["ok"], check.data["issues"]
+    floating = [i for i in check.data["issues"] if i["code"] == "FLOATING_PART"][0]
+    assert floating["objects"] == ["Floater"], floating
+    assert adapter.transform_object(name="Floater", location=[0, 0, 1.5]).success   # now sits on Base
+    assert "FLOATING_PART" not in codes(adapter.check_model(object_names=["Base", "Floater"]))
+
+    adapter = fresh()
+    colored_cube(adapter, "SlabA", location=[0, 0, 0.5])
+    colored_cube(adapter, "SlabB", location=[0.3, 0, 0.5])   # same top and bottom planes, overlapping
+    check = adapter.check_model(object_names=["SlabA", "SlabB"])
+    assert "Z_FIGHTING" in codes(check), check.data["issues"]
+    assert adapter.transform_object(name="SlabB", location=[0.3, 0.03, 0.53]).success   # off every shared plane
+    assert "Z_FIGHTING" not in codes(adapter.check_model(object_names=["SlabA", "SlabB"]))
+
+    adapter = fresh()
+    me = bpy.data.meshes.new("Mixed")
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    inner = bmesh.ops.create_cube(bm, size=0.4, matrix=__import__("mathutils").Matrix.Translation((0, 0, 1.2)))
+    bmesh.ops.reverse_faces(bm, faces=list({f for v in inner["verts"] for f in v.link_faces}))
+    a, b, c, d = (bm.verts.new(p) for p in ((2, 0, 0), (3, 0, 0), (3, 1, 0), (2, 1, 0)))
+    bm.faces.new((a, b, c, d))                                  # an open card: the object as a whole is not closed
+    bm.to_mesh(me)
+    bm.free()
+    obj = bpy.data.objects.new("Mixed", me)
+    bpy.context.scene.collection.objects.link(obj)
+    assert adapter.set_material(object_name="Mixed", base_color=[0.5, 0.5, 0.5, 1]).success
+    check = adapter.check_model(object_names=["Mixed"])
+    assert "INVERTED_PART" in codes(check) and not check.data["ok"], check.data["issues"]
+    assert adapter.mesh_edit(object_name="Mixed", operation="RECALC_NORMALS").success
+    assert "INVERTED_PART" not in codes(adapter.check_model(object_names=["Mixed"]))
+    print("[PASS] Test 4")
+
+
 if __name__ == "__main__":
     test_clean_props()
     test_defects_and_fixes()
     test_budget_duplicates_and_errors()
+    test_parts_floating_zfight_inverted_piece()
     print("ALL MODEL QA INTEGRATION TESTS PASSED")

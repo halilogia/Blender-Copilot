@@ -5,7 +5,7 @@ the ground, has flipped normals, doubled vertices or too many triangles, and whi
 measures the statistics with bmesh; this module judges them.
 """
 
-from typing import Any, Dict, List, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 FAIL = "FAIL"
 WARN = "WARN"
@@ -30,6 +30,10 @@ def object_issues(stats: Dict[str, Any]) -> List[Dict[str, Any]]:
                           "mesh_edit MERGE_BY_DISTANCE, or rebuild the part; a game engine and 3D printing need a clean surface", [name]))
     if stats.get("closed") and stats.get("signed_volume", 0.0) < -1e-9:
         out.append(_issue(FAIL, "INVERTED_NORMALS", f"{name}: the faces point inward (negative volume).",
+                          "mesh_edit RECALC_NORMALS", [name]))
+    elif stats.get("inward_parts", 0) > 0:
+        # A joined object can be open overall while one of its closed pieces is inside out (a car cabin in a body).
+        out.append(_issue(FAIL, "INVERTED_PART", f"{name}: {stats['inward_parts']} closed piece(s) have faces pointing inward.",
                           "mesh_edit RECALC_NORMALS", [name]))
     if stats.get("degenerate_faces", 0) > 0:
         out.append(_issue(WARN, "DEGENERATE_FACES", f"{name}: {stats['degenerate_faces']} faces have no area.",
@@ -90,6 +94,26 @@ def group_issues(all_stats: Sequence[Dict[str, Any]], max_triangles: int = DEFAU
     return out
 
 
+def assembly_issues(assembly: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Problems between the parts of one asset, measured by ModelQaMutator.assembly (after Scenario's bx_audit gate, MIT):
+    ``floating``: names of parts that touch nothing of the main body; ``z_fighting``: [part_a, part_b, faces] with coplanar
+    faces facing the same way (they flicker in an engine)."""
+    out: List[Dict[str, Any]] = []
+    if not assembly:
+        return out
+    floating = list(assembly.get("floating") or [])
+    if floating:
+        out.append(_issue(WARN, "FLOATING_PART", f"{len(floating)} part(s) touch nothing of the main body: {', '.join(floating[:6])}.",
+                          "transform_object to attach it (or add a joint part); if it is a separate prop, check it on its own",
+                          floating))
+    for a, b, count in list(assembly.get("z_fighting") or [])[:6]:
+        where = f"{a}, between its own pieces" if a == b else f"{a} and {b}"
+        out.append(_issue(WARN, "Z_FIGHTING", f"{where}: {count} coplanar overlapping face(s), they flicker in a game engine.",
+                          "transform_object to push one part a few millimetres in or out, or mesh_edit to delete the hidden faces",
+                          sorted({a, b})))
+    return out
+
+
 def _same_box(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
     size = max(max(float(x) - float(n) for n, x in zip(a["bbox_min"], a["bbox_max"])), 1e-6)
     tol = size * DUPLICATE_TOLERANCE
@@ -97,8 +121,9 @@ def _same_box(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
                for i in range(3))
 
 
-def verdict(all_stats: Sequence[Dict[str, Any]], max_triangles: int = DEFAULT_TRIANGLE_BUDGET) -> Dict[str, Any]:
-    """Merge object and group findings: FAIL blocks ``ok``, WARN does not; the same code on several objects counts once."""
+def verdict(all_stats: Sequence[Dict[str, Any]], max_triangles: int = DEFAULT_TRIANGLE_BUDGET,
+            assembly: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Merge object, group and assembly findings: FAIL blocks ``ok``, WARN does not; the same code on several objects counts once."""
     merged: Dict[str, Dict[str, Any]] = {}
     for stats in all_stats:
         for issue in object_issues(stats):
@@ -107,7 +132,7 @@ def verdict(all_stats: Sequence[Dict[str, Any]], max_triangles: int = DEFAULT_TR
             item["count"] += 1
             if len(item["messages"]) < 3:
                 item["messages"].append(issue["message"])
-    for issue in group_issues(all_stats, max_triangles):
+    for issue in group_issues(all_stats, max_triangles) + assembly_issues(assembly):
         item = merged.setdefault(issue["code"], {**issue, "objects": [], "count": 0, "messages": []})
         item["objects"].extend(issue["objects"])
         item["count"] += 1

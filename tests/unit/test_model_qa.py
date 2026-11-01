@@ -1,6 +1,6 @@
 import unittest
 
-from core.model_qa import DEFAULT_TRIANGLE_BUDGET, group_issues, object_issues, verdict
+from core.model_qa import DEFAULT_TRIANGLE_BUDGET, assembly_issues, group_issues, object_issues, verdict
 
 
 def clean(name="Box", **over):
@@ -61,6 +61,25 @@ class ModelQaTests(unittest.TestCase):
         self.assertEqual(dup["objects"], ["A", "B"])
         self.assertEqual(dup["count"], 2)
         self.assertEqual(v["objects_checked"], 3)
+
+    def test_inverted_piece_of_an_open_object_fails_once(self):
+        self.assertIn("INVERTED_PART", codes(object_issues(clean(closed=False, inward_parts=1))))
+        both = codes(object_issues(clean(signed_volume=-1.0, inward_parts=1)))
+        self.assertIn("INVERTED_NORMALS", both)
+        self.assertNotIn("INVERTED_PART", both)
+        self.assertFalse(verdict([clean(closed=False, inward_parts=2)])["ok"])
+
+    def test_assembly_findings_are_warnings_with_fixes(self):
+        self.assertEqual(assembly_issues(None), [])
+        self.assertEqual(assembly_issues({"floating": [], "z_fighting": []}), [])
+        found = assembly_issues({"floating": ["Wheel", "Lamp"], "z_fighting": [["Tower", "Wall", 3], ["Roof", "Roof", 1]]})
+        self.assertEqual([i["code"] for i in found], ["FLOATING_PART", "Z_FIGHTING", "Z_FIGHTING"])
+        self.assertTrue(all(i["severity"] == "WARN" and i["fix"] for i in found))
+        self.assertEqual(found[0]["objects"], ["Wheel", "Lamp"])
+        self.assertIn("between its own pieces", found[2]["message"])
+        v = verdict([clean("Tower"), clean("Wall", bbox_min=(2, 0, 0), bbox_max=(3, 1, 1))], assembly={"z_fighting": [["Tower", "Wall", 3]]})
+        self.assertTrue(v["ok"])
+        self.assertEqual(v["issues"][0]["objects"], ["Tower", "Wall"])
 
     def test_warnings_alone_keep_ok_true(self):
         v = verdict([clean(has_material=False)])

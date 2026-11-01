@@ -53,7 +53,9 @@ class PolishMutator:
                 edges = [e for e in bm.edges if e.is_manifold and e.calc_face_angle(0.0) >= math.radians(hard)]
                 before = len(bm.faces)
                 if edges:
-                    bmesh.ops.bevel(bm, geom=edges, offset=local, segments=seg, affect="EDGES")
+                    # clamp_overlap: on a joined object the width comes from the whole model, and a bevel wider than half
+                    # a thin part (a 3 cm headlight) folds that part inside out
+                    bmesh.ops.bevel(bm, geom=edges, offset=local, segments=seg, affect="EDGES", clamp_overlap=True)
                 if len(bm.verts) > MAX_VERTICES or len(bm.faces) > MAX_FACES:
                     raise ModelingError(f"'{name}' would exceed the size limit after bevelling; lower segments or bevel fewer edges.")
                 limit = math.radians(smooth)
