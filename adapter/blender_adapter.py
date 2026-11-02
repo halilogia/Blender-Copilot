@@ -846,6 +846,15 @@ class BlenderAdapter:
     def create_beam(self, **kwargs) -> ToolResult:
         return self._modeling("create_beam", ModelingMutator.create_beam, **kwargs)
 
+    def loft_profiles(self, **kwargs) -> ToolResult:
+        return self._modeling("loft_profiles", ModelingMutator.loft_profiles, **kwargs)
+
+    def place_on_socket(self, **kwargs) -> ToolResult:
+        return self._modeling("place_on_socket", ModelingMutator.place_on_socket, **kwargs)
+
+    def create_from_spec(self, **kwargs) -> ToolResult:
+        return self._modeling("create_from_spec", ModelingMutator.create_from_spec, **kwargs)
+
     def mesh_edit(self, **kwargs) -> ToolResult:
         return self._modeling("mesh_edit", ModelingMutator.mesh_edit, **kwargs)
 

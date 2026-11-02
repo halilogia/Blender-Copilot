@@ -418,7 +418,89 @@ def test_extrusion_and_beam():
     print("[PASS] Test 10")
 
 
+
+
+def test_loft_socket_and_spec():
+    print("Test 11: loft_profiles, place_on_socket, and create_from_spec...")
+    clean_scene()
+    adapter = BlenderAdapter()
+
+    # 1. loft_profiles (3 rings)
+    r0 = [[-1, -1, 0], [1, -1, 0], [1, 1, 0], [-1, 1, 0]]
+    r1 = [[-1.5, -1.5, 2], [1.5, -1.5, 2], [1.5, 1.5, 2], [-1.5, 1.5, 2]]
+    r2 = [[-0.5, -0.5, 4], [0.5, -0.5, 4], [0.5, 0.5, 4], [-0.5, 0.5, 4]]
+    loft_res = adapter.loft_profiles(name="Vase", profiles=[r0, r1, r2], cap=True)
+    assert loft_res.success, loft_res.error
+    d = loft_res.data
+    assert d["vertex_count"] == 12 and d["face_count"] == 10
+    assert near(d["dimensions"][2], 4.0)
+    assert _volume(bpy.data.objects["Vase"]) > 0, "loft must produce closed solid with outward normals"
+
+    # Test loft 2D rings with heights
+    p2d = [[[-1, -1], [1, -1], [1, 1], [-1, 1]], [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]]
+    loft2d = adapter.loft_profiles(name="Loft2D", profiles=p2d, heights=[0, 3], axis="Z")
+    assert loft2d.success and near(loft2d.data["dimensions"][2], 3.0)
+
+    # 2. place_on_socket
+    base = adapter.create_primitive(primitive_type="CUBE", name="BasePlatform", location=[0, 0, 0])
+    assert base.success
+    base_obj = bpy.data.objects["BasePlatform"]
+    base_obj["sockets"] = {"mount_gun": {"location": [0.0, 0.0, 1.0], "rotation": [0.0, 0.0, 0.0]}}
+
+    gun = adapter.create_primitive(primitive_type="CYLINDER", name="GunTurret", location=[10, 10, 10])
+    assert gun.success
+    gun_obj = bpy.data.objects["GunTurret"]
+
+    snap_res = adapter.place_on_socket(object_name="GunTurret", target_object="BasePlatform", socket_name="mount_gun")
+    assert snap_res.success, snap_res.error
+    assert gun_obj.parent == base_obj
+    assert near(gun_obj.location.z, 1.0)
+    assert near(gun_obj.matrix_world.translation.z, 1.0)
+
+    # 3. create_from_spec
+    vehicle_spec = {
+        "asset_id": "test_scout",
+        "family": "vehicle",
+        "recipe": "offroad_scout",
+        "dimensions": {"length": 4.2, "width": 2.1, "height": 1.8},
+        "parameters": {"wheel_radius": 0.4, "wheelbase_ratio": 0.65, "ground_clearance": 0.3},
+        "features": {"roof_rack": True, "headlights": True},
+    }
+    spec_res = adapter.create_from_spec(spec=vehicle_spec)
+    assert spec_res.success, spec_res.error
+    s_data = spec_res.data
+    assert s_data["part_count"] >= 7, f"Expected vehicle parts, got {s_data['part_count']}"
+    assert "test_scout_Chassis_Main" in s_data["created_objects"]
+
+    # Verify wheel grounding: center Z = wheel_radius = 0.4
+    wheel_fl = bpy.data.objects.get("test_scout_Wheel_FL")
+    assert wheel_fl is not None
+    assert near(wheel_fl.matrix_world.translation.z, 0.4, tol=0.05), f"Wheel FL translation z: {wheel_fl.matrix_world.translation.z}"
+
+    # Export to GLB
+    exp_res = adapter.export_gltf(object_names=s_data["created_objects"], filename="test_scout.glb")
+    assert exp_res.success, exp_res.error
+    assert os.path.exists(exp_res.data["path"])
+
+    # Undo verification
+    before_objs = len(bpy.data.objects)
+    push_undo_step("before spec undo")
+    spec_undo = adapter.create_from_spec(spec={
+        "asset_id": "undo_box",
+        "family": "prop",
+        "recipe": "crate",
+        "dimensions": {"length": 1.0, "width": 1.0, "height": 1.0},
+    })
+    assert spec_undo.success
+    assert len(bpy.data.objects) > before_objs
+    perform_undo()
+    assert bpy.data.objects.get("undo_box_Crate_Main") is None, "create_from_spec must undo in a single Ctrl+Z step"
+
+    print("[PASS] Test 11")
+
+
 def main():
+    test_loft_socket_and_spec()
     test_extrusion_and_beam()
     test_new_primitives()
     test_create_mesh()

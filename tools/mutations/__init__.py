@@ -13,6 +13,9 @@ from .assign_material import AssignMaterialTool
 from .create_mesh import CreateMeshTool
 from .create_extrusion import CreateExtrusionTool
 from .create_beam import CreateBeamTool
+from .loft_profiles import LoftProfilesTool
+from .place_on_socket import PlaceOnSocketTool
+from .create_from_spec import CreateFromSpecTool
 from .mesh_edit import MeshEditTool
 from .join_objects import JoinObjectsTool
 from .parent_object import ParentObjectTool
@@ -59,6 +62,9 @@ __all__ = [
     "CreateMeshTool",
     "CreateExtrusionTool",
     "CreateBeamTool",
+    "LoftProfilesTool",
+    "PlaceOnSocketTool",
+    "CreateFromSpecTool",
     "MeshEditTool",
     "JoinObjectsTool",
     "ParentObjectTool",

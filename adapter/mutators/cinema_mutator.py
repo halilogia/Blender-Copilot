@@ -85,7 +85,8 @@ def _scene_meshes(names: Optional[Sequence[str]] = None) -> List["bpy.types.Obje
             obj = bpy.data.objects.get(str(n).strip())
             if obj is None:
                 raise ModelingError(f"Object '{n}' not found in the scene.")
-            objs.append(obj)
+            if obj not in objs:
+                objs.append(obj)
             objs.extend(c for c in obj.children_recursive if c not in objs)   # a rig or parent stands for its parts
         return objs
     return [o for o in bpy.context.scene.objects if o.type == "MESH" and not o.name.startswith(HELPER_PREFIX)]

@@ -3,7 +3,9 @@
 ---
 
 ## 🚀 Aktif Sprint (v2.1)
-- [/] **Core Docs Standardizasyonu:** KNOWLEDGE, TASKS ve SKILLS dosyalarının tamamlanması ve repoya push edilmesi
+- [x] **AssetSpec & Parametrik Geometri Derleyicisi:** `core/asset_spec.py` kısıt çözücü, P0 operatörleri (`loft_profiles`, `place_on_socket`, `create_from_spec`) ve manifold/z-fighting kalite denetimleri
+- [x] **Ajan Becerileri & Modelleme Hattı:** 5 aşamalı prosedürel modelleme (`blender-procedural-pipeline`), optimizasyon denetimi (`blender-asset-optimization`), araç uzmanlığı (`blender-vehicle-artist`) ve karakter modelleme (`blender-character-artist`) becerilerinin entegrasyonu
+- [x] **Core Docs Standardizasyonu:** KNOWLEDGE, TASKS ve SKILLS dosyalarının tamamlanması, public yol anonimizasyonları ve repoya senkronizasyon
 - [ ] **Geometry Nodes Desteği:** Node tree yapısını ajanın okuyabilmesi ve procedürel nodelar ekleyebilmesi
 - [ ] **Shader Editor Node Otomasyonu:** Principled BSDF tabanlı materyallerin ajan tarafından bağlanması
 

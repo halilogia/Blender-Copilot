@@ -308,6 +308,128 @@ class ModelingMutator:
         out["length"] = round(length, 4)
         return out
 
+    @classmethod
+    def loft_profiles(cls, profiles: Any, heights: Any = None, axis: str = "Z", cap: bool = True,
+                      name: Optional[str] = None, location: Any = None, rotation: Any = None,
+                      scale: Any = None, smooth: bool = False) -> Dict[str, Any]:
+        """A closed or open solid lofted through N >= 2 cross-section rings of equal vertex count.
+        
+        Ideal for aerodynamic bodies, bottles, hulls, aircraft fuselages, columns, and organic transitions.
+        Each profile is a ring of points. If points are 3D [x, y, z], they define 3D loops directly.
+        If points are 2D [u, v], heights (list of numbers) places each ring along axis (X, Y, or Z).
+        """
+        raw_profiles = as_list(profiles)
+        if not isinstance(raw_profiles, list) or len(raw_profiles) < 2:
+            raise ModelingError("profiles must be a list of at least 2 profile rings.")
+
+        raw_heights = as_list(heights) if heights is not None else None
+        ax = str(axis).strip().upper().lstrip("+")
+        if ax not in ("X", "Y", "Z"):
+            raise ModelingError("axis must be X, Y or Z.")
+
+        def make_pt(u: float, v: float, a: float) -> Vector:
+            return Vector((u, a, v)) if ax == "Y" else Vector((a, u, v)) if ax == "X" else Vector((u, v, a))
+
+        parsed_rings: List[List[Vector]] = []
+        for r_idx, r in enumerate(raw_profiles):
+            pts = r
+            h = None
+            if isinstance(r, dict) and ("points" in r or "vertices" in r):
+                pts = r.get("points") or r.get("vertices")
+                h_val = r.get("height", r.get("position", r.get("z")))
+                if h_val is not None:
+                    try:
+                        h = float(h_val)
+                    except (TypeError, ValueError) as err:
+                        raise ModelingError(f"Profile {r_idx} height must be a number, got '{h_val}': {err}")
+            if h is None and raw_heights is not None and r_idx < len(raw_heights):
+                try:
+                    h = float(raw_heights[r_idx])
+                except (TypeError, ValueError) as err:
+                    raise ModelingError(f"heights[{r_idx}] must be a number, got '{raw_heights[r_idx]}': {err}")
+
+            pts_list = as_list(pts)
+            if not isinstance(pts_list, list) or len(pts_list) < 3:
+                raise ModelingError(f"Profile ring {r_idx} must contain at least 3 points.")
+
+            ring_vecs: List[Vector] = []
+            for p_idx, p in enumerate(pts_list):
+                if isinstance(p, dict) and len(p) == 1:
+                    p = next(iter(p.values()))
+                if not isinstance(p, (list, tuple)):
+                    raise ModelingError(f"Profile {r_idx} point {p_idx} must be a list of coordinates.")
+                if len(p) == 2:
+                    if h is None:
+                        raise ModelingError(f"2D profile points [u, v] require heights parameter (none given for ring {r_idx}).")
+                    try:
+                        u, v = float(p[0]), float(p[1])
+                    except (TypeError, ValueError) as err:
+                        raise ModelingError(f"Profile {r_idx} point {p_idx} must contain numbers only: {err}")
+                    if not (math.isfinite(u) and math.isfinite(v)):
+                        raise ModelingError(f"Profile {r_idx} point {p_idx} must be finite numbers.")
+                    ring_vecs.append(make_pt(u, v, h))
+                elif len(p) == 3:
+                    ring_vecs.append(_vec3(p, f"profile[{r_idx}][{p_idx}]"))
+                else:
+                    raise ModelingError(f"Profile {r_idx} point {p_idx} must have 2 or 3 coordinates.")
+            parsed_rings.append(ring_vecs)
+
+        k = len(parsed_rings[0])
+        for r_idx, r in enumerate(parsed_rings):
+            if len(r) != k:
+                raise ModelingError(f"All profile rings must have the same number of points. Ring 0 has {k}, but ring {r_idx} has {len(r)}.")
+
+        if len(parsed_rings) * k > MAX_VERTICES:
+            raise ModelingError(f"Too large: at most {MAX_VERTICES} vertices per call.")
+
+        bm = bmesh.new()
+        try:
+            bm_rings = []
+            for r in parsed_rings:
+                bm_rings.append([bm.verts.new(tuple(v)) for v in r])
+            bm.verts.ensure_lookup_table()
+
+            # Bridge consecutive rings with quad strips
+            for r in range(len(parsed_rings) - 1):
+                r0 = bm_rings[r]
+                r1 = bm_rings[r + 1]
+                for i in range(k):
+                    j = (i + 1) % k
+                    bm.faces.new((r0[i], r0[j], r1[j], r1[i]))
+
+            # End caps
+            if cap:
+                bm.faces.new(bm_rings[0][::-1])
+                bm.faces.new(bm_rings[-1])
+
+            bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+            base = name.strip()[:MAX_NAME_LEN] if isinstance(name, str) and name.strip() else "Loft"
+            mesh = bpy.data.meshes.new(f"{base}_mesh")
+            bm.to_mesh(mesh)
+        finally:
+            bm.free()
+
+        mesh.update()
+        if smooth:
+            for poly in mesh.polygons:
+                poly.use_smooth = True
+        obj = bpy.data.objects.new(base, mesh)
+        _link(obj)
+        if location is not None:
+            obj.location = _vec3(location, "location")
+        if rotation is not None:
+            r = _vec3(rotation, "rotation")
+            obj.rotation_euler = Euler((r.x, r.y, r.z), "XYZ")
+        if scale is not None:
+            obj.scale = _vec3(scale, "scale")
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Loft profiles ({obj.name})")
+        out = _summary(obj)
+        out["created"] = True
+        out["profile_count"] = len(parsed_rings)
+        out["points_per_profile"] = k
+        return out
+
     # ------------------------------------------------------------------ mesh_edit
     OPERATIONS = ("EXTRUDE_FACES", "INSET_FACES", "BEVEL_EDGES", "SUBDIVIDE", "TRIANGULATE", "RECALC_NORMALS",
                   "MERGE_BY_DISTANCE", "SCALE_TO_HEIGHT_TAPER", "FLIP_NORMALS", "DELETE_FACES", "DISSOLVE_PLANAR",
@@ -656,6 +778,322 @@ class ModelingMutator:
         bpy.context.view_layer.update()
         push_undo_step(f"AI: Apply transform ({obj.name})")
         return _summary(obj)
+
+    @classmethod
+    def place_on_socket(cls, object_name: str, target_object: str, socket_name: Optional[str] = None,
+                        socket_location: Any = None, relative_rotation: Any = None,
+                        relative_scale: Any = None, parent: bool = True) -> Dict[str, Any]:
+        """Attach an object to a predefined socket or local offset on target_object.
+        
+        Snaps secondary parts (wheels, turrets, spoilers, lights, lids) to mathematically
+        exact attachment points without coordinate guesswork.
+        """
+        obj = bpy.data.objects.get(str(object_name).strip()) if object_name else None
+        if obj is None:
+            raise ModelingError(f"Object '{object_name}' not found.")
+        target = bpy.data.objects.get(str(target_object).strip()) if target_object else None
+        if target is None:
+            raise ModelingError(f"Target object '{target_object}' not found.")
+        if obj is target:
+            raise ModelingError("An object cannot be placed on itself.")
+
+        sock_pos = None
+        sock_rot = Vector((0.0, 0.0, 0.0))
+
+        if socket_location is not None:
+            sock_pos = _vec3(socket_location, "socket_location")
+            if relative_rotation is not None:
+                sock_rot = _vec3(relative_rotation, "relative_rotation")
+        elif socket_name:
+            s_name = str(socket_name).strip()
+            sockets_prop = target.get("sockets")
+            if isinstance(sockets_prop, str) and sockets_prop.strip().startswith("{"):
+                try:
+                    sockets_prop = json.loads(sockets_prop)
+                except Exception as err:
+                    sockets_prop = None
+            elif hasattr(sockets_prop, "to_dict"):
+                sockets_prop = sockets_prop.to_dict()
+            elif hasattr(sockets_prop, "keys"):
+                conv = {}
+                for k in sockets_prop.keys():
+                    val = sockets_prop[k]
+                    if hasattr(val, "to_dict"):
+                        conv[k] = val.to_dict()
+                    elif hasattr(val, "keys"):
+                        conv[k] = {vk: val[vk] for vk in val.keys()}
+                    else:
+                        conv[k] = val
+                sockets_prop = conv
+            found_sock = None
+            if isinstance(sockets_prop, dict):
+                found_sock = sockets_prop.get(s_name)
+                if not found_sock:
+                    for k, v in sockets_prop.items():
+                        if k.lower() == s_name.lower():
+                            found_sock = v
+                            break
+            if not found_sock:
+                cand_names = [f"{target.name}_{s_name}", f"{target.name}_socket_{s_name}", s_name, f"socket_{s_name}"]
+                for cn in cand_names:
+                    cand = bpy.data.objects.get(cn)
+                    if cand and (cand.parent == target or cand.parent is None):
+                        sock_pos = Vector(cand.location)
+                        sock_rot = Vector(cand.rotation_euler)
+                        found_sock = {"location": list(sock_pos), "rotation": list(sock_rot)}
+                        break
+
+            if found_sock:
+                loc = found_sock.get("location") or found_sock.get("position", [0.0, 0.0, 0.0])
+                sock_pos = Vector((float(loc[0]), float(loc[1]), float(loc[2])))
+                rot = found_sock.get("rotation", [0.0, 0.0, 0.0])
+                if any(abs(float(a)) > 2 * math.pi + 0.01 for a in rot):
+                    sock_rot = Vector([math.radians(float(a)) for a in rot])
+                else:
+                    sock_rot = Vector([float(a) for a in rot])
+            else:
+                avail = list(sockets_prop.keys()) if isinstance(sockets_prop, dict) else []
+                raise ModelingError(f"Socket '{socket_name}' not found on '{target.name}'. Available sockets: {avail}")
+        else:
+            raise ModelingError("Either socket_name or socket_location must be provided.")
+
+        if relative_rotation is not None and socket_location is None:
+            r_add = _vec3(relative_rotation, "relative_rotation")
+            if any(abs(float(a)) > 2 * math.pi + 0.01 for a in r_add):
+                r_add = Vector([math.radians(float(a)) for a in r_add])
+            sock_rot = sock_rot + r_add
+
+        if parent:
+            obj.parent = target
+            obj.matrix_parent_inverse = Matrix.Identity(4)
+            obj.location = sock_pos
+            obj.rotation_euler = Euler((sock_rot.x, sock_rot.y, sock_rot.z), "XYZ")
+            if relative_scale is not None:
+                obj.scale = _vec3(relative_scale, "relative_scale")
+        else:
+            world_mat = target.matrix_world @ Matrix.Translation(sock_pos)
+            obj.location = world_mat.translation
+            target_rot = target.rotation_euler.to_matrix()
+            sock_rot_mat = Euler((sock_rot.x, sock_rot.y, sock_rot.z), "XYZ").to_matrix()
+            obj.rotation_euler = (target_rot @ sock_rot_mat).to_euler("XYZ")
+            if relative_scale is not None:
+                obj.scale = _vec3(relative_scale, "relative_scale")
+
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Place {obj.name} on {target.name}:{socket_name or 'socket'}")
+        return {
+            "object_name": obj.name,
+            "target_object": target.name,
+            "socket_name": socket_name,
+            "parent": target.name if parent else None,
+            "local_location": [round(v, 4) for v in obj.location],
+            "world_location": [round(v, 4) for v in (obj.matrix_world.translation)],
+            "rotation": [round(v, 4) for v in obj.rotation_euler],
+        }
+
+    @classmethod
+    def create_from_spec(cls, spec: Any, name: Optional[str] = None) -> Dict[str, Any]:
+        """Compile a high-level AssetSpec IR into a complete, mathematically coupled 3D asset in Blender."""
+        from core.asset_spec import AssetSpec, solve_asset_constraints, SpecValidationError, ResolvedAssetPlan, CollisionType
+
+        if isinstance(spec, str):
+            text = spec.strip()
+            try:
+                spec = json.loads(text)
+            except Exception as err:
+                raise ModelingError(f"spec JSON could not be parsed: {err}")
+        if isinstance(spec, dict):
+            spec_obj = AssetSpec.from_dict(spec)
+        elif isinstance(spec, AssetSpec):
+            spec_obj = spec
+        else:
+            raise ModelingError("spec must be an AssetSpec object or a JSON dictionary.")
+
+        try:
+            plan = solve_asset_constraints(spec_obj)
+        except SpecValidationError as err:
+            raise ModelingError(f"Asset constraint error: {err.message}")
+        except Exception as err:
+            raise ModelingError(f"Failed to solve asset constraints: {err}")
+
+        base_prefix = name.strip()[:MAX_NAME_LEN] if isinstance(name, str) and name.strip() else spec_obj.asset_id
+
+        created_objs: Dict[str, bpy.types.Object] = {}
+        root_obj: Optional[bpy.types.Object] = None
+
+        def _hex_to_rgb(hex_code: str) -> List[float]:
+            h = hex_code.lstrip("#")
+            if len(h) == 6:
+                return [int(h[0:2], 16) / 255.0, int(h[2:4], 16) / 255.0, int(h[4:6], 16) / 255.0, 1.0]
+            return [0.5, 0.5, 0.5, 1.0]
+
+        color_presets = {
+            "olive_paint": [0.28, 0.35, 0.18, 1.0],
+            "dark_rubber": [0.08, 0.08, 0.08, 1.0],
+            "dark_glass": [0.12, 0.15, 0.18, 1.0],
+            "brushed_metal": [0.65, 0.65, 0.68, 1.0],
+            "headlight_emissive": [0.95, 0.95, 0.90, 1.0],
+            "wood_or_metal": [0.45, 0.32, 0.20, 1.0],
+            "steel_edge": [0.25, 0.25, 0.27, 1.0],
+        }
+
+        for part in plan.parts:
+            part_name = f"{base_prefix}_{part.name}"
+            prim = str(part.primitive).upper()
+            dx, dy, dz = part.dimensions
+
+            bm = bmesh.new()
+            try:
+                if prim == "CUBE":
+                    bmesh.ops.create_cube(bm, size=1.0)
+                    bmesh.ops.scale(bm, vec=Vector((dx, dy, dz)), verts=bm.verts)
+                    if part.bevel_width > 0:
+                        bmesh.ops.bevel(bm, geom=list(bm.edges), offset=part.bevel_width, segments=2, affect="EDGES")
+                elif prim == "CYLINDER":
+                    segments = int(part.meta.get("segments", 16)) if part.meta else 16
+                    if abs(dx - dz) < 1e-4 and abs(dx - dy) > 1e-4:
+                        rx = dx * 0.5
+                        rz = dz * 0.5
+                        pts_neg = [Vector((rx * math.cos(2 * math.pi * i / segments), -dy * 0.5, rz * math.sin(2 * math.pi * i / segments))) for i in range(segments)]
+                        pts_pos = [Vector((rx * math.cos(2 * math.pi * i / segments), dy * 0.5, rz * math.sin(2 * math.pi * i / segments))) for i in range(segments)]
+                        v0 = [bm.verts.new(tuple(p)) for p in pts_neg]
+                        v1 = [bm.verts.new(tuple(p)) for p in pts_pos]
+                        for i in range(segments):
+                            j = (i + 1) % segments
+                            bm.faces.new((v0[i], v0[j], v1[j], v1[i]))
+                        bm.faces.new(v0[::-1])
+                        bm.faces.new(v1)
+                    elif abs(dy - dz) < 1e-4 and abs(dy - dx) > 1e-4:
+                        ry = dy * 0.5
+                        rz = dz * 0.5
+                        pts_neg = [Vector((-dx * 0.5, ry * math.cos(2 * math.pi * i / segments), rz * math.sin(2 * math.pi * i / segments))) for i in range(segments)]
+                        pts_pos = [Vector((dx * 0.5, ry * math.cos(2 * math.pi * i / segments), rz * math.sin(2 * math.pi * i / segments))) for i in range(segments)]
+                        v0 = [bm.verts.new(tuple(p)) for p in pts_neg]
+                        v1 = [bm.verts.new(tuple(p)) for p in pts_pos]
+                        for i in range(segments):
+                            j = (i + 1) % segments
+                            bm.faces.new((v0[i], v0[j], v1[j], v1[i]))
+                        bm.faces.new(v0[::-1])
+                        bm.faces.new(v1)
+                    else:
+                        rx = dx * 0.5
+                        ry = dy * 0.5
+                        pts_neg = [Vector((rx * math.cos(2 * math.pi * i / segments), ry * math.sin(2 * math.pi * i / segments), -dz * 0.5)) for i in range(segments)]
+                        pts_pos = [Vector((rx * math.cos(2 * math.pi * i / segments), ry * math.sin(2 * math.pi * i / segments), dz * 0.5)) for i in range(segments)]
+                        v0 = [bm.verts.new(tuple(p)) for p in pts_neg]
+                        v1 = [bm.verts.new(tuple(p)) for p in pts_pos]
+                        for i in range(segments):
+                            j = (i + 1) % segments
+                            bm.faces.new((v0[i], v0[j], v1[j], v1[i]))
+                        bm.faces.new(v0[::-1])
+                        bm.faces.new(v1)
+
+                    if part.bevel_width > 0:
+                        bmesh.ops.bevel(bm, geom=list(bm.edges), offset=part.bevel_width, segments=2, affect="EDGES")
+                else:
+                    bmesh.ops.create_cube(bm, size=1.0)
+                    bmesh.ops.scale(bm, vec=Vector((dx, dy, dz)), verts=bm.verts)
+
+                bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+                mesh = bpy.data.meshes.new(f"{part_name}_mesh")
+                bm.to_mesh(mesh)
+            finally:
+                bm.free()
+
+            mesh.update()
+            obj = bpy.data.objects.new(part_name, mesh)
+            _link(obj)
+
+            obj.location = Vector(part.location)
+            rot = part.rotation
+            is_deg = any(abs(float(a)) > 2 * math.pi + 0.01 for a in rot)
+            angles = [math.radians(float(a)) if is_deg else float(a) for a in rot]
+            obj.rotation_euler = Euler(angles, "XYZ")
+
+            slot_id = part.material_slot
+            mat_val = plan.materials.get(slot_id, "#888888")
+            mat_name = f"{base_prefix}_{slot_id}"
+            mat = bpy.data.materials.get(mat_name)
+            if mat is None:
+                mat = bpy.data.materials.new(name=mat_name)
+                mat.use_nodes = True
+                bsdf = mat.node_tree.nodes.get("Principled BSDF")
+                if bsdf:
+                    if isinstance(mat_val, str) and mat_val in color_presets:
+                        rgba = color_presets[mat_val]
+                    elif isinstance(mat_val, str) and mat_val.startswith("#"):
+                        rgba = _hex_to_rgb(mat_val)
+                    elif isinstance(mat_val, (list, tuple)) and len(mat_val) >= 3:
+                        rgba = [float(v) for v in mat_val[:3]] + [1.0 if len(mat_val) < 4 else float(mat_val[3])]
+                    else:
+                        rgba = [0.5, 0.5, 0.5, 1.0]
+
+                    bsdf.inputs["Base Color"].default_value = tuple(rgba)
+                    if "glass" in slot_id or "glass" in str(mat_val):
+                        if "Roughness" in bsdf.inputs:
+                            bsdf.inputs["Roughness"].default_value = 0.08
+                        if "Transmission Weight" in bsdf.inputs:
+                            bsdf.inputs["Transmission Weight"].default_value = 0.85
+                    elif "light" in slot_id or "emissive" in str(mat_val):
+                        if "Emission Color" in bsdf.inputs:
+                            bsdf.inputs["Emission Color"].default_value = tuple(rgba[:3])
+                        if "Emission Strength" in bsdf.inputs:
+                            bsdf.inputs["Emission Strength"].default_value = 5.0
+                    elif "metal" in slot_id or "steel" in str(mat_val):
+                        if "Metallic" in bsdf.inputs:
+                            bsdf.inputs["Metallic"].default_value = 0.8
+                        if "Roughness" in bsdf.inputs:
+                            bsdf.inputs["Roughness"].default_value = 0.3
+                    elif "rubber" in slot_id or "tire" in slot_id:
+                        if "Roughness" in bsdf.inputs:
+                            bsdf.inputs["Roughness"].default_value = 0.85
+
+            obj.data.materials.append(mat)
+            created_objs[part.name] = obj
+            if root_obj is None:
+                root_obj = obj
+
+        bpy.context.view_layer.update()
+        for part in plan.parts:
+            if part.parent_part and part.parent_part in created_objs:
+                child = created_objs[part.name]
+                parent = created_objs[part.parent_part]
+                world = child.matrix_world.copy()
+                child.parent = parent
+                child.matrix_parent_inverse = parent.matrix_world.inverted()
+                child.matrix_world = world
+
+        if root_obj:
+            sockets_dict = {k: v.to_dict() for k, v in plan.sockets.items()}
+            root_obj["sockets"] = json.dumps(sockets_dict)
+            root_obj["asset_id"] = plan.asset_id
+            root_obj["family"] = spec_obj.family.value
+            root_obj["recipe"] = spec_obj.recipe
+            root_obj["collision"] = plan.export.collision.value
+            if plan.export.collision == CollisionType.COMPOUND_CONVEX:
+                root_obj["godot_collision"] = "compound_convex"
+
+        bpy.context.view_layer.update()
+        push_undo_step(f"AI: Create from spec ({base_prefix})")
+
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        total_tris = 0
+        for o in created_objs.values():
+            ev = o.evaluated_get(depsgraph)
+            m = ev.to_mesh()
+            m.calc_loop_triangles()
+            total_tris += len(m.loop_triangles)
+            ev.to_mesh_clear()
+
+        return {
+            "asset_id": plan.asset_id,
+            "root_object": root_obj.name if root_obj else None,
+            "created_objects": [o.name for o in created_objs.values()],
+            "part_count": len(created_objs),
+            "socket_count": len(plan.sockets),
+            "triangle_count": total_tris,
+            "export_spec": plan.export.to_dict(),
+        }
 
     ORIGINS = ("BOTTOM_CENTER", "GEOMETRY_CENTER", "BOUNDS_CENTER", "WORLD_ORIGIN")
 
