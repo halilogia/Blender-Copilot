@@ -32,6 +32,7 @@ Eklenti ve Claude Code ortamı için `plugin/skills/` ve `.claude/skills/` altı
 6. **`blender-character-animation`:** Karakter poses, walk-cycle ve animasyon zamanlama kılavuzları.
 7. **`blender-cinematic-shot`:** Kamera kompozisyonu, ışıklandırma ve sinematik sahne kurulumu.
 8. **`blender-to-godot`:** Blender Copilot ile Godot 4 AI Sidebar arasındaki glTF aktarım ve çarpışma köprüsü.
+9. **`blender-lego-artist`:** LDraw CAD ve sanal LEGO modelleme akışı (LDU koordinatları, parça birleştirme, ABS plastik materyalleri ve fotogerçekçi Cycles/Eevee render).
 
 ---
 
