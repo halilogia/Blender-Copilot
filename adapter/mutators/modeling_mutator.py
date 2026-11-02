@@ -1036,7 +1036,7 @@ class ModelingMutator:
                             bsdf.inputs["Transmission Weight"].default_value = 0.85
                     elif "light" in slot_id or "emissive" in str(mat_val):
                         if "Emission Color" in bsdf.inputs:
-                            bsdf.inputs["Emission Color"].default_value = tuple(rgba[:3])
+                            bsdf.inputs["Emission Color"].default_value = tuple(rgba)
                         if "Emission Strength" in bsdf.inputs:
                             bsdf.inputs["Emission Strength"].default_value = 5.0
                     elif "metal" in slot_id or "steel" in str(mat_val):

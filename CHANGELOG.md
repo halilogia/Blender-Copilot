@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- **Fixed: `create_from_spec` Emission Color Socket (`adapter/mutators/modeling_mutator.py`)**: Fixed `Emission Color` socket assignment on Blender 4.0+/5.0+ Principled BSDF node to pass full 4-element RGBA tuple instead of 3-element RGB tuple, resolving `TypeError: sequences of dimension 0 should contain 4 items, not 3`.
 - **Skill `blender-lego-artist` (`plugin/skills/blender-lego-artist/SKILL.md`, `.claude/skills/blender-lego-artist/SKILL.md`)**: Comprehensive virtual LEGO CAD modeling guide based on the LDraw standard. Documents LDU coordinate units (1 LDU = 0.4mm, 20 LDU stud pitch, 24 LDU brick height, 8 LDU plate height), essential part catalog IDs (3001, 3003, 3020, 3710 etc.), official color tables, LDraw file format specifications, and automated Blender import pipeline using `io_scene_importldraw` with photo-realistic ABS plastic shaders, authentic LEGO stud logos, molded bevels, and micro-gaps.
 - **`AssetSpec` and Semantic Geometry Compiler (`core/asset_spec.py`)**: Pure Python parametric IR and constraint solver that translates high-level design intent into physically coupled 3D geometry without coordinate guesswork. Eliminates floating/intersecting part errors for text LLMs, guarantees ground contact (Z=0), computes symmetrical wheelbases, track widths, cabin ratios, socket anchors, material slots, and Godot collision metadata.
 - **P0 Procedural Operators (`loft_profiles`, `place_on_socket`, `create_from_spec`)**:
