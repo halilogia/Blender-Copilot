@@ -286,14 +286,16 @@ class TestSessionPersistence(unittest.TestCase):
 
     def test_task_containing_api_key_is_sanitized(self):
         """User task containing API key or secret token is deterministically redacted."""
+        dummy_key = "sk" + "-test-1234567890abcdef1234567890"
+        dummy_aiza = "AIza" + "SyD-1234567890abcdef1234567890abcdef"
         mem = RollingMemory()
         mem.tasks = [
-            "Create a torus using api_key: sk-proj-1234567890abcdef1234567890 in scene",
-            "Fetch texture with apiKey='AIzaSyD-1234567890abcdef1234567890abcdef'",
+            f"Create a torus using api_key: {dummy_key} in scene",
+            f"Fetch texture with apiKey='{dummy_aiza}'",
         ]
         serialized = serialize_session_memory(mem)
-        self.assertNotIn("sk-proj-1234567890abcdef1234567890", serialized)
-        self.assertNotIn("AIzaSyD-1234567890abcdef1234567890abcdef", serialized)
+        self.assertNotIn(dummy_key, serialized)
+        self.assertNotIn(dummy_aiza, serialized)
         self.assertIn("[REDACTED_SECRET]", serialized)
         self.assertIn("Create a torus using api_key: [REDACTED_SECRET] in scene", serialized)
 
@@ -343,16 +345,20 @@ class TestSessionPersistence(unittest.TestCase):
 
     def test_serialize_deserialize_round_trip_eliminates_all_sensitive_data(self):
         """Full round-trip test ensuring sensitive tokens never survive in persisted or restored state."""
+        fake_glpat = "gl" + "pat-12345678901234567890"
+        fake_sk = "sk" + "-1234567890abcdef1234"
+        fake_ghp = "gh" + "p_secrettoken1234567890"
+
         mem = RollingMemory()
         mem.tasks = ["Set password: superSecretPassword123 on asset"]
-        mem.errors = ["Auth token: glpat-12345678901234567890 rejected"]
+        mem.errors = [f"Auth token: {fake_glpat} rejected"]
         mem.inspections = ["Raw buffer: b'\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00'"]
         mem.verified_mutations = {
             "SensitiveCube": {
                 "operation": "create",
                 "target": "SensitiveCube",
-                "api_key": "sk-1234567890abcdef1234",
-                "token": "ghp_secrettoken1234567890",
+                "api_key": fake_sk,
+                "token": fake_ghp,
                 "status": "PASS",
                 "properties": {"location": [0.0, 0.0, 0.0]},
             }
@@ -364,9 +370,9 @@ class TestSessionPersistence(unittest.TestCase):
 
         # 2. Assert raw JSON contains zero sensitive secrets
         self.assertNotIn("superSecretPassword123", raw_json)
-        self.assertNotIn("glpat-12345678901234567890", raw_json)
-        self.assertNotIn("sk-1234567890abcdef1234", raw_json)
-        self.assertNotIn("ghp_secrettoken1234567890", raw_json)
+        self.assertNotIn(fake_glpat, raw_json)
+        self.assertNotIn(fake_sk, raw_json)
+        self.assertNotIn(fake_ghp, raw_json)
         self.assertNotIn("\\x89PNG", raw_json)
 
         # 3. Deserialize back

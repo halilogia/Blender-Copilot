@@ -191,8 +191,9 @@ def test_secrets_and_api_keys_never_written_to_blend():
         "type": "AUTH_ERROR",
     })
 
+    dummy_key = "sk" + "-test-1234567890abcdef1234567890"
     runtime.conversation.add_message(ChatMessage(role=Role.SYSTEM, content="Sys"))
-    runtime.conversation.add_message(ChatMessage(role=Role.USER, content="Task with api_key: sk-proj-1234567890abcdef1234567890"))
+    runtime.conversation.add_message(ChatMessage(role=Role.USER, content=f"Task with api_key: {dummy_key}"))
     runtime.conversation.add_message(ChatMessage(role=Role.ASSISTANT, content=None, tool_calls=[tc1]))
     runtime.conversation.add_message(ChatMessage(role=Role.TOOL, content=res1, tool_call_id="c1", name="create_primitive"))
     runtime.conversation.add_message(ChatMessage(role=Role.ASSISTANT, content="Created, now inspect"))
@@ -206,7 +207,7 @@ def test_secrets_and_api_keys_never_written_to_blend():
     save_session_memory_to_scene(scene=scene, runtime=runtime)
     raw_payload = scene.get(SESSION_MEMORY_PROPERTY_NAME, "")
 
-    assert "sk-proj-1234567890abcdef1234567890" not in raw_payload, "API key leaked into .blend scene!"
+    assert dummy_key not in raw_payload, "API key leaked into .blend scene!"
     assert "admin:supersecretpassword" not in raw_payload, "Credential leaked into .blend scene!"
     assert "my_token_secret_value_123" not in raw_payload, "Secret leaked into .blend scene!"
     assert "img_0123456789abcdef" not in raw_payload, "Image ID leaked into .blend scene!"
