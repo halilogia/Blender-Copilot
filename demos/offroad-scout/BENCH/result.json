@@ -1,0 +1,22 @@
+{
+  "name": "offroad-scout",
+  "date": "20261102-190000",
+  "status": "ok",
+  "seconds": 12.0,
+  "model": "asset_spec-compiler",
+  "tool_calls": 3,
+  "tool_errors": 0,
+  "agent_shots": 4,
+  "triangles": 1240,
+  "materials": 4,
+  "nodes": 12,
+  "size_m": [
+    2.2,
+    4.2,
+    1.8
+  ],
+  "bytes": 112764,
+  "final_message": "Offroad Scout modeli ba\u015far\u0131yla derlendi ve GLB olarak kaydedildi.",
+  "turns": 1,
+  "cost_usd": 0.0
+}

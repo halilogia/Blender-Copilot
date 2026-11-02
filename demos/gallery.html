@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blender Copilot - 3D Model Galerisi</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #38bdf8;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    header {
+      max-width: 1400px;
+      margin: 0 auto 24px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+      gap: 16px;
+    }
+    h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+    .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    input[type="text"] {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 240px;
+      outline: none;
+    }
+    input[type="text"]:focus { border-color: var(--accent); }
+    .btn-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .btn-toggle:hover { background: #1e293b; color: var(--accent); }
+    .grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+    }
+    .media-box {
+      width: 100%;
+      height: 240px;
+      background: #030712;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .media-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background-color: #030712;
+    }
+    .info {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      text-transform: capitalize;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: #1e293b;
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+    }
+    .prompt {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #64748b;
+      border-top: 1px solid var(--card-border);
+      padding-top: 10px;
+    }
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-action {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      text-decoration: none;
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #334155; color: #fff; }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-content img {
+      max-width: 85vw;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Blender Copilot - Model Galerisi</h1>
+      <div class="subtitle">Blender programini acmadan tum 3D modelleri, renderlari ve kontak sayfalarini inceleyin.</div>
+    </div>
+    <div class="controls">
+      <input type="text" id="search" placeholder="Model ara (orn: dragon, car, scout)..." oninput="filterCards()">
+      <button class="btn-toggle" onclick="toggleViewMode()">Mod: <span id="viewModeLabel">Izometrik Gorunum</span></button>
+    </div>
+  </header>
+
+  <div class="grid" id="galleryGrid"></div>
+
+  <div class="modal" id="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">Kapat</button>
+      <img id="modalImg" src="" alt="Detay">
+    </div>
+  </div>
+
+  <script>
+    const models = [{"name": "barrel", "prompt": "Oyun için düşük poligonlu metal varil modelle (bantlı, kapaklı), dışa aktar.", "tris": 868, "dims": "0.63 x 0.63 x 0.63 m", "tools": 22, "date": "20260930", "screenshot": "barrel/screenshot.png", "sheet": "barrel/sheet.png", "glb": "barrel/barrel.glb"}, {"name": "barrel-claudesonnet46", "prompt": "Oyun için düşük poligonlu metal varil modelle (bantlı, kapaklı), dışa aktar.", "tris": 872, "dims": "0.66 x 1.04 x 0.66 m", "tools": 34, "date": "20260930", "screenshot": "barrel-claudesonnet46/screenshot.png", "sheet": "barrel-claudesonnet46/sheet.png", "glb": "barrel-claudesonnet46/barrel-claudesonnet46.glb"}, {"name": "campfire", "prompt": "Oyun için düşük poligonlu bir kamp ateşi modelle (taş halka, odunlar, alev), dışa aktar.", "tris": 1384, "dims": "1.20 x 0.92 x 1.20 m", "tools": 42, "date": "20260930", "screenshot": "campfire/screenshot.png", "sheet": "campfire/sheet.png", "glb": "campfire/campfire.glb"}, {"name": "campfire-claudesonnet46", "prompt": "Oyun için düşük poligonlu bir kamp ateşi modelle (taş halka, odunlar, alev), dışa aktar.", "tris": 1090, "dims": "1.10 x 0.55 x 1.10 m", "tools": 40, "date": "20260930", "screenshot": "campfire-claudesonnet46/screenshot.png", "sheet": "campfire-claudesonnet46/sheet.png", "glb": "campfire-claudesonnet46/campfire-claudesonnet46.glb"}, {"name": "cannon", "prompt": "Oyun için düşük poligonlu bir top (kanon) modelle: namlu, ahşap iki tekerlekli lav, birkaç mermi yığını.", "tris": 1284, "dims": "3.08 x 0.97 x 1.57 m", "tools": 38, "date": "20260930", "screenshot": "cannon/screenshot.png", "sheet": "cannon/sheet.png", "glb": "cannon/cannon.glb"}, {"name": "car", "prompt": "Oyun için düşük poligonlu bir araba modelle: alçak gövde, ayrı kaput ve bagaj hattı, eğimli cam kabin, ön ve arka far, tampon, dört tekerlek ve jant. Gövde ve kabin farklı renk olsun. Tekerlekler yere değsin, gövde tekerlek yuvalarıyla çıkıntı yapmasın.", "tris": 1104, "dims": "4.00 x 1.80 x 1.50 m", "tools": 32, "date": "20260930", "screenshot": "car/screenshot.png", "sheet": "car/sheet.png", "glb": "car/car.glb"}, {"name": "castle", "prompt": "Oyun için düşük poligonlu küçük bir kale modelle: dört köşe kulesi, surlar ve mazgallar, kapı kulesi, ortada bir ana kule.", "tris": 1418, "dims": "10.25 x 2.00 x 10.25 m", "tools": 54, "date": "20260930", "screenshot": "castle/screenshot.png", "sheet": "castle/sheet.png", "glb": "castle/castle.glb"}, {"name": "chest", "prompt": "Oyun için düşük poligonlu bir hazine sandığı modelle: ahşap gövde, kubbeli kapak, metal bantlar, kilit.", "tris": 120, "dims": "0.90 x 0.77 x 0.67 m", "tools": 25, "date": "20260930", "screenshot": "chest/screenshot.png", "sheet": "chest/sheet.png", "glb": "chest/chest.glb"}, {"name": "crate", "prompt": "Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar.", "tris": 156, "dims": "0.82 x 0.80 x 0.82 m", "tools": 37, "date": "20260930", "screenshot": "crate/screenshot.png", "sheet": "crate/sheet.png", "glb": "crate/crate.glb"}, {"name": "crate-claudesonnet46", "prompt": "Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar.", "tris": 168, "dims": "1.01 x 1.52 x 1.01 m", "tools": 25, "date": "20260930", "screenshot": "crate-claudesonnet46/screenshot.png", "sheet": "crate-claudesonnet46/sheet.png", "glb": "crate-claudesonnet46/crate-claudesonnet46.glb"}, {"name": "dragon", "prompt": "Oyun için düşük poligonlu sevimli bir ejderha modelle: gövde, boyun, kafa, boynuzlar, iki kanat, kuyruk, dört bacak.", "tris": 990, "dims": "2.57 x 2.20 x 2.10 m", "tools": 35, "date": "20260930", "screenshot": "dragon/screenshot.png", "sheet": "dragon/sheet.png", "glb": "dragon/dragon.glb"}, {"name": "fence", "prompt": "Oyun için düşük poligonlu ahşap bir çit modelle: dört-beş kazık ve iki yatay tahta, tek parça olarak bitişik dizilebilecek genişlikte.", "tris": 84, "dims": "2.00 x 1.00 x 0.14 m", "tools": 16, "date": "20260930", "screenshot": "fence/screenshot.png", "sheet": "fence/sheet.png", "glb": "fence/fence.glb"}, {"name": "gravi", "prompt": "Antigravity 3D Maskotu GRAVI: tornalanmis govde, vizor, morfolojik gozler, gradient ve Fresnel isima katmanlari, Cycles render ve animasyonlu glTF.", "tris": 15200, "dims": "0.72 x 0.65 x 0.88 m", "tools": 12, "date": "20261102", "screenshot": "gravi/screenshot.png", "sheet": "gravi/sheet.png", "glb": "gravi/gravi.glb"}, {"name": "house", "prompt": "Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar.", "tris": 100, "dims": "4.60 x 4.20 x 3.79 m", "tools": 23, "date": "20260930", "screenshot": "house/screenshot.png", "sheet": "house/sheet.png", "glb": "house/house.glb"}, {"name": "house-claudesonnet46", "prompt": "Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar.", "tris": 68, "dims": "6.60 x 4.80 x 5.60 m", "tools": 32, "date": "20260930", "screenshot": "house-claudesonnet46/screenshot.png", "sheet": "house-claudesonnet46/sheet.png", "glb": "house-claudesonnet46/house-claudesonnet46.glb"}, {"name": "house-geminiproagent", "prompt": "Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar.", "tris": 56, "dims": "2.40 x 3.50 x 2.27 m", "tools": 22, "date": "20260930", "screenshot": "house-geminiproagent/screenshot.png", "sheet": "house-geminiproagent/sheet.png", "glb": "house-geminiproagent/house-geminiproagent.glb"}, {"name": "house-spacebunnyalpha", "prompt": "Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar.", "tris": 80, "dims": "4.20 x 3.90 x 3.40 m", "tools": 30, "date": "20260930", "screenshot": "house-spacebunnyalpha/screenshot.png", "sheet": "house-spacebunnyalpha/sheet.png", "glb": "house-spacebunnyalpha/house-spacebunnyalpha.glb"}, {"name": "lamp", "prompt": "Oyun için düşük poligonlu bir sokak lambası modelle (direk, kol, abajur), dışa aktar.", "tris": 402, "dims": "1.38 x 4.00 x 0.55 m", "tools": 20, "date": "20260930", "screenshot": "lamp/screenshot.png", "sheet": "lamp/sheet.png", "glb": "lamp/lamp.glb"}, {"name": "ledger-report-cleanup-deepseekv4flash", "prompt": "Bir köy girişi kur: create_prop ile bir house ve iki tree_pine. Önce yerleşimi denemek için geçici bir 'Test' adlı küre (create_primitive SPHERE) ve 'Marker' adlı bir kutu koy, bunlarla konumları belirle. Sonra task_report çağır: nelerin eklendiğine bak ve geçici nesneleri (Test, Marker) delete_object ile sil. Silme onayı gerekirse onayla. Tekrar task_report ile yalnız house ve ağaçların kaldığını doğrula, sonra export_gltf ile village.glb yaz.", "tris": 1988, "dims": "3.45 x 6.76 x 2.97 m", "tools": 25, "date": "20260930", "screenshot": "ledger-report-cleanup-deepseekv4flash/screenshot.png", "sheet": "ledger-report-cleanup-deepseekv4flash/sheet.png", "glb": "ledger-report-cleanup-deepseekv4flash/ledger-report-cleanup-deepseekv4flash.glb"}, {"name": "mesh-doorway-deepseekv4flash", "prompt": "Delikli bir duvar yap: create_primitive CUBE 'Wall' size 2 (yerel koordinatlar -1..1). mesh_edit ile +Y yüzüne INSET_FACES thickness 0.5, sonra -Y yüzüne aynısını yap. Sonra BRIDGE_FACES ile iki iç yüzü bir tünelle birleştir: faces={direction:'+Y', min_area:0.9}, faces_b={direction:'-Y', min_area:0.9} (inset halkası yüzlerinin alanı 0.75, iç yüzün 1.0). set_material ile taş rengi ver, check_model ile kontrol et, frame_view ve capture_viewport ile bak, export_gltf wall.glb.", "tris": 32, "dims": "2.00 x 2.00 x 2.00 m", "tools": 23, "date": "20260930", "screenshot": "mesh-doorway-deepseekv4flash/screenshot.png", "sheet": "mesh-doorway-deepseekv4flash/sheet.png", "glb": "mesh-doorway-deepseekv4flash/mesh-doorway-deepseekv4flash.glb"}, {"name": "model-baked-bench-deepseekv4flash", "prompt": "Bir park bankı modelle: ahşap oturma yüzeyi (kutu), ahşap sırtlık (kutu) ve iki metal ayak (kutular). Ahşap parçalara set_material preset wood, metal ayaklara preset metal ver. Parçaları join_objects ile birleştir, set_origin ile zemine oturt, check_model ile kontrol et ve FAIL'leri düzelt, bake_material ile dokuya pişir (resolution 512) ve export_gltf ile bench.glb yaz. Godot'ya gidecek.", "tris": 48, "dims": "1.60 x 0.85 x 0.50 m", "tools": 32, "date": "20260930", "screenshot": "model-baked-bench-deepseekv4flash/screenshot.png", "sheet": "model-baked-bench-deepseekv4flash/sheet.png", "glb": "model-baked-bench-deepseekv4flash/model-baked-bench-deepseekv4flash.glb"}, {"name": "model-check-fix-deepseekv4flash", "prompt": "create_primitive ile 3 parçalı basit bir masa yap: bir kutu tabla (scale [3,2,0.15], location [0,0,1.0]) ve iki kutu ayak (scale [0.2,0.2,1], konumlar [-1.2,0,0] ve [1.2,0,0]; ayakların alt kenarı z=-0.5'e sarkıyor, bilerek). Hiçbir malzeme verme. Sonra check_model çağır, çıkan FAIL ve WARN maddelerini söylediği araçlarla düzelt (ölçeği uygula, zemine oturt, malzeme ver), check_model ok ve temiz olana kadar tekrarla, join_objects ile birleştir, set_origin, export_gltf table.glb.", "tris": 36, "dims": "3.00 x 1.07 x 2.00 m", "tools": 27, "date": "20260930", "screenshot": "model-check-fix-deepseekv4flash/screenshot.png", "sheet": "model-check-fix-deepseekv4flash/sheet.png", "glb": "model-check-fix-deepseekv4flash/model-check-fix-deepseekv4flash.glb"}, {"name": "mushroom", "prompt": "Oyun için düşük poligonlu büyük bir mantar modelle: kırmızı şapka, beyaz benekler, krem gövde.", "tris": 1644, "dims": "2.00 x 1.84 x 2.00 m", "tools": 27, "date": "20260930", "screenshot": "mushroom/screenshot.png", "sheet": "mushroom/sheet.png", "glb": "mushroom/mushroom.glb"}, {"name": "offroad-scout", "prompt": "AssetSpec IR parametrik arazi aracı (Offroad Scout): zemin temaslı silindirik arazi tekerlekleri, tavan bagajı, tamponlar ve ön cam.", "tris": 1240, "dims": "2.20 x 4.20 x 1.80 m", "tools": 3, "date": "20261102", "screenshot": "offroad-scout/screenshot.png", "sheet": "offroad-scout/sheet.png", "glb": "offroad-scout/offroad-scout.glb"}, {"name": "rifle", "prompt": "Oyun için düşük poligonlu bir savaş dönemi tüfeği modelle: ahşap dipçik, metal namlu, sürgü, tetik koruması, nişangah, kayış. Namlu ileri (+Y) baksın, 1.1 m uzunlukta.", "tris": 1196, "dims": "0.13 x 0.24 x 1.10 m", "tools": 34, "date": "20260930", "screenshot": "rifle/screenshot.png", "sheet": "rifle/sheet.png", "glb": "rifle/rifle.glb"}, {"name": "robot", "prompt": "Oyun için düşük poligonlu sevimli bir robot karakter modelle: kutu kafa, anten, iki göz, gövde, kollar, bacaklar, göğüste bir panel.", "tris": 536, "dims": "1.00 x 1.00 x 1.00 m", "tools": 29, "date": "20260930", "screenshot": "robot/screenshot.png", "sheet": "robot/sheet.png", "glb": "robot/robot.glb"}, {"name": "rock", "prompt": "Oyun için düşük poligonlu bir kaya kümesi modelle: 3 farklı boyda düzensiz, köşeli kaya, birbirine yaslı, gri tonları ve üstünde biraz yosun yeşili. Zemine oturuyor olsun (alt yüz düz).", "tris": 114, "dims": "1.82 x 1.04 x 1.76 m", "tools": 23, "date": "20260930", "screenshot": "rock/screenshot.png", "sheet": "rock/sheet.png", "glb": "rock/rock.glb"}, {"name": "sailboat", "prompt": "Oyun için düşük poligonlu küçük bir yelkenli tekne modelle: gövde, güverte, direk, iki yelken, dümen.", "tris": 324, "dims": "3.10 x 4.10 x 1.20 m", "tools": 21, "date": "20260930", "screenshot": "sailboat/screenshot.png", "sheet": "sailboat/sheet.png", "glb": "sailboat/sailboat.glb"}, {"name": "shot-acting-sequence-deepseekv4flash", "prompt": "Sevimli düşük poligonlu bir robot karakter modelle: kafa, gövde, kollar, bacaklar ve yüz için EyeL, EyeR, Mouth adlı küçük kutular (ayrı parçalar, birleştirme). rig_character ile bağla, sonra animate_sequence ile sahneyi oynat: önce 3 metre yürüsün, sonra el sallasın, sonra şu cümleyi konuşsun: 'Merhaba, ben geldim!'. Sonra render_shots ile üç planlık film çek (planlar animasyonda kaldığı yerden devam etsin): 1) follow ile dolly_in (3 sn), 2) follow ile arc_left (2 sn), 3) eyes_in (3 sn); studio ışığı, cinematic look, müzik olarak 'calm'.", "tris": "-", "dims": "-", "tools": 74, "date": "20260930", "screenshot": "shot-acting-sequence-deepseekv4flash/screenshot.png", "sheet": "shot-acting-sequence-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-campfire-handheld-claudesonnet46", "prompt": "Taş halkalı bir kamp ateşi modelle (odunlar, alev), gece ışığı kur ve elde çekilmiş gibi hafif titreyen (handheld) 4 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 34, "date": "20260930", "screenshot": "shot-campfire-handheld-claudesonnet46/screenshot.png", "sheet": "shot-campfire-handheld-claudesonnet46/sheet.png", "glb": ""}, {"name": "shot-castle-orbit-claudesonnet46", "prompt": "Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 56, "date": "20260930", "screenshot": "shot-castle-orbit-claudesonnet46/screenshot.png", "sheet": "shot-castle-orbit-claudesonnet46/sheet.png", "glb": ""}, {"name": "shot-castle-orbit-geminiproagent", "prompt": "Bir kale modelle (kuleler, surlar), gün batımı ışığı kur ve kamerayı kalenin etrafında yavaşça döndürüp 5 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 29, "date": "20260930", "screenshot": "shot-castle-orbit-geminiproagent/screenshot.png", "sheet": "shot-castle-orbit-geminiproagent/sheet.png", "glb": ""}, {"name": "shot-check-framing-deepseekv4flash", "prompt": "create_prop ile bir tree_pine ve bir house yan yana kur (house x=3). camera_move ile dolly_in çek ama distance'ı bilerek 2 ver. Sonra check_shot çağır, çıkan sorunları söylediği araç değişikliğiyle düzelt, check_shot ok olana kadar tekrarla. En sonunda render_animation ile 4 sn'lik film çek.", "tris": "-", "dims": "-", "tools": 24, "date": "20260930", "screenshot": "shot-check-framing-deepseekv4flash/screenshot.png", "sheet": "shot-check-framing-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-film-village-spacebunnyalpha", "prompt": "Küçük bir köy sahnesi modelle: bir köy evi (duvar, çatı, kapı, pencere, baca) ve yanında iki çam ağacı. Sonra render_shots ile üç planlık kısa bir film çek: 1) gün batımı ışığında aerial_pullback (4 sn), 2) gün batımı ışığında dolly_left (3 sn) ve cinematic look, 3) gece ışığında hero_cam (3 sn). Planlar arası crossfade olsun.", "tris": "-", "dims": "-", "tools": 82, "date": "20260930", "screenshot": "shot-film-village-spacebunnyalpha/screenshot.png", "sheet": "shot-film-village-spacebunnyalpha/sheet.png", "glb": ""}, {"name": "shot-house-night-claudesonnet46", "prompt": "Küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), gece ışığı kur ve kamerayı evin çevresinde yay çizdirerek (arc) 4 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 21, "date": "20260930", "screenshot": "shot-house-night-claudesonnet46/screenshot.png", "sheet": "shot-house-night-claudesonnet46/sheet.png", "glb": ""}, {"name": "shot-knight-run-geminiproagent", "prompt": "Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al.", "tris": "-", "dims": "-", "tools": 23, "date": "20260930", "screenshot": "shot-knight-run-geminiproagent/screenshot.png", "sheet": "shot-knight-run-geminiproagent/sheet.png", "glb": ""}, {"name": "shot-knight-run-spacebunnyalpha", "prompt": "Zırhlı düşük poligonlu bir şövalye modelle (kafa, miğfer, gövde, kollar, bacaklar, kalkan ayrı parçalar olsun, birleştirme). rig_character ile bağla, koştur (run, 8 metre), kapalı hava ışığı kur, kamera onu takip etsin (follow) ve 4 saniyelik MP4 al.", "tris": "-", "dims": "-", "tools": 40, "date": "20260930", "screenshot": "shot-knight-run-spacebunnyalpha/screenshot.png", "sheet": "shot-knight-run-spacebunnyalpha/sheet.png", "glb": ""}, {"name": "shot-materials-deepseekv4flash", "prompt": "Küçük bir avlu kur: 12x12 bir plane zemin (set_material preset grass), ortada create_prop ile bir house, evin duvarına preset brick, çatısına preset wood ver (parçalara ayrı ayrı), yanında bir tree_pine, önünde küçük bir su havuzu (silindir, preset water) ve bir taş duvar parçası (kutu, preset stone). set_environment golden_hour, camera_move orbit ile 5 sn'lik film çek, check_shot ile kontrol et.", "tris": "-", "dims": "-", "tools": 27, "date": "20260930", "screenshot": "shot-materials-deepseekv4flash/screenshot.png", "sheet": "shot-materials-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-robot-vertigo-spacebunnyalpha", "prompt": "Sevimli bir robot modelle, neon ışık kur ve dolly zoom (vertigo) efektiyle 3 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 49, "date": "20260930", "screenshot": "shot-robot-vertigo-spacebunnyalpha/screenshot.png", "sheet": "shot-robot-vertigo-spacebunnyalpha/sheet.png", "glb": ""}, {"name": "shot-robot-wave-deepseekv4flash", "prompt": "Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al.", "tris": "-", "dims": "-", "tools": 58, "date": "20260930", "screenshot": "shot-robot-wave-deepseekv4flash/screenshot.png", "sheet": "shot-robot-wave-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-robot-wave-geminiproagent", "prompt": "Sevimli bir robot karakter modelle (kafa, anten, gövde, iki kol, iki bacak ayrı parçalar olsun, birleştirme). rig_character ile bağla, el salla (wave), stüdyo ışığı kur, kamera yavaşça yaklaşsın (dolly_in) ve 4 saniyelik bir MP4 al.", "tris": "-", "dims": "-", "tools": 53, "date": "20260930", "screenshot": "shot-robot-wave-geminiproagent/screenshot.png", "sheet": "shot-robot-wave-geminiproagent/sheet.png", "glb": ""}, {"name": "shot-runner-bent-deepseekv4flash", "prompt": "Düşük poligonlu bir koşucu modelle: kafa, gövde, üst kollar ile ön kollar (ForearmL, ForearmR), üst bacaklar ile alt bacaklar (ShinL, ShinR) ve ayakkabılar AYRI parçalar olsun (birleştirme; ön kolun ve alt bacağın üstü, üst parçanın alt ucuna denk gelsin). polish_model ile parçaları yumuşat, rig_character ile bağla, character_library ile 'Runner' adıyla kaydet, koştur (run, 8 metre), sunset ışığı ve cinematic look kur, kamera takip etsin (follow) ve 4 saniyelik MP4 al.", "tris": "-", "dims": "-", "tools": 66, "date": "20260930", "screenshot": "shot-runner-bent-deepseekv4flash/screenshot.png", "sheet": "shot-runner-bent-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-slowmo-dof-deepseekv4flash", "prompt": "Bir sandık (Crate) ile birkaç metre arkasında bir varil (Barrel) modelle. set_environment day kur. camera_settings ile f_stop 1.8 ve Crate'ten Barrel'e rack focus yap, 2 saniyelik dolly_left klibini 'clip_a' adıyla render_animation ile al; sonra 2 saniyelik crane_over klibini 'clip_b' adıyla al. edit_video ile clip_a'yı normal, clip_b'yi 0.5 hızda (yavaş çekim) crossfade ile birleştir, 'epic' bir soundtrack (make_soundtrack) ekle ve sonucu bu isimle kaydet.", "tris": "-", "dims": "-", "tools": 50, "date": "20260930", "screenshot": "shot-slowmo-dof-deepseekv4flash/screenshot.png", "sheet": "shot-slowmo-dof-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-soldier-aim-geminiproagent", "prompt": "Düşük poligonlu bir asker modelle (kafa, kask, gövde, kollar, bacaklar, tüfek ayrı parçalar olsun, birleştirme). rig_character ile bağla, nişan alma (aim) animasyonu ver, gece ışığı kur, kamera askerin çevresinde yay çizsin (arc_left) ve 4 saniyelik bir MP4 al.", "tris": "-", "dims": "-", "tools": 46, "date": "20260930", "screenshot": "shot-soldier-aim-geminiproagent/screenshot.png", "sheet": "shot-soldier-aim-geminiproagent/sheet.png", "glb": ""}, {"name": "shot-soldier-dolly-claudesonnet46", "prompt": "Elinde tüfek tutan düşük poligonlu bir asker modelle, kapalı hava (overcast) ışığı kur ve kamerayı askere yavaşça yaklaştıran (dolly_in) 4 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 36, "date": "20260930", "screenshot": "shot-soldier-dolly-claudesonnet46/screenshot.png", "sheet": "shot-soldier-dolly-claudesonnet46/sheet.png", "glb": ""}, {"name": "shot-soldier-walk-spacebunnyalpha", "prompt": "Düşük poligonlu bir asker modelle: kafa, kask, gövde, iki kol, iki bacak, botlar, sırt çantası ve tüfek AYRI parçalar olsun (birleştirme). Karakteri rig_character ile bağla, 5 metre yürüt, gün batımı ışığı kur, kamerayı onu takip ettirerek (follow) çek ve 5 saniyelik bir MP4 al.", "tris": "-", "dims": "-", "tools": 58, "date": "20260930", "screenshot": "shot-soldier-walk-spacebunnyalpha/screenshot.png", "sheet": "shot-soldier-walk-spacebunnyalpha/sheet.png", "glb": ""}, {"name": "shot-talker-music-deepseekv4flash", "prompt": "Sevimli düşük poligonlu bir robot karakter modelle: kafa, gövde, kollar, bacaklar ve yüz için EyeL, EyeR, Mouth adlı küçük kutular (ayrı parçalar, birleştirme). rig_character ile bağla ve animate_character ile talk animasyonunu şu metinle ver: 'Merhaba, ben yeni robotunuzum. Bugün birlikte harika şeyler yapacağız!'. Sonra render_shots ile iki planlık film çek: 1) studio ışığında eyes_in (3 sn), 2) studio ışığında dolly_out (3 sn), cinematic look; müzik olarak 'playful' kullan.", "tris": "-", "dims": "-", "tools": 63, "date": "20260930", "screenshot": "shot-talker-music-deepseekv4flash/screenshot.png", "sheet": "shot-talker-music-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-tank-crane-claudesonnet46", "prompt": "Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 29, "date": "20260930", "screenshot": "shot-tank-crane-claudesonnet46/screenshot.png", "sheet": "shot-tank-crane-claudesonnet46/sheet.png", "glb": ""}, {"name": "shot-tank-crane-geminiproagent", "prompt": "Düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), gün batımı ışığında kamerayı yukarı kaldıran (crane_up) 4 saniyelik bir MP4 çek.", "tris": "-", "dims": "-", "tools": 34, "date": "20260930", "screenshot": "shot-tank-crane-geminiproagent/screenshot.png", "sheet": "shot-tank-crane-geminiproagent/sheet.png", "glb": ""}, {"name": "shot-terrain-forest-deepseekv4flash", "prompt": "Tepeli bir manzara kur: create_terrain (size 60, height 5, flat_radius 8, seed 3) ve set_material preset grass ver. Ortada düz alana create_prop ile bir house koy. Sonra bir tree_pine üretip scatter ile araziye (ground=Terrain) 40 ağaç dağıt, evin yerini avoid ile boş bırak. Bir de ev girişinden uzanan bir yol boyunca (path) 10 lamba (lamp) dik. set_environment golden_hour, camera_move orbit ile 5 sn film çek, check_shot ile kontrol et.", "tris": "-", "dims": "-", "tools": 30, "date": "20260930", "screenshot": "shot-terrain-forest-deepseekv4flash/screenshot.png", "sheet": "shot-terrain-forest-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-village-props-deepseekv4flash", "prompt": "create_prop ile küçük bir köy sahnesi kur: bir house, yanında iki tree_pine (farklı konumlarda), bir well ve bir fence; sonra bir humanoid ekle, rig_character ile bağla ve 4 metre yürüt (walk). sunset ışığı kur, kamera humanoid'i takip etsin (follow, dolly_in) ve 5 saniyelik bir MP4 çek; kısa bir 'calm' müzik ekle (render_shots kullan).", "tris": "-", "dims": "-", "tools": 18, "date": "20260930", "screenshot": "shot-village-props-deepseekv4flash/screenshot.png", "sheet": "shot-village-props-deepseekv4flash/sheet.png", "glb": ""}, {"name": "shot-zombie-walk-geminiproagent", "prompt": "Yeşil tenli, yırtık giysili sevimli düşük poligonlu bir zombi modelle (kafa, gövde, kollar, bacaklar ayrı parçalar olsun, birleştirme). rig_character ile bağla, yürüt (3 metre, yavaş), gece ışığı kur, kamera takip etsin (follow) ve 5 saniyelik MP4 al.", "tris": "-", "dims": "-", "tools": 36, "date": "20260930", "screenshot": "shot-zombie-walk-geminiproagent/screenshot.png", "sheet": "shot-zombie-walk-geminiproagent/sheet.png", "glb": ""}, {"name": "soldier", "prompt": "Oyun için düşük poligonlu bir asker karakteri modelle: kask, gövde, kollar, bacaklar, botlar, sırt çantası, elinde tüfek tutma pozunda kollar. Yaklaşık 1.8 m boyunda, T-pozu değil, hafif yürüyüş duruşu olsun; üniforma zeytin yeşili, kask koyu, cilt tonu ayrı.", "tris": 1504, "dims": "1.56 x 3.63 x 4.80 m", "tools": 55, "date": "20260930", "screenshot": "soldier/screenshot.png", "sheet": "soldier/sheet.png", "glb": "soldier/soldier.glb"}, {"name": "spaceship", "prompt": "Oyun için düşük poligonlu bir uzay gemisi modelle: gövde, kokpit camı, iki kanat, iki motor ve motor alevleri, ayrı renkli şeritler.", "tris": 520, "dims": "4.40 x 1.45 x 4.60 m", "tools": 28, "date": "20260930", "screenshot": "spaceship/screenshot.png", "sheet": "spaceship/sheet.png", "glb": "spaceship/spaceship.glb"}, {"name": "sword", "prompt": "Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar.", "tris": 230, "dims": "0.16 x 0.98 x 0.05 m", "tools": 17, "date": "20260930", "screenshot": "sword/screenshot.png", "sheet": "sword/sheet.png", "glb": "sword/sword.glb"}, {"name": "sword-claudesonnet46", "prompt": "Oyun için düşük poligonlu bir kılıç modelle (bıçak, siper, kabza, topuz), dışa aktar.", "tris": 120, "dims": "0.50 x 1.40 x 0.10 m", "tools": 32, "date": "20260930", "screenshot": "sword-claudesonnet46/screenshot.png", "sheet": "sword-claudesonnet46/sheet.png", "glb": "sword-claudesonnet46/sword-claudesonnet46.glb"}, {"name": "tank", "prompt": "Oyun için düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), dışa aktar.", "tris": 380, "dims": "1.00 x 1.00 x 1.00 m", "tools": 17, "date": "20260930", "screenshot": "tank/screenshot.png", "sheet": "tank/sheet.png", "glb": "tank/tank.glb"}, {"name": "tank-claudesonnet46", "prompt": "Oyun için düşük poligonlu bir tank modelle (gövde, palet, kule, namlu), dışa aktar.", "tris": 364, "dims": "4.38 x 1.60 x 7.40 m", "tools": 34, "date": "20260930", "screenshot": "tank-claudesonnet46/screenshot.png", "sheet": "tank-claudesonnet46/sheet.png", "glb": "tank-claudesonnet46/tank-claudesonnet46.glb"}, {"name": "tent", "prompt": "Oyun için düşük poligonlu bir kamp çadırı modelle: üçgen çadır, giriş açıklığı, iki kazık ve ip.", "tris": 294, "dims": "1.80 x 1.35 x 3.54 m", "tools": 21, "date": "20260930", "screenshot": "tent/screenshot.png", "sheet": "tent/sheet.png", "glb": "tent/tent.glb"}, {"name": "tree", "prompt": "Oyun için düşük poligonlu bir çam ağacı modelle, dışa aktar.", "tris": 310, "dims": "5.33 x 2.65 x 5.33 m", "tools": 28, "date": "20260930", "screenshot": "tree/screenshot.png", "sheet": "tree/sheet.png", "glb": "tree/tree.glb"}, {"name": "tree-claudesonnet46", "prompt": "Oyun için düşük poligonlu bir çam ağacı modelle, dışa aktar.", "tris": 310, "dims": "2.40 x 4.00 x 2.40 m", "tools": 21, "date": "20260930", "screenshot": "tree-claudesonnet46/screenshot.png", "sheet": "tree-claudesonnet46/sheet.png", "glb": "tree-claudesonnet46/tree-claudesonnet46.glb"}, {"name": "watchtower", "prompt": "Oyun için düşük poligonlu ahşap bir gözetleme kulesi modelle: dört ayak, çapraz destekler, platform, korkuluk, çatı, merdiven.", "tris": 386, "dims": "3.20 x 7.50 x 3.20 m", "tools": 44, "date": "20260930", "screenshot": "watchtower/screenshot.png", "sheet": "watchtower/sheet.png", "glb": "watchtower/watchtower.glb"}, {"name": "well", "prompt": "Oyun için düşük poligonlu bir taş kuyu modelle: yuvarlak taş halka, iki direk, küçük çatı, kova ve ip.", "tris": 652, "dims": "2.40 x 3.30 x 1.60 m", "tools": 23, "date": "20260930", "screenshot": "well/screenshot.png", "sheet": "well/sheet.png", "glb": "well/well.glb"}, {"name": "windmill", "prompt": "Oyun için düşük poligonlu bir yel değirmeni modelle: konik taş gövde, çatı, dört kanatlı pervane (çapraz çıtalı), kapı ve pencere.", "tris": 574, "dims": "7.58 x 26.33 x 3.70 m", "tools": 35, "date": "20260930", "screenshot": "windmill/screenshot.png", "sheet": "windmill/sheet.png", "glb": "windmill/windmill.glb"}];
+    let viewMode = 'screenshot';
+
+    function renderGrid() {
+      const grid = document.getElementById('galleryGrid');
+      const q = document.getElementById('search').value.toLowerCase();
+      grid.innerHTML = '';
+
+      models.filter(m => m.name.toLowerCase().includes(q) || m.prompt.toLowerCase().includes(q)).forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        let mediaHtml = '';
+        if (viewMode === '3d' && m.glb) {
+          mediaHtml = `<model-viewer src="${m.glb}" auto-rotate camera-controls shadow-intensity="1"></model-viewer>`;
+        } else {
+          const src = viewMode === 'sheet' ? m.sheet : m.screenshot;
+          mediaHtml = `<div class="media-box" onclick="openModal('${viewMode === 'sheet' ? m.sheet : m.screenshot}')">
+            <img src="${src}" alt="${m.name}" loading="lazy">
+          </div>`;
+        }
+
+        card.innerHTML = `
+          ${mediaHtml}
+          <div class="info">
+            <div class="title-row">
+              <span class="title">${m.name}</span>
+              <span class="badge">${m.tris} tris</span>
+            </div>
+            <div class="prompt" title="${m.prompt}">${m.prompt}</div>
+            <div class="meta">
+              <span>Boyut: ${m.dims}</span>
+              <span>Tarih: ${m.date}</span>
+            </div>
+            <div class="actions">
+              <button class="btn-action" onclick="openModal('${m.sheet}')">4 Aci Sheet</button>
+              ${m.glb ? `<a class="btn-action" href="${m.glb}" download>GLB Indir</a>` : ''}
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCards() { renderGrid(); }
+
+    function toggleViewMode() {
+      if (viewMode === 'screenshot') {
+        viewMode = 'sheet';
+        document.getElementById('viewModeLabel').innerText = '4-Aci Kontak Sayfasi';
+      } else if (viewMode === 'sheet') {
+        viewMode = '3d';
+        document.getElementById('viewModeLabel').innerText = 'Interaktif 3D WebGL';
+      } else {
+        viewMode = 'screenshot';
+        document.getElementById('viewModeLabel').innerText = 'Izometrik Gorunum';
+      }
+      renderGrid();
+    }
+
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    renderGrid();
+  </script>
+</body>
+</html>

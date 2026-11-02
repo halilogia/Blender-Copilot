@@ -1,0 +1,22 @@
+{
+  "name": "gravi",
+  "date": "20261102-184800",
+  "status": "ok",
+  "seconds": 45.0,
+  "model": "blender_copilot_tools",
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "agent_shots": 8,
+  "triangles": 15200,
+  "materials": 5,
+  "nodes": 8,
+  "size_m": [
+    0.72,
+    0.65,
+    0.88
+  ],
+  "bytes": 790436,
+  "final_message": "GRAVI maskotu basariyla uretildi ve glTF 2.0 olarak kaydedildi.",
+  "turns": 1,
+  "cost_usd": 0.0
+}

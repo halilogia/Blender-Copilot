@@ -16,7 +16,9 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [chest](chest/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir hazine sandığı modelle: ahşap gövde, kubbeli kapak, metal bantlar, kilit. | 1.3 dk | 25 | 120 | 0.90x0.77x0.67 m | 20260930 |
 | [crate](crate/) | Claude Code (MCP) · claude-opus-5-5 | Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar. | 1.1 dk | 37 | 156 | 0.82x0.80x0.82 m | 20260930 |
 | [crate-claudesonnet46](crate-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Bir oyun için düşük poligonlu ahşap sandık modelle, dışa aktar. | 2.0 dk | 25 | 168 | 1.01x1.52x1.01 m | 20260930 |
+| [dragon](dragon/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu sevimli bir ejderha modelle: gövde, boyun, kafa, boynuzlar, iki kanat, kuyruk, dört bacak. | 1.1 dk | 35 | 990 | 2.57x2.20x2.10 m | 20260930 |
 | [fence](fence/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu ahşap bir çit modelle: dört-beş kazık ve iki yatay tahta, tek parça olarak bitişik dizilebilecek genişlikte. | 0.7 dk | 16 | 84 | 2.00x1.00x0.14 m | 20260930 |
+| [gravi](gravi/) | Claude Code (MCP) · blender_copilot_tools | Antigravity 3D Maskotu GRAVI: tornalanmis govde, vizor, morfolojik gozler, gradient ve Fresnel isima katmanlari, Cycles render ve animasyonlu glTF. | 0.8 dk | 12 | 15200 | 0.72x0.65x0.88 m | 20261102 |
 | [house](house/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 1.1 dk | 23 | 100 | 4.60x4.20x3.79 m | 20260930 |
 | [house-claudesonnet46](house-claudesonnet46/) | Blender Copilot ajanı (9router) · ag/claude-sonnet-4-6 | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 2.5 dk | 32 | 68 | 6.60x4.80x5.60 m | 20260930 |
 | [house-geminiproagent](house-geminiproagent/) | Blender Copilot ajanı (9router) · ag/gemini-pro-agent | Oyun için düşük poligonlu küçük bir köy evi modelle (duvar, çatı, kapı, pencere, baca), dışa aktar. | 1.2 dk | 22 | 56 | 2.40x3.50x2.27 m | 20260930 |
@@ -27,6 +29,7 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 | [model-baked-bench-deepseekv4flash](model-baked-bench-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | Bir park bankı modelle: ahşap oturma yüzeyi (kutu), ahşap sırtlık (kutu) ve iki metal ayak (kutular). Ahşap parçalara set_material preset wood, metal ayaklara preset metal ver. Parçaları join_objects ile birleştir, set_origin ile zemine oturt, check_model ile kontrol et ve FAIL'leri düzelt, bake_material ile dokuya pişir (resolution 512) ve export_gltf ile bench.glb yaz. Godot'ya gidecek. | 3.6 dk | 32 | 48 | 1.60x0.85x0.50 m | 20260930 |
 | [model-check-fix-deepseekv4flash](model-check-fix-deepseekv4flash/) | Blender Copilot ajanı (9router) · cmc/deepseek/deepseek-v4-flash | create_primitive ile 3 parçalı basit bir masa yap: bir kutu tabla (scale [3,2,0.15], location [0,0,1.0]) ve iki kutu ayak (scale [0.2,0.2,1], konumlar [-1.2,0,0] ve [1.2,0,0]; ayakların alt kenarı z=-0.5'e sarkıyor, bilerek). Hiçbir malzeme verme. Sonra check_model çağır, çıkan FAIL ve WARN maddelerini söylediği araçlarla düzelt (ölçeği uygula, zemine oturt, malzeme ver), check_model ok ve temiz olana kadar tekrarla, join_objects ile birleştir, set_origin, export_gltf table.glb. | 3.1 dk | 27 | 36 | 3.00x1.07x2.00 m | 20260930 |
 | [mushroom](mushroom/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu büyük bir mantar modelle: kırmızı şapka, beyaz benekler, krem gövde. | 1.0 dk | 27 | 1644 | 2.00x1.84x2.00 m | 20260930 |
+| [offroad-scout](offroad-scout/) | Claude Code (MCP) · asset_spec-compiler | AssetSpec IR parametrik arazi aracı (Offroad Scout): zemin temaslı silindirik arazi tekerlekleri, tavan bagajı, tamponlar ve ön cam. | 0.2 dk | 3 | 1240 | 2.20x4.20x1.80 m | 20261102 |
 | [rifle](rifle/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir savaş dönemi tüfeği modelle: ahşap dipçik, metal namlu, sürgü, tetik koruması, nişangah, kayış. Namlu ileri (+Y) baksın, 1.1 m uzunlukta. | 1.6 dk | 34 | 1196 | 0.13x0.24x1.10 m | 20260930 |
 | [robot](robot/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu sevimli bir robot karakter modelle: kutu kafa, anten, iki göz, gövde, kollar, bacaklar, göğüste bir panel. | 1.0 dk | 29 | 536 | 1.00x1.00x1.00 m | 20260930 |
 | [rock](rock/) | Claude Code (MCP) · claude-opus-5-5 | Oyun için düşük poligonlu bir kaya kümesi modelle: 3 farklı boyda düzensiz, köşeli kaya, birbirine yaslı, gri tonları ve üstünde biraz yosun yeşili. Zemine oturuyor olsun (alt yüz düz). | 1.1 dk | 23 | 114 | 1.82x1.04x1.76 m | 20260930 |
@@ -110,9 +113,17 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 
 ![crate-claudesonnet46](crate-claudesonnet46/sheet.png)
 
+**dragon**
+
+![dragon](dragon/sheet.png)
+
 **fence**
 
 ![fence](fence/sheet.png)
+
+**gravi**
+
+![gravi](gravi/sheet.png)
 
 **house**
 
@@ -153,6 +164,10 @@ Kullanmak için: `.glb` dosyasını Godot, Unity ya da Blender'a sürükle (Godo
 **mushroom**
 
 ![mushroom](mushroom/sheet.png)
+
+**offroad-scout**
+
+![offroad-scout](offroad-scout/sheet.png)
 
 **rifle**
 

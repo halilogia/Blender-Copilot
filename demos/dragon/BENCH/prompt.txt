@@ -1,0 +1,1 @@
+Oyun için düşük poligonlu sevimli bir ejderha modelle: gövde, boyun, kafa, boynuzlar, iki kanat, kuyruk, dört bacak.

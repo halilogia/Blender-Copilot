@@ -989,7 +989,10 @@ class ModelingMutator:
                         bm.faces.new(v1)
 
                     if part.bevel_width > 0:
-                        bmesh.ops.bevel(bm, geom=list(bm.edges), offset=part.bevel_width, segments=2, affect="EDGES")
+                        v_caps = set(v0) | set(v1)
+                        cap_edges = [e for e in bm.edges if (e.verts[0] in v_caps and e.verts[1] in v_caps)]
+                        geom_edges = cap_edges if cap_edges else list(bm.edges)
+                        bmesh.ops.bevel(bm, geom=geom_edges, offset=part.bevel_width, segments=2, affect="EDGES")
                 else:
                     bmesh.ops.create_cube(bm, size=1.0)
                     bmesh.ops.scale(bm, vec=Vector((dx, dy, dz)), verts=bm.verts)

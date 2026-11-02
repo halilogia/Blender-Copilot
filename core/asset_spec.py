@@ -348,10 +348,10 @@ def _solve_vehicle_spec(spec: AssetSpec) -> ResolvedAssetPlan:
             name=w_name,
             primitive="CYLINDER",
             location=loc,
-            dimensions=(wheel_r * 2, wheel_w, wheel_r * 2),
-            rotation=(0.0, 90.0, 0.0),
+            dimensions=(wheel_w, wheel_r * 2, wheel_r * 2),
+            rotation=(0.0, 0.0, 0.0),
             material_slot="tires",
-            bevel_width=bevel_w * 0.5,
+            bevel_width=bevel_w * 0.4,
             socket_name=sock_name,
         ))
 
@@ -361,7 +361,7 @@ def _solve_vehicle_spec(spec: AssetSpec) -> ResolvedAssetPlan:
     cabin_h = H * cabin_h_ratio
     chassis_h = max(0.25, H - cabin_h - ground_clearance)
     chassis_center_z = chassis_z_start + (chassis_h / 2.0)
-    chassis_w = W * 0.92
+    chassis_w = max(0.4, (half_tw * 2.0) - wheel_w - 0.08)
     chassis_l = L * 0.96
 
     parts.append(ResolvedPart(
@@ -374,7 +374,7 @@ def _solve_vehicle_spec(spec: AssetSpec) -> ResolvedAssetPlan:
     ))
 
     # 3. Cabin (Upper Body)
-    cabin_w = W * 0.82
+    cabin_w = min(chassis_w * 0.92, W * 0.78)
     cabin_l = L * (1.0 - hood_l_ratio - 0.15)
     # Offset cabin backward to leave room for the hood/engine bay in front (+Y)
     cabin_offset_y = - (L * 0.5) + (cabin_l * 0.5) + 0.1
