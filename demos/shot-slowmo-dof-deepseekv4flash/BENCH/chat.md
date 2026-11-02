@@ -87,7 +87,7 @@
 **Ajan:** Rack focus kuruldu (7.3 m → 10.56 m). Bir test karesi alıyorum.
 
 - `render_image` {"filename": "test_frame", "frame": 1, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\test_frame.png", "filename": "test_frame.png", "width": 960, "height": 540, "frame": 1, "bytes": 496886, "format": "PNG", "engine": "EEVEE", "image_id": " ... [64 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\test_frame.png", "filename": "test_frame.png", "width": 960, "height": 540, "frame": 1, "bytes": 496886, "format": "PNG", "engine": "EEVEE", "image_id": " ... [64 more characters]
 **Ajan:** Screenshot looks stale (from earlier run). Building crate now.
 
 - `create_primitive` {"location": [0, 0, 0.5], "name": "Crate", "primitive_type": "CUBE", "size": 1}
@@ -109,7 +109,7 @@
 **Ajan:** Sahne temiz. Tekrar bir test karesi alıp ışığı/kadrajı kontrol ediyorum.
 
 - `render_image` {"filename": "test_frame2", "frame": 1, "height": 432, "width": 768}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\test_frame2.png", "filename": "test_frame2.png", "width": 768, "height": 432, "frame": 1, "bytes": 324712, "format": "PNG", "engine": "EEVEE", "image_id": ... [66 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\test_frame2.png", "filename": "test_frame2.png", "width": 768, "height": 432, "frame": 1, "bytes": 324712, "format": "PNG", "engine": "EEVEE", "image_id": ... [66 more characters]
 **Ajan:** Old viewport image from archive — scene actually empty now. Building crate:
 
 - `create_primitive` {"primitive_type": "CUBE", "name": "Crate", "location": [0, 0, 0.5], "size": 1}
@@ -123,7 +123,7 @@
 - `render_animation` {"end_frame": 48, "filename": "clip_a", "format": "mp4", "fps": 24, "height": 540, "samples": 12, "start_frame": 1, "width": 960}
   > {"error": "Unexpected argument(s) ['fps'] for tool 'render_animation'.", "type": "INVALID_ARGUMENT"}
 - `render_animation` {"end_frame": 48, "filename": "clip_a", "format": "mp4", "height": 540, "samples": 12, "start_frame": 1, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\clip_a.mp4", "filename": "clip_a.mp4", "format": "MP4", "frames": 48, "fps": 24, "width": 960, "height": 540, "bytes": 51037, "render_seconds": 4.1, "prev ... [265 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\clip_a.mp4", "filename": "clip_a.mp4", "format": "MP4", "frames": 48, "fps": 24, "width": 960, "height": 540, "bytes": 51037, "render_seconds": 4.1, "prev ... [265 more characters]
 **Ajan:** Viewport shows crate + barrel already. Conflicting with earlier scene inspection. Re-inspect ground truth.
 
 - `inspect_scene` {}
@@ -135,7 +135,7 @@
 - `camera_settings` {"f_stop": 1.8, "focus_object": "Crate", "rack_focus_to": "Barrel"}
   > {"camera": "ShotCamera", "f_stop": 1.8, "focus_object": "Crate", "rack_focus": {"from": "Crate", "to": "Barrel", "meters": [7.58, 7.49]}}
 - `render_animation` {"end_frame": 48, "filename": "clip_b", "format": "mp4", "height": 540, "samples": 12, "start_frame": 1, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\clip_b.mp4", "filename": "clip_b.mp4", "format": "MP4", "frames": 48, "fps": 24, "width": 960, "height": 540, "bytes": 94005, "render_seconds": 4.1, "prev ... [265 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\clip_b.mp4", "filename": "clip_b.mp4", "format": "MP4", "frames": 48, "fps": 24, "width": 960, "height": 540, "bytes": 94005, "render_seconds": 4.1, "prev ... [265 more characters]
 **Ajan:** Screenshot shows crate and barrel already present — scene state differs from earlier inspect. Re-checking.
 
 - `inspect_scene` {}
@@ -143,7 +143,7 @@
 **Ajan:** Her iki klip de hazır. Şimdi 'epic' soundtrack oluşturuyorum.
 
 - `make_soundtrack` {"filename": "epic_score", "mood": "epic", "seconds": 6}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\epic_score.wav", "filename": "epic_score.wav", "mood": "epic", "about": "driving bass pulse, big chords and drum hits", "seconds": 6.0, "bytes": 264644, " ... [87 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\epic_score.wav", "filename": "epic_score.wav", "mood": "epic", "about": "driving bass pulse, big chords and drum hits", "seconds": 6.0, "bytes": 264644, " ... [87 more characters]
 **Ajan:** Her iki klip ve müzik hazır. Şimdi edit_video ile birleştiriyorum (clip_a normal, clip_b 0.5 hız, crossfade).
 
 - `edit_video` {"clips": [{"file": "clip_a.mp4", "speed": 1}, {"file": "clip_b.mp4", "speed": 0.5}], "filename": "shot-slowmo-dof-deepseekv4flash", "music_volume": 0.6, "soundtrack": "epic_score.wav", "transition": "crossfade", "transition_seconds": 0.5}
@@ -151,7 +151,7 @@
 **Ajan:** `edit_video` yavaş çekim + crossfade kombinasyonunda hata verdi. Önce cut geçişiyle deniyorum.
 
 - `edit_video` {"clips": [{"file": "clip_a.mp4", "speed": 1}, {"file": "clip_b.mp4", "speed": 0.5}], "filename": "shot-slowmo-dof-deepseekv4flash", "music_volume": 0.6, "soundtrack": "epic_score.wav", "transition": "cut"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\shot-slowmo-dof-deepseekv4flash.mp4", "filename": "shot-slowmo-dof-deepseekv4flash.mp4", "clips": ["clip_a.mp4", "clip_b.mp4"], "frames": 144, "fps": 24,  ... [137 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-141442-shot-slowmo-dof-deepseekv4flash\\shot-slowmo-dof-deepseekv4flash.mp4", "filename": "shot-slowmo-dof-deepseekv4flash.mp4", "clips": ["clip_a.mp4", "clip_b.mp4"], "frames": 144, "fps": 24,  ... [137 more characters]
 **Ajan:** İşlem tamamlandı. Sonuç:
 
 **Modellenen sahne**

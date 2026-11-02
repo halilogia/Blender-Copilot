@@ -123,71 +123,71 @@
 - `camera_move` {"duration": 4, "elevation": 20, "focal_length": 40, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 16.32, ... [17 more characters]
 - `render_image` {"filename": "village_check_01", "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_01.png", "filename": "village_check_01.png", "width": 960, "height": 540, "frame": 1, "bytes": 550421, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_01.png", "filename": "village_check_01.png", "width": 960, "height": 540, "frame": 1, "bytes": 550421, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
 **Ajan:** Opening frame far too tight — door and roof fill the frame. Pulling the camera back.
 
 - `camera_move` {"distance": 27, "duration": 4, "elevation": 25, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 27.0,  ... [16 more characters]
 - `render_image` {"filename": "village_check_02", "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_02.png", "filename": "village_check_02.png", "width": 960, "height": 540, "frame": 1, "bytes": 540390, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_02.png", "filename": "village_check_02.png", "width": 960, "height": 540, "frame": 1, "bytes": 540390, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
 **Ajan:** Better, but the house base is still cropped. One more pull-back.
 
 - `camera_move` {"distance": 34, "duration": 4, "elevation": 28, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 34.0,  ... [16 more characters]
 - `render_image` {"filename": "village_check_03", "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_03.png", "filename": "village_check_03.png", "width": 960, "height": 540, "frame": 1, "bytes": 525008, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_check_03.png", "filename": "village_check_03.png", "width": 960, "height": 540, "frame": 1, "bytes": 525008, "format": "PNG", "engine": "EEVEE", ... [78 more characters]
 **Ajan:** Framing good now — full house, both pines, sunset light. Checking the whole pullback move in one sheet.
 
 - `render_contact_sheet` {"filename": "village_aerial_sheet", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet.png", "filename": "village_aerial_sheet.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 356 ... [82 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet.png", "filename": "village_aerial_sheet.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 356 ... [82 more characters]
 **Ajan:** Pullback overshoots badly — by frame 96 house is a speck. Testing a shorter start distance.
 
 - `camera_move` {"distance": 22, "duration": 4, "elevation": 25, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 22.0,  ... [16 more characters]
 - `render_contact_sheet` {"filename": "village_aerial_sheet_b", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_b.png", "filename": "village_aerial_sheet_b.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_b.png", "filename": "village_aerial_sheet_b.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
 **Ajan:** The preset pulls back ~3×, so the ending frames lose the house. Starting closer so the move lands on a good frame.
 
 - `camera_move` {"distance": 11.5, "duration": 4, "elevation": 30, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 11.5,  ... [16 more characters]
 - `render_contact_sheet` {"filename": "village_aerial_sheet_c", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_c.png", "filename": "village_aerial_sheet_c.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_c.png", "filename": "village_aerial_sheet_c.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
 **Ajan:** Fixed ~3× ratio means I can't have both a tight start and a wide end. Splitting the difference for a read-in to a wide reveal.
 
 - `camera_move` {"distance": 17, "duration": 4, "elevation": 28, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 17.0,  ... [16 more characters]
 - `render_contact_sheet` {"filename": "village_aerial_sheet_d", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_d.png", "filename": "village_aerial_sheet_d.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_d.png", "filename": "village_aerial_sheet_d.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
 **Ajan:** Testing a lower intensity to soften the pullback rate.
 
 - `camera_move` {"distance": 17, "duration": 4, "elevation": 28, "focal_length": 50, "intensity": 0.5, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "aerial_pullback"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "aerial_pullback", "about": "camera starts close and pulls back and up into a high aerial view", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 17.0,  ... [16 more characters]
 - `render_contact_sheet` {"filename": "village_aerial_sheet_e", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_e.png", "filename": "village_aerial_sheet_e.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_aerial_sheet_e.png", "filename": "village_aerial_sheet_e.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 840, "height": 480, "bytes": ... [86 more characters]
 **Ajan:** Intensity had no effect — identical output. Locking shot 1 at 22 m, the best compromise. Now testing shot 2's dolly_left.
 
 - `camera_move` {"azimuth": 20, "distance": 17, "duration": 3, "elevation": 12, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "dolly_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_left", "about": "camera trucks sideways to the left, keeping its direction", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 17.0, "follow": fal ... [3 more characters]
 - `render_contact_sheet` {"filename": "village_dolly_sheet", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet.png", "filename": "village_dolly_sheet.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 30433 ... [80 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet.png", "filename": "village_dolly_sheet.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 30433 ... [80 more characters]
 **Ajan:** Dolly pushes the house out of frame. Testing whether travel is absolute by raising the distance.
 
 - `camera_move` {"azimuth": 25, "distance": 30, "duration": 3, "elevation": 14, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "dolly_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_left", "about": "camera trucks sideways to the left, keeping its direction", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 30.0, "follow": fal ... [3 more characters]
 - `render_contact_sheet` {"filename": "village_dolly_sheet_b", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_b.png", "filename": "village_dolly_sheet_b.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 2 ... [84 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_b.png", "filename": "village_dolly_sheet_b.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 2 ... [84 more characters]
 **Ajan:** Dolly travel is absolute, not proportional. Testing if `intensity` scales it down.
 
 - `camera_move` {"azimuth": 25, "distance": 30, "duration": 3, "elevation": 14, "focal_length": 50, "intensity": 0.35, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "dolly_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_left", "about": "camera trucks sideways to the left, keeping its direction", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 30.0, "follow": fal ... [3 more characters]
 - `render_contact_sheet` {"filename": "village_dolly_sheet_c", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_c.png", "filename": "village_dolly_sheet_c.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 2 ... [84 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_c.png", "filename": "village_dolly_sheet_c.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 2 ... [84 more characters]
 **Ajan:** `intensity` works on dolly_left — house stays framed. Tightening in slightly.
 
 - `camera_move` {"azimuth": 25, "distance": 24, "duration": 3, "elevation": 14, "focal_length": 50, "intensity": 0.3, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "dolly_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_left", "about": "camera trucks sideways to the left, keeping its direction", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 24.0, "follow": fal ... [3 more characters]
 - `render_contact_sheet` {"filename": "village_dolly_sheet_d", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_d.png", "filename": "village_dolly_sheet_d.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 3 ... [84 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_dolly_sheet_d.png", "filename": "village_dolly_sheet_d.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 3 ... [84 more characters]
 **Ajan:** Shot 2 framed well. Now night lighting for shot 3.
 
 - `set_environment` {"ground_color": [0.1, 0.13, 0.11], "ground_size": 60, "preset": "night"}
@@ -195,13 +195,13 @@
 - `camera_move` {"azimuth": 35, "distance": 20, "duration": 3, "elevation": 10, "focal_length": 50, "intensity": 0.6, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "hero_cam"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "hero_cam", "about": "low angle, slow push-in, subject looms", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 20.0, "follow": false}
 - `render_contact_sheet` {"filename": "village_hero_sheet", "frames": 4, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_hero_sheet.png", "filename": "village_hero_sheet.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 288755, ... [78 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_hero_sheet.png", "filename": "village_hero_sheet.png", "frames": [1, 25, 48, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 288755, ... [78 more characters]
 **Ajan:** Hero cam starts behind the ground plane. Using `static` — named in the docs as the hero framing — to keep the low angle.
 
 - `camera_move` {"azimuth": 35, "distance": 21, "duration": 3, "elevation": 6, "focal_length": 50, "object_names": ["village_house", "pine_left", "pine_right"], "preset": "static"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "static", "about": "locked camera", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.19, 0.0, 2.45], "subject_radius": 5.71, "distance": 21.0, "follow": false}
 - `render_contact_sheet` {"filename": "village_hero_sheet_b", "frames": 3, "height": 240, "samples": 8, "width": 420}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_hero_sheet_b.png", "filename": "village_hero_sheet_b.png", "frames": [1, 36, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 212522, ... [78 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_hero_sheet_b.png", "filename": "village_hero_sheet_b.png", "frames": [1, 36, 72], "tiles": [2, 2], "width": 840, "height": 480, "bytes": 212522, ... [78 more characters]
 **Ajan:** Night shot works — glowing windows read clearly, ground plane is below the lens. Now rendering the three-shot film.
 
 - `render_shots` {"filename": "shot-film-village-spacebunnyalpha", "height": 540, "samples": 12, "shots": [{"distance": "22", "duration": "4", "elevation": "28", "focal_length": "50", "object_names": {"item": ["village_house", "pine_left", "pine_right"]}, "preset": "aerial_pullback"}, {"azimuth": "25", "distance": "24", "duration": "3", "elevation": "14", "focal_length": "50", "intensity": "0.3", "object_names": { ... [379 more characters]
@@ -267,11 +267,11 @@
 **Ajan:** Let me try omitting `object_names` entirely — the docs say it defaults to every mesh.
 
 - `render_shots` {"filename": "shot-film-village-spacebunnyalpha", "height": 540, "samples": 12, "shots": [{"distance": "22", "duration": "4", "elevation": "28", "focal_length": "50", "preset": "aerial_pullback"}, {"azimuth": "25", "distance": "24", "duration": "3", "elevation": "14", "focal_length": "50", "intensity": "0.3", "look": "cinematic", "preset": "dolly_left"}, {"azimuth": "35", "distance": "21", "durati ... [163 more characters]
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\shot-film-village-spacebunnyalpha.mp4", "filename": "shot-film-village-spacebunnyalpha.mp4", "clips": ["shot-film-village-spacebunnyalpha_shot1.mp4", "s ... [513 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\shot-film-village-spacebunnyalpha.mp4", "filename": "shot-film-village-spacebunnyalpha.mp4", "clips": ["shot-film-village-spacebunnyalpha_shot1.mp4", "s ... [513 more characters]
 **Ajan:** Film rendered. Verifying the final shot state.
 
 - `render_image` {"filename": "village_film_final_check", "samples": 12, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_film_final_check.png", "filename": "village_film_final_check.png", "width": 960, "height": 540, "frame": 1, "bytes": 342646, "format": "PNG", "e ... [94 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-115824-shot-film-village-spacebunnyalpha\\village_film_final_check.png", "filename": "village_film_final_check.png", "width": 960, "height": 540, "frame": 1, "bytes": 342646, "format": "PNG", "e ... [94 more characters]
 **Ajan:** Bitti.
 
 **Model** — varsayılan `Cube` ve `Light` silindi. Ev parçaları birleşti: duvarlar (4 × 3.5 × 2.6 m), kiremit çatı, koyu ahşap kapı, iki pencere, taş baca → `village_house` (84 üçgen). İki çam ağacı gövde + iki koni katman olarak → `pine_left`, `pine_right` (her biri 248 üçgen). Toplam ~580 üçgen. Dönüşümler bake edildi (scale 1,1,1). Pencerelere emissive verildi → gece planında parlıyor.

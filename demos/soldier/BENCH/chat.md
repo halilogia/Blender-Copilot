@@ -97,7 +97,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Torso","Pelvis","ThighL","ShinL","BootL","ThighR","ShinR","BootR","Neck","Head","Helmet","Backpack","UpperArmR","ForearmR","HandR","UpperArmL","ForearmL","HandL","RifleBody","RifleStock","RifleMag","RifleBarrel"],"center":[0.0 ... [84 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013510-soldier\7e4559ce-85e2-4c1c-b227-6101bb163de0\tool-results\mcp-blender-blob-1790721398289-sdwsqo.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013510-soldier\7e4559ce-85e2-4c1c-b227-6101bb163de0\tool-results\mcp-blender-blob-1790721398289-sdwsqo.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_485a0d21e211","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":78385,"channels":4},"error":null}
 **Ajan:** Model is taking shape; checking the side view for the pose.
 
@@ -105,7 +105,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"RIGHT","objects":["Torso","Pelvis","ThighL","ShinL","BootL","ThighR","ShinR","BootR","Neck","Head","Helmet","Backpack","UpperArmR","ForearmR","HandR","UpperArmL","ForearmL","HandL","RifleBody","RifleStock","RifleMag","RifleBarrel"],"center":[0 ... [86 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013510-soldier\7e4559ce-85e2-4c1c-b227-6101bb163de0\tool-results\mcp-blender-blob-1790721401410-v6f0cc.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013510-soldier\7e4559ce-85e2-4c1c-b227-6101bb163de0\tool-results\mcp-blender-blob-1790721401410-v6f0cc.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_35625493d3d1","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":79228,"channels":4},"error":null}
 **Ajan:** The pose looks right. Next I'll join everything into one mesh, set the origin to the bottom and export.
 
@@ -116,7 +116,7 @@
 - `mcp__blender__inspect_mesh` {"object_name": "Soldier"}
   > {"success":true,"tool":"inspect_mesh","data":{"bounding_box":{"center":[0.0006,-0.2955,0.8982],"max":[0.3287,0.3289,1.805],"min":[-0.3274,-0.92,-0.0086]},"counts":{"edges":1520,"polygons":768,"vertices":796},"has_uv":false,"mesh_name":"Torso_mesh","object_name":"Soldier","polygon_breakdown":{"ngons" ... [61 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Soldier"], "filename": "soldier.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013510-soldier\\soldier.glb","filename":"soldier.glb","bytes":87084,"objects":["Soldier"],"triangle_count":1504,"format":"GLB","y_up":true,"recentered" ... [20 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013510-soldier\\soldier.glb","filename":"soldier.glb","bytes":87084,"objects":["Soldier"],"triangle_count":1504,"format":"GLB","y_up":true,"recentered" ... [20 more characters]
 **Ajan:** I built a low-poly soldier in a light walking pose holding a rifle and exported it as `soldier.glb`. The model is **1,504 triangles** (796 vertices).
 
 **What I did:**

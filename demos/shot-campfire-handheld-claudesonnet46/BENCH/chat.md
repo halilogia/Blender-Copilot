@@ -89,11 +89,11 @@
 - `camera_move` {"duration": 4, "elevation": 22, "focal_length": 40, "object_names": ["Stone_Ring", "Ash_Ground", "Log_A", "Log_B", "Log_C", "Flame_Core", "Flame_Inner"], "preset": "handheld", "azimuth": 25, "distance": 3.2}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "handheld", "about": "small hand shake around a framed subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.0, 0.154], "subject_radius": 0.879, "distance": 3.2}
 - `render_image` {"width": 960, "filename": "campfire_test", "frame": 48, "height": 540, "samples": 24}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-092234-shot-campfire-handheld-claudesonnet46\\campfire_test.png", "filename": "campfire_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 502658, "format": "PNG", "engine": "EEVEE",  ... [77 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-092234-shot-campfire-handheld-claudesonnet46\\campfire_test.png", "filename": "campfire_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 502658, "format": "PNG", "engine": "EEVEE",  ... [77 more characters]
 **Ajan:** Render iyi görünüyor — ateş parlıyor, gece ortamı koyu, kadraj güzel. Animasyonu çekiyorum.
 
 - `render_animation` {"height": 540, "samples": 12, "width": 960, "filename": "shot-campfire-handheld-claudesonnet46"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-092234-shot-campfire-handheld-claudesonnet46\\shot-campfire-handheld-claudesonnet46.mp4", "filename": "shot-campfire-handheld-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "widt ... [371 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-092234-shot-campfire-handheld-claudesonnet46\\shot-campfire-handheld-claudesonnet46.mp4", "filename": "shot-campfire-handheld-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "widt ... [371 more characters]
 **Ajan:** Bitti. Özet:
 
 ---

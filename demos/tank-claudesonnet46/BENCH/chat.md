@@ -103,7 +103,7 @@
 **Ajan:** **10 — GLB export**
 
 - `export_gltf` {"include_materials": true, "recenter": true, "y_up": true, "filename": "tank-claudesonnet46.glb", "object_names": ["Tank_Hull", "Tank_Track_L", "Tank_Track_R", "Tank_Turret", "Tank_Barrel"], "apply_modifiers": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082945-tank-claudesonnet46\\tank-claudesonnet46.glb", "filename": "tank-claudesonnet46.glb", "bytes": 13272, "objects": ["Tank_Hull", "Tank_Track_L", "Tank_Track_R", "Tank_Turret", "Tank_Barrel" ... [76 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082945-tank-claudesonnet46\\tank-claudesonnet46.glb", "filename": "tank-claudesonnet46.glb", "bytes": 13272, "objects": ["Tank_Hull", "Tank_Track_L", "Tank_Track_R", "Tank_Turret", "Tank_Barrel" ... [76 more characters]
 **Ajan:** ✅ **Bitti.**
 
 ---
@@ -123,5 +123,5 @@
 Transform uygulandı, origin tabana alındı, Y-up GLB olarak export edildi.  
 **364 tri** — oyun için çok hafif.
 
-`tank-claudesonnet46.glb` → `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-082945-tank-claudesonnet46\`
+`tank-claudesonnet46.glb` → `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-082945-tank-claudesonnet46\`
 

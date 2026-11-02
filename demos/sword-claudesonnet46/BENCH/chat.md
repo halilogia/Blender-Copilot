@@ -95,7 +95,7 @@
 **Ajan:** Model görünüyor, export ediyorum:
 
 - `export_gltf` {"recenter": true, "y_up": true, "filename": "sword-claudesonnet46.glb", "object_names": ["Sword"], "apply_modifiers": true, "include_materials": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082711-sword-claudesonnet46\\sword-claudesonnet46.glb", "filename": "sword-claudesonnet46.glb", "bytes": 9980, "objects": ["Sword"], "triangle_count": 120, "format": "GLB", "y_up": true, "recent ... [12 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082711-sword-claudesonnet46\\sword-claudesonnet46.glb", "filename": "sword-claudesonnet46.glb", "bytes": 9980, "objects": ["Sword"], "triangle_count": 120, "format": "GLB", "y_up": true, "recent ... [12 more characters]
 **Ajan:** ✅ Export tamam.
 
 ---

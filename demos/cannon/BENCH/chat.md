@@ -61,13 +61,13 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Barrel","Muzzle","Carriage","Trail","WheelL","WheelR","Axle","Breech","Ball1","Ball2","Ball3","Ball4","Ball5","Ball6","Ball7"],"center":[-0.047,0.085,0.485],"radius":1.797,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012801-cannon\9f0e4748-8b3e-4219-b0ad-655bf0ad93ca\tool-results\mcp-blender-blob-1790720939893-glz5lv.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012801-cannon\9f0e4748-8b3e-4219-b0ad-655bf0ad93ca\tool-results\mcp-blender-blob-1790720939893-glz5lv.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_4c561240b470","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":83571,"channels":4},"error":null}
 - `mcp__blender__frame_view` {"direction": "FRONT", "shading": "MATERIAL", "overlays": true}
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Barrel","Muzzle","Carriage","Trail","WheelL","WheelR","Axle","Breech","Ball1","Ball2","Ball3","Ball4","Ball5","Ball6","Ball7"],"center":[-0.047,0.085,0.485],"radius":1.797,"shading":"MATERIAL","overlays":true},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012801-cannon\9f0e4748-8b3e-4219-b0ad-655bf0ad93ca\tool-results\mcp-blender-blob-1790720943044-gpbykh.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012801-cannon\9f0e4748-8b3e-4219-b0ad-655bf0ad93ca\tool-results\mcp-blender-blob-1790720943044-gpbykh.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_28f02f247d99","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":86677,"channels":4},"error":null}
 - `mcp__blender__join_objects` {"object_names": ["Carriage", "Barrel", "Muzzle", "Trail", "WheelL", "WheelR", "Axle", "Breech", "Ball1", "Ball2", "Ball3", "Ball4", "Ball5", "Ball6", "Ball7"], "target_name": "Carriage", "new_name": "Cannon"}
   > {"success":true,"tool":"join_objects","data":{"object_name":"Cannon","type":"MESH","exists":true,"location":[-0.2,0,0.52],"rotation":[0,0,0],"scale":[1.3,0.4,0.25],"vertex_count":672,"face_count":822,"triangle_count":1284,"local_bounds_min":[-1.069,-1.75,-2.08],"local_bounds_max":[1.3039,2.175,1.8], ... [184 more characters]
@@ -80,7 +80,7 @@
 - `mcp__blender__set_origin` {"object_name": "Cannon", "mode": "BOTTOM_CENTER"}
   > {"success":true,"tool":"set_origin","data":{"object_name":"Cannon","type":"MESH","exists":true,"location":[-0.0473,0.085,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":672,"face_count":822,"triangle_count":1284,"local_bounds_min":[-1.5424,-0.785,0],"local_bounds_max":[1.5424,0.785,0.97],"dimen ... [70 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Cannon"], "filename": "cannon.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012801-cannon\\cannon.glb","filename":"cannon.glb","bytes":80656,"objects":["Cannon"],"triangle_count":1284,"format":"GLB","y_up":true,"recentered":tru ... [16 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012801-cannon\\cannon.glb","filename":"cannon.glb","bytes":80656,"objects":["Cannon"],"triangle_count":1284,"format":"GLB","y_up":true,"recentered":tru ... [16 more characters]
 **Ajan:** Top modeli bitti ve `cannon.glb` olarak dışa aktarıldı: **1284 üçgen**. Bu, düşük poligonlu bir obje için önerilen ~3000 üçgen sınırının oldukça altında.
 
 **Yaptıklarım:**

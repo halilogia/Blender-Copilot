@@ -143,7 +143,7 @@
 - `camera_move` {"preset": "eyes_in", "object_names": ["head", "torso"], "duration": 3, "azimuth": 0, "elevation": 5}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "eyes_in", "about": "push in to an extreme close-up of the face", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.0, 0.247, 0.819], "subject_radius": 0.85, "distance": 2.889, "follow": false}
 - `render_image` {"filename": "check_talk_eyesin", "frame": 55, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-130406-shot-talker-music-deepseekv4flash\\check_talk_eyesin.png", "filename": "check_talk_eyesin.png", "width": 960, "height": 540, "frame": 55, "bytes": 451722, "format": "PNG", "engine": "EEVE ... [81 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-130406-shot-talker-music-deepseekv4flash\\check_talk_eyesin.png", "filename": "check_talk_eyesin.png", "width": 960, "height": 540, "frame": 55, "bytes": 451722, "format": "PNG", "engine": "EEVE ... [81 more characters]
 **Ajan:** Viewport capture looks stale (robot from a previous run). Checking actual scene state.
 
 - `inspect_scene` {}
@@ -159,7 +159,7 @@
 **Ajan:** The scene data is confirmed correct (22 robot parts + rig + studio ground, cinematic-ready). The viewport preview channel is showing a stale frame, so I'm relying on the verified scene/geometry/material data. Now rendering the two-shot film with playful music:
 
 - `render_shots` {"filename": "shot-talker-music-deepseekv4flash", "height": 540, "music": "playful", "shots": [{"azimuth": 0, "duration": 3, "elevation": 5, "environment": "studio", "look": "cinematic", "object_names": ["head", "torso"], "preset": "eyes_in"}, {"azimuth": 8, "duration": 3, "environment": "studio", "elevation": 12, "look": "cinematic", "object_names": ["Robot_Rig"], "preset": "dolly_out"}], "width" ... [6 more characters]
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-130406-shot-talker-music-deepseekv4flash\\shot-talker-music-deepseekv4flash.mp4", "filename": "shot-talker-music-deepseekv4flash.mp4", "clips": ["shot-talker-music-deepseekv4flash_shot1.mp4", "s ... [431 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-130406-shot-talker-music-deepseekv4flash\\shot-talker-music-deepseekv4flash.mp4", "filename": "shot-talker-music-deepseekv4flash.mp4", "clips": ["shot-talker-music-deepseekv4flash_shot1.mp4", "s ... [431 more characters]
 **Ajan:** Film hazır. İşte yaptıklarım:
 
 ## 1. Model (düşük poligonlu sevimli robot)

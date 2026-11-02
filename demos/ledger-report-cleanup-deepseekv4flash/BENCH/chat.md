@@ -75,9 +75,9 @@
 **Ajan:** Model check passes (clean, 1988 triangles). Now exporting.
 
 - `export_gltf` {"filename": "village.glb", "object_names": ["House", "PineTree_L", "PineTree_R"]}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-230411-ledger-report-cleanup-deepseekv4flash\\village.glb", "filename": "village.glb", "bytes": 72032, "objects": ["House", "PineTree_L", "PineTree_R"], "triangle_count": 1988, "format": "GLB", "y ... [31 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-230411-ledger-report-cleanup-deepseekv4flash\\village.glb", "filename": "village.glb", "bytes": 72032, "objects": ["House", "PineTree_L", "PineTree_R"], "triangle_count": 1988, "format": "GLB", "y ... [31 more characters]
 - `export_gltf` {"filename": "ledger-report-cleanup-deepseekv4flash.glb", "object_names": ["House", "PineTree_L", "PineTree_R"]}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-230411-ledger-report-cleanup-deepseekv4flash\\ledger-report-cleanup-deepseekv4flash.glb", "filename": "ledger-report-cleanup-deepseekv4flash.glb", "bytes": 72032, "objects": ["House", "PineTree_L", "P ... [87 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-230411-ledger-report-cleanup-deepseekv4flash\\ledger-report-cleanup-deepseekv4flash.glb", "filename": "ledger-report-cleanup-deepseekv4flash.glb", "bytes": 72032, "objects": ["House", "PineTree_L", "P ... [87 more characters]
 **Ajan:** Tamamlandı. Yaptıklarım özetle:
 
 **Kurulum**

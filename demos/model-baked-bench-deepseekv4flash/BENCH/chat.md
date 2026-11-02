@@ -74,8 +74,8 @@
 
 - `export_gltf` {"filename": "model-baked-bench-deepseekv4flash.glb", "object_names": ["Bench"]}
 - `export_gltf` {"filename": "bench.glb", "object_names": ["Bench"]}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-182637-model-baked-bench-deepseekv4flash\\model-baked-bench-deepseekv4flash.glb", "filename": "model-baked-bench-deepseekv4flash.glb", "bytes": 175960, "objects": ["Bench"], "triangle_count": 48 ... [52 more characters]
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-182637-model-baked-bench-deepseekv4flash\\bench.glb", "filename": "bench.glb", "bytes": 175960, "objects": ["Bench"], "triangle_count": 48, "format": "GLB", "y_up": true, "recentered": true}
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-182637-model-baked-bench-deepseekv4flash\\model-baked-bench-deepseekv4flash.glb", "filename": "model-baked-bench-deepseekv4flash.glb", "bytes": 175960, "objects": ["Bench"], "triangle_count": 48 ... [52 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-182637-model-baked-bench-deepseekv4flash\\bench.glb", "filename": "bench.glb", "bytes": 175960, "objects": ["Bench"], "triangle_count": 48, "format": "GLB", "y_up": true, "recentered": true}
 - `frame_view` {"direction": "ISO", "object_names": ["Bench"], "shading": "MATERIAL"}
   > {"direction": "ISO", "objects": ["Bench"], "center": [0.0, 0.0, 0.425], "radius": 0.94, "shading": "MATERIAL", "overlays": true}
 - `capture_viewport` {"height": 512, "width": 512}

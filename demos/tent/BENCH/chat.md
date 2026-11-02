@@ -39,14 +39,14 @@
   > {"success":true,"tool":"set_material","data":{"material_name":"Rope","object_name":"RopeBack","slot_index":0,"changed":["base_color"],"before":{"assigned_objects":["RopeBack","RopeFront"],"is_linked":false,"library_name":null,"material_name":"Rope","node_summary":{"node_count":2,"node_types":["BSDF_ ... [990 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012646-tent\8436e619-be37-4f69-8f82-f00698f790d8\tool-results\mcp-blender-blob-1790720866658-z7ia1d.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012646-tent\8436e619-be37-4f69-8f82-f00698f790d8\tool-results\mcp-blender-blob-1790720866658-z7ia1d.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_8ee179ec50a7","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":76035,"channels":4},"error":null}
 **Ajan:** Görüntü iyi: giriş açıklığı, ön ip ve kazık yerinde. Birleştirip dışa aktarıyorum.
 
 - `mcp__blender__join_objects` {"object_names": ["Tent", "TentInner", "StakeFront", "StakeBack", "RopeFront", "RopeBack"], "target_name": "Tent"}
   > {"success":true,"tool":"join_objects","data":{"object_name":"Tent","type":"MESH","exists":true,"location":[0,0,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":162,"face_count":92,"triangle_count":294,"local_bounds_min":[-0.9,-1.77,-0.05],"local_bounds_max":[0.9,1.77,1.3051],"dimensions":[1.8,3. ... [103 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Tent"], "filename": "tent.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012646-tent\\tent.glb","filename":"tent.glb","bytes":16476,"objects":["Tent"],"triangle_count":294,"format":"GLB","y_up":true,"recentered":true},"error ... [7 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012646-tent\\tent.glb","filename":"tent.glb","bytes":16476,"objects":["Tent"],"triangle_count":294,"format":"GLB","y_up":true,"recentered":true},"error ... [7 more characters]
 **Ajan:** Çadır hazır ve `tent.glb` olarak dışa aktarıldı: `...\20260930-012646-tent\tent.glb`
 
 **Yaptıklarım:**

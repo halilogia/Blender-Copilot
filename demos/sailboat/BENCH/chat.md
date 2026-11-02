@@ -35,7 +35,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Hull","Deck","Mast","Boom","MainSail","JibSail","Rudder"],"center":[-0.05,0,1.8],"radius":2.6,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073812-sailboat\4938ef00-a09b-4ef7-b9b0-c6ceebec4e20\tool-results\mcp-blender-blob-1790743145810-57z1rv.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073812-sailboat\4938ef00-a09b-4ef7-b9b0-c6ceebec4e20\tool-results\mcp-blender-blob-1790743145810-57z1rv.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_e2b40bb8a6ca","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":77443,"channels":4},"error":null}
 **Ajan:** Tekne hazır görünüyor; yandan kontrol edip dışa aktarıyorum.
 
@@ -43,12 +43,12 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Hull","Deck","Mast","Boom","MainSail","JibSail","Rudder"],"center":[-0.05,0,1.8],"radius":2.6,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073812-sailboat\4938ef00-a09b-4ef7-b9b0-c6ceebec4e20\tool-results\mcp-blender-blob-1790743148855-nrf9fp.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073812-sailboat\4938ef00-a09b-4ef7-b9b0-c6ceebec4e20\tool-results\mcp-blender-blob-1790743148855-nrf9fp.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_a0f6cd3474db","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":77966,"channels":4},"error":null}
 **Ajan:** Görünüm doğru. Dışa aktarıyorum (Hull ilk sırada; orijini gövdenin tabanında).
 
 - `mcp__blender__export_gltf` {"object_names": ["Hull", "Deck", "Mast", "Boom", "MainSail", "JibSail", "Rudder"], "filename": "sailboat.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-073812-sailboat\\sailboat.glb","filename":"sailboat.glb","bytes":19140,"objects":["Hull","Deck","Mast","Boom","MainSail","JibSail","Rudder"],"triangle_ ... [70 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-073812-sailboat\\sailboat.glb","filename":"sailboat.glb","bytes":19140,"objects":["Hull","Deck","Mast","Boom","MainSail","JibSail","Rudder"],"triangle_ ... [70 more characters]
 **Ajan:** Yelkenli tekne hazır ve `sailboat.glb` olarak dışa aktarıldı; toplam **324 üçgen**, 19 KB.
 
 **Parçalar:**

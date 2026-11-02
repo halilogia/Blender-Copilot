@@ -73,13 +73,13 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Crate"],"center":[0,0,0.4],"radius":0.704,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010632-crate\2ececf91-2c01-438d-84a0-f0799ee4cd49\tool-results\mcp-blender-blob-1790719645570-bkyxbz.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010632-crate\2ececf91-2c01-438d-84a0-f0799ee4cd49\tool-results\mcp-blender-blob-1790719645570-bkyxbz.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_e231788a4de2","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":96992,"channels":4},"error":null}
 **Ajan:** Görünüm iyi: çerçeveli bir sandık, ölçüler ve oranlar doğru. Dışa aktarıyorum.
 
 - `mcp__blender__export_gltf` {"object_names": ["Crate"], "filename": "crate.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010632-crate\\crate.glb","filename":"crate.glb","bytes":10280,"objects":["Crate"],"triangle_count":156,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
-**Ajan:** Sandık hazır ve `crate.glb` olarak dışa aktarıldı: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010632-crate\crate.glb`
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010632-crate\\crate.glb","filename":"crate.glb","bytes":10280,"objects":["Crate"],"triangle_count":156,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
+**Ajan:** Sandık hazır ve `crate.glb` olarak dışa aktarıldı: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010632-crate\crate.glb`
 
 **Üçgen sayısı: 156.** Düşük poligonlu bir obje için ~3000 üçgen sınırının çok altında.
 
@@ -96,7 +96,7 @@ Modelde UV açılmadı, sadece düz renkler var. Ahşap dokusu eklemek isterseni
 
 
 ---
-**Sonuç:** Sandık hazır ve `crate.glb` olarak dışa aktarıldı: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010632-crate\crate.glb`
+**Sonuç:** Sandık hazır ve `crate.glb` olarak dışa aktarıldı: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010632-crate\crate.glb`
 
 **Üçgen sayısı: 156.** Düşük poligonlu bir obje için ~3000 üçgen sınırının çok altında.
 

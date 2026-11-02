@@ -33,7 +33,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"RIGHT","objects":["Stock","Barrel","Receiver","BoltHandle","TriggerGuard","Trigger","FrontSight","RearSight","SlingA","SlingB","BoltKnob"],"center":[0.036,0.1,0.066],"radius":0.566,"shading":"SOLID","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {"width": 1024, "height": 512}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013700-rifle\ea77ca70-e9d4-47d6-8433-415126e46504\tool-results\mcp-blender-blob-1790721483851-9t2gvo.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013700-rifle\ea77ca70-e9d4-47d6-8433-415126e46504\tool-results\mcp-blender-blob-1790721483851-9t2gvo.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_bc1a2214c65c","width":1024,"height":512,"format":"PNG","mime_type":"image/png","byte_size":16096,"channels":4},"error":null}
 - `mcp__blender__transform_object` {"name": "TriggerGuard", "location": [0, -0.06, 0.06], "scale": [1.3, 1.3, 1.3]}
   > {"success":true,"tool":"transform_object","data":{"object_name":"TriggerGuard","relative":false,"exists":true,"before":{"location":[0,-0.06,0.085],"rotation":[0,1.5708,0],"scale":[1,1,1]},"after":{"exists":true,"location":[0,-0.06,0.06],"rotation":[0,1.5708,0],"scale":[1.3,1.3,1.3]},"actual":{"exist ... [126 more characters]
@@ -67,14 +67,14 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Stock","Barrel","Receiver","BoltHandle","TriggerGuard","Trigger","FrontSight","RearSight","SlingA","SlingB","BoltKnob"],"center":[0.036,0.1,0.066],"radius":0.566,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {"width": 1024, "height": 640}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013700-rifle\ea77ca70-e9d4-47d6-8433-415126e46504\tool-results\mcp-blender-blob-1790721501855-navtso.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013700-rifle\ea77ca70-e9d4-47d6-8433-415126e46504\tool-results\mcp-blender-blob-1790721501855-navtso.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_8df5fe9ba135","width":1024,"height":640,"format":"PNG","mime_type":"image/png","byte_size":185210,"channels":4},"error":null}
 **Ajan:** Görüntü iyi; parçaları birleştirip dışa aktarıyorum.
 
 - `mcp__blender__join_objects` {"object_names": ["Stock", "Barrel", "Receiver", "BoltHandle", "BoltKnob", "TriggerGuard", "Trigger", "FrontSight", "RearSight", "SlingA", "SlingB"], "target_name": "Stock", "new_name": "Rifle"}
   > {"success":true,"tool":"join_objects","data":{"object_name":"Rifle","type":"MESH","exists":true,"location":[0,0,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":618,"face_count":582,"triangle_count":1196,"local_bounds_min":[-0.028,-0.45,-0.0521],"local_bounds_max":[0.1003,0.65,0.1845],"dimension ... [168 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Rifle"], "filename": "rifle.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013700-rifle\\rifle.glb","filename":"rifle.glb","bytes":66444,"objects":["Rifle"],"triangle_count":1196,"format":"GLB","y_up":true,"recentered":true}," ... [12 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013700-rifle\\rifle.glb","filename":"rifle.glb","bytes":66444,"objects":["Rifle"],"triangle_count":1196,"format":"GLB","y_up":true,"recentered":true}," ... [12 more characters]
 **Ajan:** Tüfeği modelleyip `rifle.glb` olarak dışa aktardım: **1196 üçgen**, uzunluk tam **1.10 m**, namlu +Y yönünde.
 
 Dosya: `archives\bench-runs\20260930-013700-rifle\rifle.glb`

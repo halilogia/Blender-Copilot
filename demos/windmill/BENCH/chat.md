@@ -2,7 +2,7 @@
 
 - `ToolSearch` {"query": "select:mcp__blender__create_primitive,mcp__blender__create_mesh,mcp__blender__transform_object,mcp__blender__delete_object,mcp__blender__set_material,mcp__blender__frame_view,mcp__blender__capture_viewport,mcp__blender__export_gltf,mcp__blender__inspect_scene,mcp__blender__join_objects,mcp__blender__duplicate_object,mcp__blender__inspect_mesh", "max_results": 12}
 - `Bash` {"command": "python -c \"\nimport json,math\nV=[];F=[]\ndef box(x0,x1,y0,y1,z0,z1,r):\n    b=len(V);c,s=math.cos(r),math.sin(r)\n    for z in(z0,z1):\n        for x,y in((x0,y0),(x1,y0),(x1,y1),(x0,y1)):\n            V.append([round(x*c+z*s,3),y,round(-x*s+z*c,3)])\n    F.extend([[b+3,b+2,b+1,b],[b+4,b+5,b+6,b+7],[b,b+1,b+5,b+4],[b+1,b+2,b+6,b+5],[b+2,b+3,b+7,b+6],[b+3,b,b+4,b+7]])\nfor k in range ... [322 more characters]
-  > Output redirection to 'C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013939-windmill\sails.json' needs approval. The path is inside the working directories for this session ('C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\202609 ... [106 more characters]
+  > Output redirection to 'C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013939-windmill\sails.json' needs approval. The path is inside the working directories for this session ('C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\202609 ... [106 more characters]
 - `Bash` {"command": "python -c \"\nimport json,math\nV=[];F=[]\ndef box(x0,x1,y0,y1,z0,z1,r):\n    b=len(V);c,s=math.cos(r),math.sin(r)\n    for z in(z0,z1):\n        for x,y in((x0,y0),(x1,y0),(x1,y1),(x0,y1)):\n            V.append([round(x*c+z*s,2),y,round(-x*s+z*c,2)])\n    F.extend([[b+3,b+2,b+1,b],[b+4,b+5,b+6,b+7],[b,b+1,b+5,b+4],[b+1,b+2,b+6,b+5],[b+2,b+3,b+7,b+6],[b+3,b,b+4,b+7]])\nfor k in range ... [304 more characters]
   > This command requires approval
 - `mcp__blender__delete_object` {"name": "Cube"}
@@ -67,7 +67,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Tower","Roof","Shaft","Blade1","Door","Window","Blade2","Blade3","Blade4"],"center":[0,-0.241,5.198],"radius":6.773,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013939-windmill\e482fea1-712e-4508-8d95-9d02532770a4\tool-results\mcp-blender-blob-1790721667711-tm0ko7.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013939-windmill\e482fea1-712e-4508-8d95-9d02532770a4\tool-results\mcp-blender-blob-1790721667711-tm0ko7.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_7c24084cdc3b","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":84674,"channels":4},"error":null}
 **Ajan:** Looks right. Quick front check, then export.
 
@@ -75,10 +75,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Tower","Roof","Shaft","Blade1","Door","Window","Blade2","Blade3","Blade4"],"center":[0,-0.241,5.198],"radius":6.773,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013939-windmill\e482fea1-712e-4508-8d95-9d02532770a4\tool-results\mcp-blender-blob-1790721670282-ugubk5.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013939-windmill\e482fea1-712e-4508-8d95-9d02532770a4\tool-results\mcp-blender-blob-1790721670282-ugubk5.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_e82753cb27e0","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":80492,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Tower", "Roof", "Door", "Window", "Shaft", "Blade1", "Blade2", "Blade3", "Blade4"], "filename": "windmill.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013939-windmill\\windmill.glb","filename":"windmill.glb","bytes":35036,"objects":["Tower","Roof","Door","Window","Shaft","Blade1","Blade2","Blade3","Bl ... [87 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013939-windmill\\windmill.glb","filename":"windmill.glb","bytes":35036,"objects":["Tower","Roof","Door","Window","Shaft","Blade1","Blade2","Blade3","Bl ... [87 more characters]
 **Ajan:** You've hit your session limit · resets 5am (Europe/Istanbul)
 
 

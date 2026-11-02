@@ -47,7 +47,7 @@
 **Ajan:** Camera is set to follow with a dolly_in. Let me render a test frame to check the lighting and framing.
 
 - `render_image` {"filename": "village_test", "frame": 60}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\village_test.png", "filename": "village_test.png", "width": 960, "height": 540, "frame": 60, "bytes": 511679, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\village_test.png", "filename": "village_test.png", "width": 960, "height": 540, "frame": 60, "bytes": 511679, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
 **Ajan:** Viewport shows a humanoid I didn't create yet — scene may hold leftovers. Inspecting.
 
 - `inspect_scene` {}
@@ -59,7 +59,7 @@
 **Ajan:** Let me render a test frame to check the framing and lighting.
 
 - `render_image` {"filename": "village_test2", "frame": 60}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\village_test2.png", "filename": "village_test2.png", "width": 960, "height": 540, "frame": 60, "bytes": 543240, "format": "PNG", "engine": "EEVEE", "im ... [74 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\village_test2.png", "filename": "village_test2.png", "width": 960, "height": 540, "frame": 60, "bytes": 543240, "format": "PNG", "engine": "EEVEE", "im ... [74 more characters]
 **Ajan:** Viewport shows a humanoid already present. Let me inspect actual scene state.
 
 - `inspect_scene` {}
@@ -67,7 +67,7 @@
 **Ajan:** Scene is exactly as intended — house, two pines, well, fence, and the rigged walking villager; no duplicates. Now the final render: one dolly_in shot that follows the walking villager, with a calm soundtrack, named `shot-village-props-deepseekv4flash`.
 
 - `render_shots` {"filename": "shot-village-props-deepseekv4flash", "music": "calm", "shots": [{"preset": "dolly_in", "duration": 5, "object_names": ["Villager_Rig"], "environment": "sunset", "azimuth": 165, "elevation": 14, "follow": true, "fps": 24}], "transition": "cut"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\shot-village-props-deepseekv4flash.mp4", "filename": "shot-village-props-deepseekv4flash.mp4", "clips": ["shot-village-props-deepseekv4flash_shot1.mp4" ... [297 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-160817-shot-village-props-deepseekv4flash\\shot-village-props-deepseekv4flash.mp4", "filename": "shot-village-props-deepseekv4flash.mp4", "clips": ["shot-village-props-deepseekv4flash_shot1.mp4" ... [297 more characters]
 **Ajan:** Done. Here's a summary of what I built in the scene:
 
 **Models (create_prop)**

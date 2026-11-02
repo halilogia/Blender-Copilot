@@ -31,10 +31,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Fence"],"center":[0,0.02,0.5],"radius":1.12,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012457-fence\bcc83a1b-0e02-4288-b42f-058425fe0402\tool-results\mcp-blender-blob-1790720730794-rdg6h1.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012457-fence\bcc83a1b-0e02-4288-b42f-058425fe0402\tool-results\mcp-blender-blob-1790720730794-rdg6h1.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_8afa2cfa3ab4","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":82435,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Fence"], "filename": "fence.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012457-fence\\fence.glb","filename":"fence.glb","bytes":5596,"objects":["Fence"],"triangle_count":84,"format":"GLB","y_up":true,"recentered":true},"err ... [9 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012457-fence\\fence.glb","filename":"fence.glb","bytes":5596,"objects":["Fence"],"triangle_count":84,"format":"GLB","y_up":true,"recentered":true},"err ... [9 more characters]
 **Ajan:** Çit hazır ve `fence.glb` olarak dışa aktarıldı. Toplam **84 üçgen**.
 
 **Yaptıklarım:**
@@ -45,7 +45,7 @@
 - Toplam genişlik tam 2 m. Tahtalar kenara kadar uzanıyor, kenardaki kazıklar ise kenara 0,2 m uzakta. Bu yüzden çitleri 2 m aralıkla yan yana koyduğunuzda ek yerlerinde de kazık aralığı 0,4 m kalıyor ve kazıklar üst üste binmiyor.
 - Modeli viewport'ta ISO açıdan kendim kontrol ettim; kazıklar ve tahtalar düzgün görünüyor.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012457-fence\fence.glb` (Y-up, orijine ortalanmış, yaklaşık 5,6 KB)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012457-fence\fence.glb` (Y-up, orijine ortalanmış, yaklaşık 5,6 KB)
 
 
 ---
@@ -59,4 +59,4 @@
 - Toplam genişlik tam 2 m. Tahtalar kenara kadar uzanıyor, kenardaki kazıklar ise kenara 0,2 m uzakta. Bu yüzden çitleri 2 m aralıkla yan yana koyduğunuzda ek yerlerinde de kazık aralığı 0,4 m kalıyor ve kazıklar üst üste binmiyor.
 - Modeli viewport'ta ISO açıdan kendim kontrol ettim; kazıklar ve tahtalar düzgün görünüyor.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012457-fence\fence.glb` (Y-up, orijine ortalanmış, yaklaşık 5,6 KB)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012457-fence\fence.glb` (Y-up, orijine ortalanmış, yaklaşık 5,6 KB)

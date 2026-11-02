@@ -108,10 +108,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Wall_Back","Wall_Front","Wall_Left","Wall_Right","Tower_FL","Roof_FL","Keep","Keep_Roof","Gatehouse","Gate","Tower_FR","Tower_BL","Tower_BR","Roof_FR","Roof_BL","Roof_BR","Merlons_Back","Merlons_Left","Merlons_Gate","Merlons_F ... [115 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-074047-castle\bd9f7a11-270d-4c47-b1a5-65e03ee34802\tool-results\mcp-blender-blob-1790743314612-g1tazy.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-074047-castle\bd9f7a11-270d-4c47-b1a5-65e03ee34802\tool-results\mcp-blender-blob-1790743314612-g1tazy.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_63e6625bed30","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":95504,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"filename": "castle.glb", "recenter": false, "object_names": ["Wall_Back", "Wall_Front", "Wall_Left", "Wall_Right", "Tower_FL", "Tower_FR", "Tower_BL", "Tower_BR", "Roof_FL", "Roof_FR", "Roof_BL", "Roof_BR", "Keep", "Keep_Roof", "Gatehouse", "Gate", "Merlons_Back", "Merlons_Front", "Merlons_Left", "Merlons_Right", "Merlons_Gate"]}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-074047-castle\\castle.glb","filename":"castle.glb","bytes":77376,"objects":["Wall_Back","Wall_Front","Wall_Left","Wall_Right","Tower_FL","Tower_FR","To ... [257 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-074047-castle\\castle.glb","filename":"castle.glb","bytes":77376,"objects":["Wall_Back","Wall_Front","Wall_Left","Wall_Right","Tower_FL","Tower_FR","To ... [257 more characters]
 **Ajan:** Kale hazır ve `castle.glb` olarak dışa aktarıldı. Toplam **1.418 üçgen**, yani ~3000'lik low-poly bütçesinin epey altında.
 
 **Neler yaptım:**
@@ -131,7 +131,7 @@ Modeli ISO açıdan viewport'ta yakalayıp kontrol ettim. Kuleler, surlar, mazga
 - Model 21 ayrı parça olarak dışa aktarıldı, parçaları birleştirmedim.
 - Model zaten sahnede ortalandığı ve tabanı zemine (z=0) oturduğu için recenter'ı kapattım. Oyuna yüklendiğinde doğru yerde durmalı.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-074047-castle\castle.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-074047-castle\castle.glb`
 
 
 ---
@@ -154,4 +154,4 @@ Modeli ISO açıdan viewport'ta yakalayıp kontrol ettim. Kuleler, surlar, mazga
 - Model 21 ayrı parça olarak dışa aktarıldı, parçaları birleştirmedim.
 - Model zaten sahnede ortalandığı ve tabanı zemine (z=0) oturduğu için recenter'ı kapattım. Oyuna yüklendiğinde doğru yerde durmalı.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-074047-castle\castle.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-074047-castle\castle.glb`

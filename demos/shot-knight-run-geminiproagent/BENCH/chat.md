@@ -47,12 +47,12 @@
 - `camera_move` {"preset": "orbit", "duration": 4, "object_names": ["Knight_Rig"], "follow": true}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "orbit", "about": "camera circles the subject (angle degrees, default 120)", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.035, 0.07, 0.883], "subject_radius": 1.026, "distance": 3.977, "follow": true}
 - `render_image` {"filename": "knight_test", "frame": 48}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104840-shot-knight-run-geminiproagent\\knight_test.png", "filename": "knight_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 518902, "format": "PNG", "engine": "EEVEE", "image_id": ... [66 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104840-shot-knight-run-geminiproagent\\knight_test.png", "filename": "knight_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 518902, "format": "PNG", "engine": "EEVEE", "image_id": ... [66 more characters]
 **Ajan:** gltf_export=None, animations=True... I don't need to export gltf, just render.
 The image looks acceptable. The knight has limbs, a shield, head, and looks like he is running. Overcast light is soft.
 Now I'll run `render_animation` with the requested name `shot-knight-run-geminiproagent`.
 
 - `render_animation` {"filename": "shot-knight-run-geminiproagent"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104840-shot-knight-run-geminiproagent\\shot-knight-run-geminiproagent.mp4", "filename": "shot-knight-run-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104840-shot-knight-run-geminiproagent\\shot-knight-run-geminiproagent.mp4", "filename": "shot-knight-run-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
 **Ajan:** 䐪Küp silindi. Şövalye parçaları (gövde, baş, miğfer, kollar, bacaklar, kalkan) modellendi. Metal, ten ve ahşap renkleri atandı. `rig_character` ile iskelet kuruldu. `animate_character` ile 8 metrelik koşma (run) eylemi verildi. Kapalı hava (overcast) ışığı ve karakteri takip eden (follow) kamera ayarlandı. Test karesi alındı. 4 saniyelik `shot-knight-run-geminiproagent.mp4` animasyonu başarıyla işlendi (render). İşlem tamam.
 

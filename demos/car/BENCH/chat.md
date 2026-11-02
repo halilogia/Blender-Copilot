@@ -59,7 +59,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Body","Cabin","Wheel_FL","Bumper_F","Headlight_L","Taillight_L","Wheel_RL","Wheel_FR","Wheel_RR","Bumper_R","Headlight_R","Taillight_R"],"center":[0,0,0.65],"radius":2.411,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011747-car\7ae8d0bb-ba4c-4ce1-8408-26f58d8e7267\tool-results\mcp-blender-blob-1790720341058-n6n7y2.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011747-car\7ae8d0bb-ba4c-4ce1-8408-26f58d8e7267\tool-results\mcp-blender-blob-1790720341058-n6n7y2.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_40d200ab9652","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":86154,"channels":4},"error":null}
 **Ajan:** Görünüm iyi. Yan profilden tekerleklerin yere değdiğini kontrol ediyorum.
 
@@ -67,10 +67,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"LEFT","objects":["Body","Cabin","Wheel_FL","Bumper_F","Headlight_L","Taillight_L","Wheel_RL","Wheel_FR","Wheel_RR","Bumper_R","Headlight_R","Taillight_R"],"center":[0,0,0.65],"radius":2.411,"shading":"MATERIAL","overlays":true},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011747-car\7ae8d0bb-ba4c-4ce1-8408-26f58d8e7267\tool-results\mcp-blender-blob-1790720344120-von9bl.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011747-car\7ae8d0bb-ba4c-4ce1-8408-26f58d8e7267\tool-results\mcp-blender-blob-1790720344120-von9bl.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_c4b9f195e168","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":84690,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Body", "Cabin", "Bumper_F", "Bumper_R", "Headlight_L", "Headlight_R", "Taillight_L", "Taillight_R", "Wheel_FL", "Wheel_FR", "Wheel_RL", "Wheel_RR"], "filename": "car.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011747-car\\car.glb","filename":"car.glb","bytes":54472,"objects":["Body","Cabin","Bumper_F","Bumper_R","Headlight_L","Headlight_R","Taillight_L","Tail ... [135 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011747-car\\car.glb","filename":"car.glb","bytes":54472,"objects":["Body","Cabin","Bumper_F","Bumper_R","Headlight_L","Headlight_R","Taillight_L","Tail ... [135 more characters]
 **Ajan:** Low-poly araba `car.glb` olarak dışa aktarıldı: **toplam 1104 üçgen**.
 
 **Yaptıklarım:**
@@ -84,7 +84,7 @@
 
 **Kontrol:** Viewport'ta ISO açıdan ve arkadan (arka farların göründüğü açı) çekim alıp baktım. Parçalar yerinde, tekerlekler zemin çizgisine oturuyor.
 
-**Export:** 12 parça ayrı nesneler olarak dosyada. Y ekseni yukarı, orijin gövdenin alt ortasında. Dosya yolu: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011747-car\car.glb`
+**Export:** 12 parça ayrı nesneler olarak dosyada. Y ekseni yukarı, orijin gövdenin alt ortasında. Dosya yolu: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011747-car\car.glb`
 
 
 ---
@@ -101,4 +101,4 @@
 
 **Kontrol:** Viewport'ta ISO açıdan ve arkadan (arka farların göründüğü açı) çekim alıp baktım. Parçalar yerinde, tekerlekler zemin çizgisine oturuyor.
 
-**Export:** 12 parça ayrı nesneler olarak dosyada. Y ekseni yukarı, orijin gövdenin alt ortasında. Dosya yolu: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011747-car\car.glb`
+**Export:** 12 parça ayrı nesneler olarak dosyada. Y ekseni yukarı, orijin gövdenin alt ortasında. Dosya yolu: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011747-car\car.glb`

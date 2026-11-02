@@ -43,14 +43,14 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["House","RoofFront","RoofBack","Door","WinFront","WinLeft","WinRight","Chimney"],"center":[0,0,2.1],"radius":3.647,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011124-house\85e20f6e-eb15-4ccc-86d6-115e94e7a8ad\tool-results\mcp-blender-blob-1790719938256-yy7u0h.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011124-house\85e20f6e-eb15-4ccc-86d6-115e94e7a8ad\tool-results\mcp-blender-blob-1790719938256-yy7u0h.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_4d1792d03a5f","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":84993,"channels":4},"error":null}
 **Ajan:** Looks right. Joining and exporting.
 
 - `mcp__blender__join_objects` {"object_names": ["House", "RoofFront", "RoofBack", "Door", "WinFront", "WinLeft", "WinRight", "Chimney"], "target_name": "House"}
   > {"success":true,"tool":"join_objects","data":{"object_name":"House","type":"MESH","exists":true,"location":[0,0,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":66,"face_count":49,"triangle_count":100,"local_bounds_min":[-2.3,-1.8976,0],"local_bounds_max":[2.3,1.8976,4.2],"dimensions":[4.6,3.795 ... [112 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["House"], "filename": "house.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011124-house\\house.glb","filename":"house.glb","bytes":9188,"objects":["House"],"triangle_count":100,"format":"GLB","y_up":true,"recentered":true},"er ... [10 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011124-house\\house.glb","filename":"house.glb","bytes":9188,"objects":["House"],"triangle_count":100,"format":"GLB","y_up":true,"recentered":true},"er ... [10 more characters]
 **Ajan:** Köy evi hazır ve `house.glb` olarak dışa aktarıldı. Toplam **100 üçgen**, yani ~3000'lik sınırın çok altında.
 
 **Ne yaptım:**
@@ -64,7 +64,7 @@
 
 **Kontrol:** Modeli ISO açıdan, malzemeli görünümde viewport'ta inceledim. Çatı, kapı, pencereler ve baca yerinde duruyor, belirgin bir hata görmedim. Yalnızca bu tek açıdan baktım; arka ve yandan ayrıca kontrol etmedim.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011124-house\house.glb` (9 KB, Y-up)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011124-house\house.glb` (9 KB, Y-up)
 
 
 ---
@@ -81,4 +81,4 @@
 
 **Kontrol:** Modeli ISO açıdan, malzemeli görünümde viewport'ta inceledim. Çatı, kapı, pencereler ve baca yerinde duruyor, belirgin bir hata görmedim. Yalnızca bu tek açıdan baktım; arka ve yandan ayrıca kontrol etmedim.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011124-house\house.glb` (9 KB, Y-up)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011124-house\house.glb` (9 KB, Y-up)

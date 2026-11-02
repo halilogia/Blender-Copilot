@@ -97,7 +97,7 @@
 **Ajan:** Varil tek mesh, görünüm temiz. Export:
 
 - `export_gltf` {"filename": "barrel-claudesonnet46.glb", "object_names": ["Barrel"], "recenter": true, "y_up": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-081830-barrel-claudesonnet46\\barrel-claudesonnet46.glb", "filename": "barrel-claudesonnet46.glb", "bytes": 40952, "objects": ["Barrel"], "triangle_count": 872, "format": "GLB", "y_up": true, "r ... [17 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-081830-barrel-claudesonnet46\\barrel-claudesonnet46.glb", "filename": "barrel-claudesonnet46.glb", "bytes": 40952, "objects": ["Barrel"], "triangle_count": 872, "format": "GLB", "y_up": true, "r ... [17 more characters]
 **Ajan:** Export tamam. 
 
 ---

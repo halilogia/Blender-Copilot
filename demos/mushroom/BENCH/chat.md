@@ -47,7 +47,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Stem","Cap","Spot1","Spot2","Spot3","Spot4","Spot5","Spot6","Spot7"],"center":[-0.009,0,0.92],"radius":1.693,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012542-mushroom\2416ba14-9bb1-4edf-b5c6-853107c1e3a2\tool-results\mcp-blender-blob-1790720787946-it70fb.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012542-mushroom\2416ba14-9bb1-4edf-b5c6-853107c1e3a2\tool-results\mcp-blender-blob-1790720787946-it70fb.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_a8f029d905c0","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":86779,"channels":4},"error":null}
 **Ajan:** Looks right. Joining, cleaning up transforms, and exporting.
 
@@ -58,7 +58,7 @@
 - `mcp__blender__set_origin` {"object_name": "Mushroom", "mode": "BOTTOM_CENTER"}
   > {"success":true,"tool":"set_origin","data":{"object_name":"Mushroom","type":"MESH","exists":true,"location":[0,0,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":840,"face_count":1106,"triangle_count":1644,"local_bounds_min":[-1,-1,0],"local_bounds_max":[1,1,1.84],"dimensions":[2,2,1.84],"origin ... [37 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Mushroom"], "filename": "mushroom.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012542-mushroom\\mushroom.glb","filename":"mushroom.glb","bytes":105068,"objects":["Mushroom"],"triangle_count":1644,"format":"GLB","y_up":true,"recent ... [25 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012542-mushroom\\mushroom.glb","filename":"mushroom.glb","bytes":105068,"objects":["Mushroom"],"triangle_count":1644,"format":"GLB","y_up":true,"recent ... [25 more characters]
 **Ajan:** Mantar hazır ve `mushroom.glb` olarak dışa aktarıldı.
 
 **Yaptıklarım:**
@@ -73,7 +73,7 @@
 - **Boyut:** 2 × 2 × 1,84 m
 - **Üçgen sayısı:** 1644, yani ~3000'lik low-poly sınırının rahatça altında
 - **Materyaller:** CapRed, StemCream, SpotWhite
-- **Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012542-mushroom\mushroom.glb`, Y-up olarak kaydedildi.
+- **Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012542-mushroom\mushroom.glb`, Y-up olarak kaydedildi.
 
 Gövde görsel olarak biraz kısa kalıyor. Daha "büyük mantar" siluetini istersen gövdeyi uzatabilirim. Üçgen sayısını düşürmek istersen de şapkanın küresi daha az segmentle yeniden yapılabilir.
 
@@ -93,6 +93,6 @@ Gövde görsel olarak biraz kısa kalıyor. Daha "büyük mantar" siluetini iste
 - **Boyut:** 2 × 2 × 1,84 m
 - **Üçgen sayısı:** 1644, yani ~3000'lik low-poly sınırının rahatça altında
 - **Materyaller:** CapRed, StemCream, SpotWhite
-- **Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012542-mushroom\mushroom.glb`, Y-up olarak kaydedildi.
+- **Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012542-mushroom\mushroom.glb`, Y-up olarak kaydedildi.
 
 Gövde görsel olarak biraz kısa kalıyor. Daha "büyük mantar" siluetini istersen gövdeyi uzatabilirim. Üçgen sayısını düşürmek istersen de şapkanın küresi daha az segmentle yeniden yapılabilir.

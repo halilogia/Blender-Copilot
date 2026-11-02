@@ -27,7 +27,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["PineTree"],"center":[0,0,1.327],"radius":1.744,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010831-tree\6c1cfed8-40e1-4171-b3d9-f3d30dd873be\tool-results\mcp-blender-blob-1790719747905-c4e3f5.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010831-tree\6c1cfed8-40e1-4171-b3d9-f3d30dd873be\tool-results\mcp-blender-blob-1790719747905-c4e3f5.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_07ba181691d6","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":80362,"channels":4},"error":null}
 - `ToolSearch` {"query": "select:mcp__blender__assign_material,mcp__blender__mesh_edit,mcp__blender__inspect_material", "max_results": 3}
 **Ajan:** The two upper cones didn't get a material when I joined them. I'll rebuild and assign a material to every part before joining.
@@ -58,12 +58,12 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["PineTree"],"center":[0,0,1.328],"radius":1.744,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010831-tree\6c1cfed8-40e1-4171-b3d9-f3d30dd873be\tool-results\mcp-blender-blob-1790719769529-su0btn.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010831-tree\6c1cfed8-40e1-4171-b3d9-f3d30dd873be\tool-results\mcp-blender-blob-1790719769529-su0btn.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_5c7662de054f","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":79463,"channels":4},"error":null}
 **Ajan:** Looks good. Exporting.
 
 - `mcp__blender__export_gltf` {"object_names": ["PineTree"], "filename": "tree.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010831-tree\\tree.glb","filename":"tree.glb","bytes":17600,"objects":["PineTree"],"triangle_count":310,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010831-tree\\tree.glb","filename":"tree.glb","bytes":17600,"objects":["PineTree"],"triangle_count":310,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
 **Ajan:** Düşük poligonlu çam ağacı hazır ve `tree.glb` olarak dışa aktarıldı: `...\20260930-010831-tree\tree.glb` (17,6 KB).
 
 **Üçgen sayısı: 310.** Küçük bir prop için önerilen ~3000 sınırının çok altında.

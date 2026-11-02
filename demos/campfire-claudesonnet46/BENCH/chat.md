@@ -111,7 +111,7 @@
 **Ajan:** **7 — Export.**
 
 - `export_gltf` {"object_names": ["Campfire"], "recenter": true, "y_up": true, "filename": "campfire-claudesonnet46.glb"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-083159-campfire-claudesonnet46\\campfire-claudesonnet46.glb", "filename": "campfire-claudesonnet46.glb", "bytes": 49592, "objects": ["Campfire"], "triangle_count": 1090, "format": "GLB", "y_up": ... [26 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-083159-campfire-claudesonnet46\\campfire-claudesonnet46.glb", "filename": "campfire-claudesonnet46.glb", "bytes": 49592, "objects": ["Campfire"], "triangle_count": 1090, "format": "GLB", "y_up": ... [26 more characters]
 **Ajan:** Bitti. Özet:
 
 ---

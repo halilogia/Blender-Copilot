@@ -152,11 +152,11 @@ Taş doku → gri, hafif pürüzlü:
 **Ajan:** Bir kare render et, kadraj/ışık kontrol:
 
 - `render_image` {"height": 540, "samples": 16, "width": 960, "filename": "castle_preview", "frame": 1}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095552-shot-castle-orbit-claudesonnet46\\castle_preview.png", "filename": "castle_preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 553615, "format": "PNG", "engine": "EEVEE", "ima ... [73 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095552-shot-castle-orbit-claudesonnet46\\castle_preview.png", "filename": "castle_preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 553615, "format": "PNG", "engine": "EEVEE", "ima ... [73 more characters]
 **Ajan:** Render iyi görünüyor — kale çerçevede, gün batımı ışığı kaleye güzel vuruyor, gölgeler doğal. Kadraj ve ışık tamam. Tam animasyon çek:
 
 - `render_animation` {"width": 960, "filename": "shot-castle-orbit-claudesonnet46", "height": 540, "samples": 12}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095552-shot-castle-orbit-claudesonnet46\\shot-castle-orbit-claudesonnet46.mp4", "filename": "shot-castle-orbit-claudesonnet46.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "heig ... [347 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095552-shot-castle-orbit-claudesonnet46\\shot-castle-orbit-claudesonnet46.mp4", "filename": "shot-castle-orbit-claudesonnet46.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "heig ... [347 more characters]
 **Ajan:** MP4 hazır. Özet:
 
 ---

@@ -87,7 +87,7 @@
 **Ajan:** Sahne doğrulandı: tek mesh "Table". Şimdi dışa aktarıyorum.
 
 - `export_gltf` {"filename": "model-check-fix-deepseekv4flash.glb", "object_names": ["Table"]}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-181306-model-check-fix-deepseekv4flash\\model-check-fix-deepseekv4flash.glb", "filename": "model-check-fix-deepseekv4flash.glb", "bytes": 3560, "objects": ["Table"], "triangle_count": 36, "forma ... [44 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-181306-model-check-fix-deepseekv4flash\\model-check-fix-deepseekv4flash.glb", "filename": "model-check-fix-deepseekv4flash.glb", "bytes": 3560, "objects": ["Table"], "triangle_count": 36, "forma ... [44 more characters]
 **Ajan:** İşlem tamam. Yaptıklarımın özeti:
 
 **1. Sahne hazırlığı**

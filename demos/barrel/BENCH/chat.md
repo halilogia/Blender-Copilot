@@ -39,7 +39,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Barrel","Band_Low","Band_High","Rim_Top","Rim_Bottom","Lid","Cap"],"center":[0,0,0.475],"radius":0.651,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010746-barrel\91559948-7eb8-4a6e-9725-f12b8e0cbaeb\tool-results\mcp-blender-blob-1790719694743-h7pwyb.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-010746-barrel\91559948-7eb8-4a6e-9725-f12b8e0cbaeb\tool-results\mcp-blender-blob-1790719694743-h7pwyb.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_5c0ae6d5c53d","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":103874,"channels":4},"error":null}
 **Ajan:** Looks good. Joining and exporting.
 
@@ -48,8 +48,8 @@
 - `mcp__blender__set_origin` {"object_name": "Barrel", "mode": "BOTTOM_CENTER"}
   > {"success":true,"tool":"set_origin","data":{"object_name":"Barrel","type":"MESH","exists":true,"location":[0,0,-0.0006],"rotation":[0,0,0],"scale":[1,1,1.5],"vertex_count":448,"face_count":238,"triangle_count":868,"local_bounds_min":[-0.315,-0.315,0],"local_bounds_max":[0.315,0.315,0.6337],"dimensio ... [67 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Barrel"], "filename": "barrel.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010746-barrel\\barrel.glb","filename":"barrel.glb","bytes":39320,"objects":["Barrel"],"triangle_count":868,"format":"GLB","y_up":true,"recentered":true ... [15 more characters]
-**Ajan:** Low-poly metal varil hazır ve dışa aktarıldı: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010746-barrel\barrel.glb` (868 üçgen).
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-010746-barrel\\barrel.glb","filename":"barrel.glb","bytes":39320,"objects":["Barrel"],"triangle_count":868,"format":"GLB","y_up":true,"recentered":true ... [15 more characters]
+**Ajan:** Low-poly metal varil hazır ve dışa aktarıldı: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010746-barrel\barrel.glb` (868 üçgen).
 
 **Ne yaptım:**
 - Varsayılan Cube'u sildim.
@@ -66,7 +66,7 @@ Nesnenin Z ölçeği (1.5) uygulanmadı. glTF bunu doğru taşır, ama motorda �
 
 
 ---
-**Sonuç:** Low-poly metal varil hazır ve dışa aktarıldı: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010746-barrel\barrel.glb` (868 üçgen).
+**Sonuç:** Low-poly metal varil hazır ve dışa aktarıldı: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-010746-barrel\barrel.glb` (868 üçgen).
 
 **Ne yaptım:**
 - Varsayılan Cube'u sildim.

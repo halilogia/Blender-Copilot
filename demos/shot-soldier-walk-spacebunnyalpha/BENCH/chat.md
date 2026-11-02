@@ -109,7 +109,7 @@
 - `camera_move` {"azimuth": 35, "distance": 6, "duration": 5, "elevation": 10, "focal_length": 50, "follow": true, "fps": 24, "object_names": ["Soldier_Rig"], "preset": "static"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "static", "about": "locked camera", "frames": 120, "fps": 24, "seconds": 5.0, "frame_range": [1, 120], "subject_center": [0.0, 0.185, 0.913], "subject_radius": 1.049, "distance": 6.0, "follow": true}
 - `render_image` {"filename": "soldier_check", "frame": 40, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check.png", "filename": "soldier_check.png", "width": 960, "height": 540, "frame": 40, "bytes": 501933, "format": "PNG", "engine": "EEVEE", "ima ... [73 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check.png", "filename": "soldier_check.png", "width": 960, "height": 540, "frame": 40, "bytes": 501933, "format": "PNG", "engine": "EEVEE", "ima ... [73 more characters]
 **Ajan:** Işık iyi, kadraj yakın. Kollar gövdeden ayrı — içeri al, kamerayı uzaklaştır.
 
 - `transform_object` {"location": [0.32, 0, 1.16], "name": "Arm_L"}
@@ -119,7 +119,7 @@
 - `camera_move` {"azimuth": 40, "distance": 9, "duration": 5, "elevation": 12, "focal_length": 55, "follow": true, "fps": 24, "object_names": ["Soldier_Rig"], "preset": "static"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "static", "about": "locked camera", "frames": 120, "fps": 24, "seconds": 5.0, "frame_range": [1, 120], "subject_center": [0.0, 0.182, 0.913], "subject_radius": 1.029, "distance": 9.0, "follow": true}
 - `render_image` {"filename": "soldier_check2", "frame": 40, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check2.png", "filename": "soldier_check2.png", "width": 960, "height": 540, "frame": 40, "bytes": 492012, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check2.png", "filename": "soldier_check2.png", "width": 960, "height": 540, "frame": 40, "bytes": 492012, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
 **Ajan:** Bacaklar kalkık — üstteki eklem boşluğunu kapat.
 
 - `transform_object` {"name": "Leg_L", "scale": [0.13, 0.15, 0.46]}
@@ -127,11 +127,11 @@
 - `transform_object` {"name": "Leg_R", "scale": [0.13, 0.15, 0.46]}
   > {"object_name": "Leg_R", "relative": false, "exists": true, "before": {"location": [-0.12, 0.0, 0.715], "rotation": [0.0, 0.0, 0.0], "scale": [0.13, 0.15, 0.41]}, "after": {"exists": true, "location": [-0.12, 0.0, 0.715], "rotation": [0.0, 0.0, 0.0], "scale": [0.13, 0.15, 0.46]}, "actual": {"exists" ... [301 more characters]
 - `render_image` {"filename": "soldier_check3", "frame": 40, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check3.png", "filename": "soldier_check3.png", "width": 960, "height": 540, "frame": 40, "bytes": 492015, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\soldier_check3.png", "filename": "soldier_check3.png", "width": 960, "height": 540, "frame": 40, "bytes": 492015, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
 **Ajan:** Yürüme karesi, gövde/bacak arası boşluk animasyon kaynaklı. Işık ve kadraj kabul. Render et.
 
 - `render_animation` {"end_frame": 120, "filename": "shot-soldier-walk-spacebunnyalpha", "format": "mp4", "height": 540, "samples": 16, "start_frame": 1, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\shot-soldier-walk-spacebunnyalpha.mp4", "filename": "shot-soldier-walk-spacebunnyalpha.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "h ... [352 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103557-shot-soldier-walk-spacebunnyalpha\\shot-soldier-walk-spacebunnyalpha.mp4", "filename": "shot-soldier-walk-spacebunnyalpha.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "h ... [352 more characters]
 **Ajan:** Bitti.
 
 Ne yapıldı:
@@ -144,5 +144,5 @@ Ne yapıldı:
 - `render_image` ile kare 40 üç kez kontrol edildi: kollar içeri alındı, kamerayı uzaklaştırıldı, bacak eklemi kapatıldı.
 - `render_animation` → `shot-soldier-walk-spacebunnyalpha.mp4`, 960x540, 120 kare, 8.9 sn render.
 
-Çıktı: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-103557-shot-soldier-walk-spacebunnyalpha\shot-soldier-walk-spacebunnyalpha.mp4`
+Çıktı: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-103557-shot-soldier-walk-spacebunnyalpha\shot-soldier-walk-spacebunnyalpha.mp4`
 

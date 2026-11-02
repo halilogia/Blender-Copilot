@@ -49,7 +49,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Hull","Wings","Cockpit","Engine_L","Engine_R","Flame_L","Flame_R","Stripe_L","Stripe_R"],"center":[0,-0.05,0.735],"radius":3.472,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073924-spaceship\2371c012-4185-48bc-96d3-624a16aee512\tool-results\mcp-blender-blob-1790743227475-c58moy.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073924-spaceship\2371c012-4185-48bc-96d3-624a16aee512\tool-results\mcp-blender-blob-1790743227475-c58moy.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_0c611a306e7d","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":78820,"channels":4},"error":null}
 - `mcp__blender__transform_object` {"name": "Cockpit", "location": [0, 0.8, 1]}
   > {"success":true,"tool":"transform_object","data":{"object_name":"Cockpit","relative":false,"exists":true,"before":{"location":[0,0.9,0.92],"rotation":[0,0,0],"scale":[0.6,1.2,0.5]},"after":{"exists":true,"location":[0,0.8,1],"rotation":[0,0,0],"scale":[0.6,1.2,0.5]},"actual":{"exists":true,"location ... [91 more characters]
@@ -57,12 +57,12 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"LEFT","objects":["Hull","Wings","Cockpit","Engine_L","Engine_R","Flame_L","Flame_R","Stripe_L","Stripe_R"],"center":[0,-0.05,0.775],"radius":3.477,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073924-spaceship\2371c012-4185-48bc-96d3-624a16aee512\tool-results\mcp-blender-blob-1790743231042-6qb8fe.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-073924-spaceship\2371c012-4185-48bc-96d3-624a16aee512\tool-results\mcp-blender-blob-1790743231042-6qb8fe.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_f3bddf1d6ede","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":71023,"channels":4},"error":null}
 **Ajan:** Yan görünüm temiz; kokpit gövdenin üstünde, alevler motorların arkasında. Dışa aktarıyorum:
 
 - `mcp__blender__export_gltf` {"object_names": ["Hull", "Wings", "Cockpit", "Engine_L", "Engine_R", "Flame_L", "Flame_R", "Stripe_L", "Stripe_R"], "filename": "spaceship.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-073924-spaceship\\spaceship.glb","filename":"spaceship.glb","bytes":33812,"objects":["Hull","Wings","Cockpit","Engine_L","Engine_R","Flame_L","Flame_R" ... [104 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-073924-spaceship\\spaceship.glb","filename":"spaceship.glb","bytes":33812,"objects":["Hull","Wings","Cockpit","Engine_L","Engine_R","Flame_L","Flame_R" ... [104 more characters]
 **Ajan:** Uzay gemisini modelleyip `spaceship.glb` olarak dışa aktardım. Toplam **520 üçgen**, yani önerilen ~3000 sınırının çok altında.
 
 **Ne yaptım:**
@@ -76,7 +76,7 @@
 
 **Kontrol:** Modele önce çapraz (ISO), sonra yan açıdan baktım. İlk bakışta kokpit gövdenin içine fazla gömülüydü, biraz yukarı ve geriye aldım. Yandan bakınca kokpit gövdenin üstünde, alevler de motorların hemen arkasında duruyordu.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-073924-spaceship\spaceship.glb` (33 KB). Y ekseni yukarıyı gösteriyor, modifier'lar uygulandı, malzemeler dosyanın içinde.
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-073924-spaceship\spaceship.glb` (33 KB). Y ekseni yukarıyı gösteriyor, modifier'lar uygulandı, malzemeler dosyanın içinde.
 
 Kokpit camının saydamlığı oyun motorunda ayrıca kontrol edilmeli. Blender'daki alpha değeri motorda her zaman aynı görünmeyebilir.
 
@@ -95,6 +95,6 @@ Kokpit camının saydamlığı oyun motorunda ayrıca kontrol edilmeli. Blender'
 
 **Kontrol:** Modele önce çapraz (ISO), sonra yan açıdan baktım. İlk bakışta kokpit gövdenin içine fazla gömülüydü, biraz yukarı ve geriye aldım. Yandan bakınca kokpit gövdenin üstünde, alevler de motorların hemen arkasında duruyordu.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-073924-spaceship\spaceship.glb` (33 KB). Y ekseni yukarıyı gösteriyor, modifier'lar uygulandı, malzemeler dosyanın içinde.
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-073924-spaceship\spaceship.glb` (33 KB). Y ekseni yukarıyı gösteriyor, modifier'lar uygulandı, malzemeler dosyanın içinde.
 
 Kokpit camının saydamlığı oyun motorunda ayrıca kontrol edilmeli. Blender'daki alpha değeri motorda her zaman aynı görünmeyebilir.

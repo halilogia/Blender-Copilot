@@ -69,7 +69,7 @@
 **Ajan:** Framing passes now. Let me render a test frame to check light and framing visually.
 
 - `render_image` {"filename": "terrain_test", "frame": 1, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\terrain_test.png", "filename": "terrain_test.png", "width": 960, "height": 540, "frame": 1, "bytes": 599276, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\terrain_test.png", "filename": "terrain_test.png", "width": 960, "height": 540, "frame": 1, "bytes": 599276, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
 **Ajan:** Screenshot shows terrain, trees, house already — but my `create_terrain` reported NOT_EXECUTED. Let me inspect actual scene state.
 
 - `inspect_scene` {}
@@ -95,7 +95,7 @@
 **Ajan:** Framing passes. Let me render a check frame to verify light and composition.
 
 - `render_image` {"filename": "terrain_check", "frame": 60, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\terrain_check.png", "filename": "terrain_check.png", "width": 960, "height": 540, "frame": 60, "bytes": 633772, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\terrain_check.png", "filename": "terrain_check.png", "width": 960, "height": 540, "frame": 60, "bytes": 633772, "format": "PNG", "engine": "EEVEE", "i ... [75 more characters]
 **Ajan:** Image looks like a stale capture from an earlier run. Let me verify actual scene state.
 
 - `inspect_scene` {}
@@ -103,7 +103,7 @@
 **Ajan:** Scene verified: 53 meshes (Terrain, House, 40 pines, 10 lamps + source/helpers), golden-hour sun, orbit shot framed and passing. Now the final 5-second render.
 
 - `render_animation` {"filename": "shot-terrain-forest-deepseekv4flash", "format": "mp4", "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\shot-terrain-forest-deepseekv4flash.mp4", "filename": "shot-terrain-forest-deepseekv4flash.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 9 ... [362 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-195727-shot-terrain-forest-deepseekv4flash\\shot-terrain-forest-deepseekv4flash.mp4", "filename": "shot-terrain-forest-deepseekv4flash.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 9 ... [362 more characters]
 **Ajan:** Terrain call didn't execute. The render result looks stale/misrouted — inspecting actual scene state first.
 
 - `inspect_scene` {}

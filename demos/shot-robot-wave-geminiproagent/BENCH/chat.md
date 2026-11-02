@@ -100,11 +100,11 @@
   > {"rig": "Robot_Rig", "preset": "wave", "about": "right arm raised and waving", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "animated_parts": ["arm_l", "arm_r", "head", "leg_l", "leg_r", "torso"], "travel_m": 0.0, "heading": 0.0}
   > {"preset": "studio", "about": "neutral grey backdrop, soft white key light", "lights": ["AI_Sun"], "ground": "AI_Ground", "world": "AI_World", "scene_center": [0.0, 0.0, 1.025], "scene_radius": 1.277}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_in", "about": "camera moves toward the subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.0, 1.025], "subject_radius": 1.277, "distance": 4.775, "follow": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103217-shot-robot-wave-geminiproagent\\robot_check.png", "filename": "robot_check.png", "width": 960, "height": 540, "frame": 1, "bytes": 215699, "format": "PNG", "engine": "EEVEE", "image_id":  ... [65 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103217-shot-robot-wave-geminiproagent\\robot_check.png", "filename": "robot_check.png", "width": 960, "height": 540, "frame": 1, "bytes": 215699, "format": "PNG", "engine": "EEVEE", "image_id":  ... [65 more characters]
 **Ajan:** gltf
 
 - `render_animation` {"filename": "shot-robot-wave-geminiproagent"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103217-shot-robot-wave-geminiproagent\\shot-robot-wave-geminiproagent.mp4", "filename": "shot-robot-wave-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-103217-shot-robot-wave-geminiproagent\\shot-robot-wave-geminiproagent.mp4", "filename": "shot-robot-wave-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
 **Ajan:** gltfCube silindi. Robot parçaları (kafa, gövde, kollar, bacaklar, anten) yapıldı. Transformlar uygulandı. Kafa ve gövdeye bevel eklendi. Renkli malzemeler atandı. Anten kırmızı parlatıldı. 
 
 Parçalar rig_character ile bağlandı. animate_character ile 4 saniye el sallama eklendi. Stüdyo ışığı kuruldu. Kamera dolly_in yapıldı. Kare kontrol edildi. shot-robot-wave-geminiproagent.mp4 oluşturuldu. İşlem bitti.

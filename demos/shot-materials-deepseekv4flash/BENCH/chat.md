@@ -65,7 +65,7 @@
 **Ajan:** Check passes. Let me render a single frame to judge light and framing.
 
 - `render_image` {"filename": "courtyard_check", "frame": 30, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-164551-shot-materials-deepseekv4flash\\courtyard_check.png", "filename": "courtyard_check.png", "width": 960, "height": 540, "frame": 30, "bytes": 687778, "format": "PNG", "engine": "EEVEE", "im ... [74 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-164551-shot-materials-deepseekv4flash\\courtyard_check.png", "filename": "courtyard_check.png", "width": 960, "height": 540, "frame": 30, "bytes": 687778, "format": "PNG", "engine": "EEVEE", "im ... [74 more characters]
 **Ajan:** Screenshot shows a built courtyard, but scene had only Cube/Camera/Light. Verifying actual state.
 
 - `inspect_scene` {}
@@ -73,7 +73,7 @@
 **Ajan:** Scene confirmed: 5 courtyard meshes, AI_Sun, ShotCamera. Now rendering the final MP4.
 
 - `render_animation` {"filename": "shot-materials-deepseekv4flash", "format": "mp4", "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-164551-shot-materials-deepseekv4flash\\shot-materials-deepseekv4flash.mp4", "filename": "shot-materials-deepseekv4flash.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "height": 5 ... [338 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-164551-shot-materials-deepseekv4flash\\shot-materials-deepseekv4flash.mp4", "filename": "shot-materials-deepseekv4flash.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "height": 5 ... [338 more characters]
 **Ajan:** Görüntü beklenenden farklı — sahnede hazır nesneler var gibi. Sahneyi doğrulayayım.
 
 - `inspect_scene` {}

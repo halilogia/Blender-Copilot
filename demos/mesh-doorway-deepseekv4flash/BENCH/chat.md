@@ -63,7 +63,7 @@
 **Ajan:** Şimdi export ediyorum.
 
 - `export_gltf` {"filename": "mesh-doorway-deepseekv4flash.glb", "object_names": ["Wall"]}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-194511-mesh-doorway-deepseekv4flash\\mesh-doorway-deepseekv4flash.glb", "filename": "mesh-doorway-deepseekv4flash.glb", "bytes": 239072, "objects": ["Wall"], "triangle_count": 32, "format": "GLB ... [36 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-194511-mesh-doorway-deepseekv4flash\\mesh-doorway-deepseekv4flash.glb", "filename": "mesh-doorway-deepseekv4flash.glb", "bytes": 239072, "objects": ["Wall"], "triangle_count": 32, "format": "GLB ... [36 more characters]
 - `frame_view` {"direction": "ISO", "object_names": ["Wall"], "shading": "MATERIAL"}
   > {"direction": "ISO", "objects": ["Wall"], "center": [0.0, 0.0, 1.0], "radius": 1.732, "shading": "MATERIAL", "overlays": true}
 - `capture_viewport` {"height": 512, "width": 512}

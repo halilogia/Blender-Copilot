@@ -84,7 +84,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Watchtower"],"center":[0,0,3.75],"radius":4.38,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012256-watchtower\02a74677-3062-408b-bff2-541bdcedcc6e\tool-results\mcp-blender-blob-1790720678064-6nf5bn.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012256-watchtower\02a74677-3062-408b-bff2-541bdcedcc6e\tool-results\mcp-blender-blob-1790720678064-6nf5bn.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_5f939bf6db93","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":93632,"channels":4},"error":null}
 **Ajan:** Model hazır ve görüntü doğru; önden bir kez daha bakıp export ediyorum.
 
@@ -93,9 +93,9 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Watchtower"],"center":[0,0,3.75],"radius":4.38,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Watchtower"], "filename": "watchtower.glb"}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012256-watchtower\02a74677-3062-408b-bff2-541bdcedcc6e\tool-results\mcp-blender-blob-1790720683617-icznls.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012256-watchtower\02a74677-3062-408b-bff2-541bdcedcc6e\tool-results\mcp-blender-blob-1790720683617-icznls.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_bf020b7e9791","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":84677,"channels":4},"error":null}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012256-watchtower\\watchtower.glb","filename":"watchtower.glb","bytes":22772,"objects":["Watchtower"],"triangle_count":386,"format":"GLB","y_up":true," ... [31 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012256-watchtower\\watchtower.glb","filename":"watchtower.glb","bytes":22772,"objects":["Watchtower"],"triangle_count":386,"format":"GLB","y_up":true," ... [31 more characters]
 **Ajan:** Gözetleme kulesi bitti ve `watchtower.glb` olarak dışa aktarıldı. Toplam **386 üçgen**, 3000'lik düşük poligon sınırının çok altında.
 
 **Ne yaptım:**
@@ -110,7 +110,7 @@
 
 **Kontrol:** Viewport'ta ISO ve önden (FRONT) görüntü aldım. Ayaklar, destekler, platform, korkuluk, çatı ve merdiven yerli yerinde görünüyor. Görüntülerde çatı ile gövde arasındaki renk farkı pek belli olmuyor; bunu ayrıca kontrol etmedim.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012256-watchtower\watchtower.glb` (Y-up, orijine ortalanmış, yaklaşık 22 KB)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012256-watchtower\watchtower.glb` (Y-up, orijine ortalanmış, yaklaşık 22 KB)
 
 
 ---
@@ -128,4 +128,4 @@
 
 **Kontrol:** Viewport'ta ISO ve önden (FRONT) görüntü aldım. Ayaklar, destekler, platform, korkuluk, çatı ve merdiven yerli yerinde görünüyor. Görüntülerde çatı ile gövde arasındaki renk farkı pek belli olmuyor; bunu ayrıca kontrol etmedim.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012256-watchtower\watchtower.glb` (Y-up, orijine ortalanmış, yaklaşık 22 KB)
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012256-watchtower\watchtower.glb` (Y-up, orijine ortalanmış, yaklaşık 22 KB)

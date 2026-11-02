@@ -155,7 +155,7 @@
 - `camera_move` {"duration": 3, "follow": true, "object_names": ["Robot_Rig"], "preset": "dolly_in", "start_frame": 1}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_in", "about": "camera moves toward the subject", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.0, 0.008, 0.891], "subject_radius": 1.078, "distance": 4.234, "follow": true}
 - `render_image` {"filename": "check_shot1", "frame": 20, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\check_shot1.png", "filename": "check_shot1.png", "width": 960, "height": 540, "frame": 20, "bytes": 512787, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\check_shot1.png", "filename": "check_shot1.png", "width": 960, "height": 540, "frame": 20, "bytes": 512787, "format": "PNG", "engine": "EEVEE", "imag ... [72 more characters]
 **Ajan:** Let me inspect what's actually in the scene.
 
 - `inspect_scene` {}
@@ -169,13 +169,13 @@
 **Ajan:** Model and rig look good. Now rendering the three-shot film with music:
 
 - `render_shots` {"continuous": true, "filename": "shot-acting-sequence", "height": 540, "music": "calm", "shots": [{"duration": 3, "environment": "studio", "follow": true, "look": "cinematic", "object_names": ["Robot_Rig"], "preset": "dolly_in"}, {"duration": 2, "follow": true, "object_names": ["Robot_Rig"], "preset": "arc_left"}, {"duration": 3, "object_names": ["Robot_Rig"], "preset": "eyes_in"}], "transition": ... [27 more characters]
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\shot-acting-sequence.mp4", "filename": "shot-acting-sequence.mp4", "clips": ["shot-acting-sequence_shot1.mp4", "shot-acting-sequence_shot2.mp4", "sho ... [490 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\shot-acting-sequence.mp4", "filename": "shot-acting-sequence.mp4", "clips": ["shot-acting-sequence_shot1.mp4", "shot-acting-sequence_shot2.mp4", "sho ... [490 more characters]
 **Ajan:** Now the final full-length MP4. Let me set a camera over the whole 8.33 s sequence and render it:
 
 - `camera_move` {"duration": 8.33, "follow": true, "object_names": ["Robot_Rig"], "preset": "dolly_in", "start_frame": 1}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_in", "about": "camera moves toward the subject", "frames": 200, "fps": 24, "seconds": 8.33, "frame_range": [1, 200], "subject_center": [0.0, 0.008, 0.891], "subject_radius": 1.078, "distance": 4.234, "follow": true}
 - `render_animation` {"filename": "shot-acting-sequence-deepseekv4flash", "format": "mp4", "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\shot-acting-sequence-deepseekv4flash.mp4", "filename": "shot-acting-sequence-deepseekv4flash.mp4", "format": "MP4", "frames": 200, "fps": 24, "width" ... [368 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-142201-shot-acting-sequence-deepseekv4flash\\shot-acting-sequence-deepseekv4flash.mp4", "filename": "shot-acting-sequence-deepseekv4flash.mp4", "format": "MP4", "frames": 200, "fps": 24, "width" ... [368 more characters]
 **Ajan:** Tool results look inconsistent. Verifying actual scene state.
 
 - `inspect_scene` {}

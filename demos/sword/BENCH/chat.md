@@ -23,7 +23,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Blade","Guard","Grip","Pommel"],"center":[0,0,0.49],"radius":0.497,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011026-sword\cd8bee6d-83b5-4ca3-8961-903f81b12a4c\tool-results\mcp-blender-blob-1790719865678-tuzml6.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011026-sword\cd8bee6d-83b5-4ca3-8961-903f81b12a4c\tool-results\mcp-blender-blob-1790719865678-tuzml6.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_10f555b97a35","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":71477,"channels":4},"error":null}
 **Ajan:** Kılıç ön görünümde doğru görünüyor; şimdi birleştirip dışa aktarıyorum.
 
@@ -35,10 +35,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Sword"],"center":[0,0,0.49],"radius":0.497,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011026-sword\cd8bee6d-83b5-4ca3-8961-903f81b12a4c\tool-results\mcp-blender-blob-1790719871713-dwnskk.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011026-sword\cd8bee6d-83b5-4ca3-8961-903f81b12a4c\tool-results\mcp-blender-blob-1790719871713-dwnskk.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_a47a47d9e957","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":68844,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Sword"], "filename": "sword.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011026-sword\\sword.glb","filename":"sword.glb","bytes":15684,"objects":["Sword"],"triangle_count":230,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011026-sword\\sword.glb","filename":"sword.glb","bytes":15684,"objects":["Sword"],"triangle_count":230,"format":"GLB","y_up":true,"recentered":true},"e ... [11 more characters]
 **Ajan:** Kılıç hazır ve `sword.glb` olarak dışa aktarıldı: `...\20260930-011026-sword\sword.glb`
 
 **Ne yaptım:**

@@ -64,11 +64,11 @@
   > {"object_name": "Tank", "type": "MESH", "exists": true, "location": [0.0, 0.0, 0.0], "rotation": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0], "vertex_count": 144, "face_count": 106, "triangle_count": 268, "local_bounds_min": [-2.1, -2.8, 0.0], "local_bounds_max": [2.1, 2.8, 2.2], "dimensions": [4.2, 5 ... [41 more characters]
   > {"preset": "golden_hour", "about": "low warm sun, orange sky, long shadows", "lights": ["AI_Sun"], "ground": "AI_Ground", "world": "AI_World", "scene_center": [0.0, 0.0, 1.1], "scene_radius": 3.669}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "crane_up", "about": "camera rises while looking at the subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.0, 1.1], "subject_radius": 3.669, "distance": 10.273}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094906-shot-tank-crane-geminiproagent\\shot-tank-crane-preview.png", "filename": "shot-tank-crane-preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 490723, "format": "PNG", "engine ... [89 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094906-shot-tank-crane-geminiproagent\\shot-tank-crane-preview.png", "filename": "shot-tank-crane-preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 490723, "format": "PNG", "engine ... [89 more characters]
 **Ajan:** advantages
 
 - `render_animation` {"filename": "shot-tank-crane-geminiproagent"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094906-shot-tank-crane-geminiproagent\\shot-tank-crane-geminiproagent.mp4", "filename": "shot-tank-crane-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094906-shot-tank-crane-geminiproagent\\shot-tank-crane-geminiproagent.mp4", "filename": "shot-tank-crane-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
 **Ajan:** .mp4 render success.
 
 Done.
@@ -80,5 +80,5 @@ Done.
 6. Camera move 'crane_up'. Render check image.
 7. Render 4 second animation to `shot-tank-crane-geminiproagent.mp4`.
 
-File saved at: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-094906-shot-tank-crane-geminiproagent\shot-tank-crane-geminiproagent.mp4`
+File saved at: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-094906-shot-tank-crane-geminiproagent\shot-tank-crane-geminiproagent.mp4`
 

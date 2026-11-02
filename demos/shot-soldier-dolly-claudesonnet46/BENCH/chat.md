@@ -99,11 +99,11 @@
 **Ajan:** Test render — orta kare:
 
 - `render_image` {"frame": 48, "height": 540, "samples": 16, "width": 960, "filename": "soldier_test"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095939-shot-soldier-dolly-claudesonnet46\\soldier_test.png", "filename": "soldier_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 511599, "format": "PNG", "engine": "EEVEE", "image ... [71 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095939-shot-soldier-dolly-claudesonnet46\\soldier_test.png", "filename": "soldier_test.png", "width": 960, "height": 540, "frame": 48, "bytes": 511599, "format": "PNG", "engine": "EEVEE", "image ... [71 more characters]
 **Ajan:** Render iyi görünüyor — asker kadrajda, overcast ışık yumuşak. Animasyonu çek.
 
 - `render_animation` {"height": 540, "samples": 12, "width": 960, "filename": "shot-soldier-dolly-claudesonnet46"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095939-shot-soldier-dolly-claudesonnet46\\shot-soldier-dolly-claudesonnet46.mp4", "filename": "shot-soldier-dolly-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "he ... [351 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-095939-shot-soldier-dolly-claudesonnet46\\shot-soldier-dolly-claudesonnet46.mp4", "filename": "shot-soldier-dolly-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "he ... [351 more characters]
 **Ajan:** Bitti. Özet:
 
 **Model** — 8 parça (bacaklar, gövde, kafa, kask, 2 kol, tüfek gövde+namlu) join edildi → `Soldier`, 346 üçgen. 4 materyal: zeytin yeşili üniforma, ten rengi kafa, koyu yeşil kask, gun-metal tüfek.

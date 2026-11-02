@@ -51,7 +51,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Body","Head","AntennaRod","AntennaTip","EyeL","EyeR","ChestPanel","ArmL","ArmR","LegL","LegR"],"center":[0,-0.008,0.692],"radius":0.814,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013839-robot\02e1829a-59f4-4439-8a8a-63b5f580121d\tool-results\mcp-blender-blob-1790721562542-ahm5l2.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013839-robot\02e1829a-59f4-4439-8a8a-63b5f580121d\tool-results\mcp-blender-blob-1790721562542-ahm5l2.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_6df5d329f870","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":80344,"channels":4},"error":null}
 **Ajan:** Looks good. Quick front check, then export.
 
@@ -59,10 +59,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Body","Head","AntennaRod","AntennaTip","EyeL","EyeR","ChestPanel","ArmL","ArmR","LegL","LegR"],"center":[0,-0.008,0.692],"radius":0.814,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013839-robot\02e1829a-59f4-4439-8a8a-63b5f580121d\tool-results\mcp-blender-blob-1790721564827-50u027.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-013839-robot\02e1829a-59f4-4439-8a8a-63b5f580121d\tool-results\mcp-blender-blob-1790721564827-50u027.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_9bea2775be22","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":76869,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"filename": "robot.glb", "object_names": ["Body", "Head", "AntennaRod", "AntennaTip", "EyeL", "EyeR", "ChestPanel", "ArmL", "ArmR", "LegL", "LegR"], "recenter": false}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013839-robot\\robot.glb","filename":"robot.glb","bytes":32976,"objects":["Body","Head","AntennaRod","AntennaTip","EyeL","EyeR","ChestPanel","ArmL","Arm ... [99 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-013839-robot\\robot.glb","filename":"robot.glb","bytes":32976,"objects":["Body","Head","AntennaRod","AntennaTip","EyeL","EyeR","ChestPanel","ArmL","Arm ... [99 more characters]
 **Ajan:** Robot hazır ve `robot.glb` olarak dışa aktarıldı: **536 üçgen**.
 
 **Ne yaptım:**
@@ -78,7 +78,7 @@
 - Dışa aktarım Y-up ayarıyla yapıldı ve malzemeler dosyaya dahil. Parçaları birleştirmedim, bu yüzden oyunda kolları, kafayı ve diğer parçaları ayrı ayrı hareket ettirebilirsin.
 - `recenter=false` ile dışa aktardım. Böylece modelin orijini, alt orta noktası olan sahne orijininde (0,0,0) kalıyor.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013839-robot\robot.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013839-robot\robot.glb`
 
 
 ---
@@ -97,4 +97,4 @@
 - Dışa aktarım Y-up ayarıyla yapıldı ve malzemeler dosyaya dahil. Parçaları birleştirmedim, bu yüzden oyunda kolları, kafayı ve diğer parçaları ayrı ayrı hareket ettirebilirsin.
 - `recenter=false` ile dışa aktardım. Böylece modelin orijini, alt orta noktası olan sahne orijininde (0,0,0) kalıyor.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013839-robot\robot.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-013839-robot\robot.glb`

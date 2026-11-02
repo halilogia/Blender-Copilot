@@ -46,12 +46,12 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Roof","Ring","Water","PostL","PostR","Axle","Rope","Bucket"],"center":[0,0,1.4],"radius":2.052,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012148-well\db267e67-f953-40b0-b882-c74d54fc62e3\tool-results\mcp-blender-blob-1790720561158-yogvy9.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012148-well\db267e67-f953-40b0-b882-c74d54fc62e3\tool-results\mcp-blender-blob-1790720561158-yogvy9.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_daecbc259815","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":84873,"channels":4},"error":null}
 **Ajan:** Görünüm iyi. Dışa aktarıyorum (Roof ilk sırada; origin'i dünya merkezinde, yani tabanın ortasında).
 
 - `mcp__blender__export_gltf` {"object_names": ["Roof", "Ring", "Water", "PostL", "PostR", "Axle", "Rope", "Bucket"], "filename": "well.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012148-well\\well.glb","filename":"well.glb","bytes":31632,"objects":["Roof","Ring","Water","PostL","PostR","Axle","Rope","Bucket"],"triangle_count":65 ... [61 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012148-well\\well.glb","filename":"well.glb","bytes":31632,"objects":["Roof","Ring","Water","PostL","PostR","Axle","Rope","Bucket"],"triangle_count":65 ... [61 more characters]
 **Ajan:** Taş kuyu hazır ve `well.glb` olarak dışa aktarıldı. Toplam **652 üçgen**, yani ~3000 sınırının çok altında.
 
 **Ne yaptım:**
@@ -66,7 +66,7 @@
 - Su diski halkanın üst kenarıyla aynı hizada. Bu yüzden kuyu derin değil, ağzına kadar dolu görünüyor.
 - Parçalar birleştirilmedi (join yapmadım). Dosyada 8 ayrı mesh var ama tek bir `.glb` içinde, Y-up olarak export edildi.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012148-well\well.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012148-well\well.glb`
 
 
 ---
@@ -84,4 +84,4 @@
 - Su diski halkanın üst kenarıyla aynı hizada. Bu yüzden kuyu derin değil, ağzına kadar dolu görünüyor.
 - Parçalar birleştirilmedi (join yapmadım). Dosyada 8 ayrı mesh var ama tek bir `.glb` içinde, Y-up olarak export edildi.
 
-**Dosya:** `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012148-well\well.glb`
+**Dosya:** `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012148-well\well.glb`

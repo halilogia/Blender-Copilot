@@ -71,7 +71,7 @@ Transform uygula, origin ayarla, sonra export.
 - `set_origin` {"mode": "BOTTOM_CENTER", "object_name": "Crate"}
   > {"object_name": "Crate", "type": "MESH", "exists": true, "location": [-0.0058, 0.0058, -0.0115], "rotation": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0], "vertex_count": 64, "face_count": 60, "triangle_count": 120, "local_bounds_min": [-0.5058, -0.5058, 0.0], "local_bounds_max": [0.5058, 0.5058, 1.011 ... [75 more characters]
 - `export_gltf` {"recenter": true, "y_up": true, "filename": "crate-claudesonnet46.glb", "object_names": ["Crate", "Strap_H1", "Strap_H2", "Strap_H3", "Strap_V1"], "include_materials": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-081616-crate-claudesonnet46\\crate-claudesonnet46.glb", "filename": "crate-claudesonnet46.glb", "bytes": 11728, "objects": ["Crate", "Strap_H1", "Strap_H2", "Strap_H3", "Strap_V1"], "triangle_co ... [61 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-081616-crate-claudesonnet46\\crate-claudesonnet46.glb", "filename": "crate-claudesonnet46.glb", "bytes": 11728, "objects": ["Crate", "Strap_H1", "Strap_H2", "Strap_H3", "Strap_V1"], "triangle_co ... [61 more characters]
 **Ajan:** Export tamam. **168 üçgen**, ~12KB.
 
 ---

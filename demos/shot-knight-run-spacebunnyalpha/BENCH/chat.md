@@ -105,35 +105,35 @@ Onay: knight modelini sıfırdan kurayım mı, yoksa hazır asset yolu var mı (
 **Ajan:** Tek kare denetim.
 
 - `render_image` {"filename": "knight_run_check", "frame": 36, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check.png", "filename": "knight_run_check.png", "width": 960, "height": 540, "frame": 36, "bytes": 494892, "format": "PNG", "engine": "EEVEE",  ... [77 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check.png", "filename": "knight_run_check.png", "width": 960, "height": 540, "frame": 36, "bytes": 494892, "format": "PNG", "engine": "EEVEE",  ... [77 more characters]
 **Ajan:** Kamera çok uzak ve arkadan kalıyor; özne karede küçük. Yakınlaştırıp önden çekiyorum.
 
 - `camera_move` {"azimuth": 22, "distance": 3.6, "duration": 3, "elevation": 8, "focal_length": 45, "follow": true, "fps": 24, "object_names": ["Knight_Rig"], "preset": "arc_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "arc_left", "about": "camera swings 60 degrees to the left around the subject", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.047, 0.089, 0.93], "subject_radius": 1.131, "distance": 3.6, "follow": true ... [1 more characters]
 - `render_image` {"filename": "knight_run_check2", "frame": 30, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check2.png", "filename": "knight_run_check2.png", "width": 960, "height": 540, "frame": 30, "bytes": 514587, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check2.png", "filename": "knight_run_check2.png", "width": 960, "height": 540, "frame": 30, "bytes": 514587, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
 **Ajan:** Çok yakın, baş kesik. 4.6 m denge noktası.
 
 - `camera_move` {"azimuth": 20, "distance": 4.6, "duration": 3, "elevation": 11, "focal_length": 45, "follow": true, "fps": 24, "object_names": ["Knight_Rig"], "preset": "arc_right"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "arc_right", "about": "camera swings 60 degrees to the right around the subject", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.047, 0.089, 0.93], "subject_radius": 1.131, "distance": 4.6, "follow": tr ... [3 more characters]
 - `render_image` {"filename": "knight_run_check3", "frame": 30, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check3.png", "filename": "knight_run_check3.png", "width": 960, "height": 540, "frame": 30, "bytes": 502078, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check3.png", "filename": "knight_run_check3.png", "width": 960, "height": 540, "frame": 30, "bytes": 502078, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
 **Ajan:** Özne arkadan görünüyor (kılıç sola düşüyor). `arc_left` ile önden çekiyorum.
 
 - `camera_move` {"azimuth": 0, "distance": 4.6, "duration": 3, "elevation": 11, "focal_length": 45, "follow": true, "fps": 24, "object_names": ["Knight_Rig"], "preset": "arc_left"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "arc_left", "about": "camera swings 60 degrees to the left around the subject", "frames": 72, "fps": 24, "seconds": 3.0, "frame_range": [1, 72], "subject_center": [0.047, 0.089, 0.93], "subject_radius": 1.131, "distance": 4.6, "follow": true ... [1 more characters]
 - `render_image` {"filename": "knight_run_check4", "frame": 30, "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check4.png", "filename": "knight_run_check4.png", "width": 960, "height": 540, "frame": 30, "bytes": 510399, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\knight_run_check4.png", "filename": "knight_run_check4.png", "width": 960, "height": 540, "frame": 30, "bytes": 510399, "format": "PNG", "engine": "EEVEE" ... [79 more characters]
 **Ajan:** Kadraj iyi: tam gövde, kılıç ve kalkan görünüyor, koşu pozunda. MP4 render ediyorum.
 
 - `render_animation` {"end_frame": 72, "filename": "shot-knight-run-spacebunnyalpha", "format": "mp4", "height": 540, "samples": 16, "start_frame": 1, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\shot-knight-run-spacebunnyalpha.mp4", "filename": "shot-knight-run-spacebunnyalpha.mp4", "format": "MP4", "frames": 72, "fps": 24, "width": 960, "height": ... [341 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-104238-shot-knight-run-spacebunnyalpha\\shot-knight-run-spacebunnyalpha.mp4", "filename": "shot-knight-run-spacebunnyalpha.mp4", "format": "MP4", "frames": 72, "fps": 24, "width": 960, "height": ... [341 more characters]
 **Ajan:** Render tamam.
 
 **Dosya:** `shot-knight-run-spacebunnyalpha.mp4` — 72 kare, 24 fps, 3.0 sn, 960x540, H.264, 201 KB, EEVEE, 6.1 sn render süresi.
 
 Yol:
-`C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-104238-shot-knight-run-spacebunnyalpha\`
+`C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-104238-shot-knight-run-spacebunnyalpha\`
 
 **Yapılan iş:**
 - Karakter parçaları kuruldu: `head`, `torso`, `arm_l/r`, `leg_l/r`, `sword`, `shield` — ayrı obje, join yok (rig şartı).

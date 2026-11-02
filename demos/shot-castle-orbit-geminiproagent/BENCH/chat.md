@@ -55,11 +55,11 @@
   > {"preset": "golden_hour", "about": "low warm sun, orange sky, long shadows", "lights": ["AI_Sun"], "ground": "AI_Ground", "world": "AI_World", "scene_center": [0.0, 0.0, 1.5], "scene_radius": 4.69}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "orbit", "about": "camera circles the subject (angle degrees, default 120)", "frames": 120, "fps": 24, "seconds": 5.0, "frame_range": [1, 120], "subject_center": [0.0, 0.0, 1.5], "subject_radius": 4.69, "distance": 13.133}
 - `render_image` {"filename": "castle_test"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094639-shot-castle-orbit-geminiproagent\\castle_test.png", "filename": "castle_test.png", "width": 960, "height": 540, "frame": 1, "bytes": 510067, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094639-shot-castle-orbit-geminiproagent\\castle_test.png", "filename": "castle_test.png", "width": 960, "height": 540, "frame": 1, "bytes": 510067, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
 **Ajan:** .
 
 - `render_animation` {"filename": "shot-castle-orbit-geminiproagent"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094639-shot-castle-orbit-geminiproagent\\shot-castle-orbit-geminiproagent.mp4", "filename": "shot-castle-orbit-geminiproagent.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "heig ... [347 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-094639-shot-castle-orbit-geminiproagent\\shot-castle-orbit-geminiproagent.mp4", "filename": "shot-castle-orbit-geminiproagent.mp4", "format": "MP4", "frames": 120, "fps": 24, "width": 960, "heig ... [347 more characters]
 **Ajan:** MP4 hazır. Neler yaptım:
 
 *   Cube silindi, yerine ana gövde (Keep) yapıldı.

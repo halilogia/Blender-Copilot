@@ -65,7 +65,7 @@
 **Ajan:** check_shot is now **ok**. Let me render one frame to inspect lighting and framing visually.
 
 - `render_image` {"filename": "shot_check_framing_preview", "frame": 48}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-163005-shot-check-framing-deepseekv4flash\\shot_check_framing_preview.png", "filename": "shot_check_framing_preview.png", "width": 960, "height": 540, "frame": 48, "bytes": 505598, "format": "PN ... [100 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-163005-shot-check-framing-deepseekv4flash\\shot_check_framing_preview.png", "filename": "shot_check_framing_preview.png", "width": 960, "height": 540, "frame": 48, "bytes": 505598, "format": "PN ... [100 more characters]
 **Ajan:** Screenshot shows both props, but `tree_pine` returned NOT_EXECUTED and the third result looks like a render. Need ground truth.
 
 - `inspect_scene` {}
@@ -79,7 +79,7 @@
 **Ajan:** `render_animation` takes no `duration` — the scene range from camera_move (96 frames @24fps = 4 s) already defines the length.
 
 - `render_animation` {"filename": "shot-check-framing-deepseekv4flash", "format": "mp4"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-163005-shot-check-framing-deepseekv4flash\\shot-check-framing-deepseekv4flash.mp4", "filename": "shot-check-framing-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960,  ... [357 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-163005-shot-check-framing-deepseekv4flash\\shot-check-framing-deepseekv4flash.mp4", "filename": "shot-check-framing-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960,  ... [357 more characters]
 **Ajan:** Screenshot shows house + tree, but tool results look misattributed. Checking actual scene state.
 
 - `inspect_scene` {}

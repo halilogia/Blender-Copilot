@@ -85,13 +85,13 @@
   > {"preset": "night", "about": "dark blue night with a cold moon light from behind", "lights": ["AI_Sun"], "ground": "AI_Ground", "world": "AI_World", "scene_center": [0.0, 0.419, 1.017], "scene_radius": 1.465}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "arc_left", "about": "camera swings 60 degrees to the left around the subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.419, 1.017], "subject_radius": 1.465, "distance": 4.863, "follow": tru ... [2 more characters]
 - `render_image` {}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-105021-shot-soldier-aim-geminiproagent\\shot.png", "filename": "shot.png", "width": 960, "height": 540, "frame": 1, "bytes": 546208, "format": "PNG", "engine": "EEVEE", "image_id": "rn_49452ae9c ... [52 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-105021-shot-soldier-aim-geminiproagent\\shot.png", "filename": "shot.png", "width": 960, "height": 540, "frame": 1, "bytes": 546208, "format": "PNG", "engine": "EEVEE", "image_id": "rn_49452ae9c ... [52 more characters]
 **Ajan:** .
 
 - `render_animation` {"filename": "shot-soldier-aim-geminiproagent"}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-105021-shot-soldier-aim-geminiproagent\\shot-soldier-aim-geminiproagent.mp4", "filename": "shot-soldier-aim-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": ... [341 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-105021-shot-soldier-aim-geminiproagent\\shot-soldier-aim-geminiproagent.mp4", "filename": "shot-soldier-aim-geminiproagent.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": ... [341 more characters]
 **Ajan:** gÜd>Varsayılan küp silindi. Asker parçaları (gövde, kafa, kask, kollar, bacaklar, tüfek) oluşturuldu. Renk atandı. Rig bağlandı. Nişan alma animasyonu verildi. Gece ışığı kuruldu. Kamera askerin etrafında sola yay çizecek şekilde ayarlandı. 4 saniyelik render alındı.
 
 MP4 dosya yolu:
-`C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-105021-shot-soldier-aim-geminiproagent\shot-soldier-aim-geminiproagent.mp4`
+`C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-105021-shot-soldier-aim-geminiproagent\shot-soldier-aim-geminiproagent.mp4`
 

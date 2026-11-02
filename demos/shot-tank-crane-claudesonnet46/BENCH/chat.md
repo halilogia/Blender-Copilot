@@ -71,11 +71,11 @@
 - `camera_move` {"distance": 12, "duration": 4, "elevation": 10, "focal_length": 50, "fps": 24, "object_names": ["Tank"], "preset": "crane_up", "azimuth": 30}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "crane_up", "about": "camera rises while looking at the subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.0, 0.875], "subject_radius": 3.873, "distance": 12.0}
 - `render_image` {"width": 960, "filename": "tank_preview", "frame": 1, "height": 540, "samples": 16}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-091515-shot-tank-crane-claudesonnet46\\tank_preview.png", "filename": "tank_preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 478074, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-091515-shot-tank-crane-claudesonnet46\\tank_preview.png", "filename": "tank_preview.png", "width": 960, "height": 540, "frame": 1, "bytes": 478074, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
 **Ajan:** Kadraj ve ışık güzel — gün batımı tonları, tank zeminde, kamera açısı iyi. MP4 render başlatıyorum.
 
 - `render_animation` {"filename": "shot-tank-crane-claudesonnet46", "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-091515-shot-tank-crane-claudesonnet46\\shot-tank-crane-claudesonnet46.mp4", "filename": "shot-tank-crane-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-091515-shot-tank-crane-claudesonnet46\\shot-tank-crane-claudesonnet46.mp4", "filename": "shot-tank-crane-claudesonnet46.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": 54 ... [336 more characters]
 **Ajan:** Bitti. Özet:
 
 **Model** (260 üçgen):

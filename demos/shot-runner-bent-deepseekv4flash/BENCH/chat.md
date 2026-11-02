@@ -133,7 +133,7 @@
 **Ajan:** Rig created successfully (height 1.75 m). Now let me save it to the character library.
 
 - `character_library` {"action": "save", "name": "Runner", "rig": "Runner_Rig"}
-  > {"saved": "Runner", "path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\characters\\Runner.blend", "objects": 13, "rig": "Runner_Rig", "bytes": 600517}
+  > {"saved": "Runner", "path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\characters\\Runner.blend", "objects": 13, "rig": "Runner_Rig", "bytes": 600517}
 **Ajan:** Saved as "Runner". Now let me animate it running 8 meters.
 
 - `animate_character` {"preset": "run", "rig": "Runner_Rig", "distance": 8, "duration": 4}
@@ -155,7 +155,7 @@
 **Ajan:** Now let me render a frame to check lighting and framing before the full animation.
 
 - `render_image` {"filename": "runner_check", "frame": 48, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\runner_check.png", "filename": "runner_check.png", "width": 960, "height": 540, "frame": 48, "bytes": 521609, "format": "PNG", "engine": "EEVEE", "image_ ... [70 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\runner_check.png", "filename": "runner_check.png", "width": 960, "height": 540, "frame": 48, "bytes": 521609, "format": "PNG", "engine": "EEVEE", "image_ ... [70 more characters]
 **Ajan:** Screenshot shows a runner already present in scene. Results look inconsistent — let me re-inspect actual state.
 
 - `inspect_scene` {}
@@ -167,7 +167,7 @@
 - `render_animation` {"filename": "shot-runner-bent-deepseekv4flash", "format": "mp4", "fps": 24, "height": 540, "width": 960}
   > {"error": "Unexpected argument(s) ['fps'] for tool 'render_animation'.", "type": "INVALID_ARGUMENT"}
 - `render_animation` {"filename": "shot-runner-bent-deepseekv4flash", "format": "mp4", "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\shot-runner-bent-deepseekv4flash.mp4", "filename": "shot-runner-bent-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "heigh ... [347 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-123734-shot-runner-bent-deepseekv4flash\\shot-runner-bent-deepseekv4flash.mp4", "filename": "shot-runner-bent-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "heigh ... [347 more characters]
 **Ajan:** State unclear — one call reported NOT_EXECUTED, yet a render appeared. Let me verify actual scene contents.
 
 - `inspect_scene` {}

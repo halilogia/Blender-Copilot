@@ -125,7 +125,7 @@
 - `camera_move` {"duration": 4, "follow": true, "object_names": ["Robot_Rig"], "preset": "dolly_in"}
   > {"camera": "ShotCamera", "target": "ShotTarget", "preset": "dolly_in", "about": "camera moves toward the subject", "frames": 96, "fps": 24, "seconds": 4.0, "frame_range": [1, 96], "subject_center": [0.0, 0.014, 0.877], "subject_radius": 0.988, "distance": 3.893, "follow": true}
 - `render_image` {"filename": "robot_check", "frame": 20, "height": 540, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\robot_check.png", "filename": "robot_check.png", "width": 960, "height": 540, "frame": 20, "bytes": 422100, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\robot_check.png", "filename": "robot_check.png", "width": 960, "height": 540, "frame": 20, "bytes": 422100, "format": "PNG", "engine": "EEVEE", "image_id" ... [67 more characters]
 **Ajan:** Viewport shows a robot, but tool results were inconsistent. Inspecting actual scene state.
 
 - `inspect_scene` {}
@@ -133,7 +133,7 @@
 **Ajan:** Let me check the whole camera move with a contact sheet.
 
 - `render_contact_sheet` {"filename": "robot_sheet", "frames": 4, "height": 270, "width": 480}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\robot_sheet.png", "filename": "robot_sheet.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 960, "height": 540, "bytes": 373997, "image_id": "rn ... [62 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\robot_sheet.png", "filename": "robot_sheet.png", "frames": [1, 33, 64, 96], "tiles": [2, 2], "width": 960, "height": 540, "bytes": 373997, "image_id": "rn ... [62 more characters]
 **Ajan:** Viewport capture shows a robot already. Checking actual scene state.
 
 - `inspect_scene` {}
@@ -145,7 +145,7 @@
 - `render_animation` {"filename": "shot-robot-wave-deepseekv4flash", "format": "mp4", "fps": 24, "height": 540, "samples": 16, "width": 960}
   > {"error": "Unexpected argument(s) ['fps'] for tool 'render_animation'.", "type": "INVALID_ARGUMENT"}
 - `render_animation` {"filename": "shot-robot-wave-deepseekv4flash", "format": "mp4", "height": 540, "samples": 16, "width": 960}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\shot-robot-wave-deepseekv4flash.mp4", "filename": "shot-robot-wave-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": ... [342 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-122028-shot-robot-wave-deepseekv4flash\\shot-robot-wave-deepseekv4flash.mp4", "filename": "shot-robot-wave-deepseekv4flash.mp4", "format": "MP4", "frames": 96, "fps": 24, "width": 960, "height": ... [342 more characters]
 **Ajan:** Viewport shows robot already built. Checking actual scene state before continuing.
 
 - `inspect_scene` {}

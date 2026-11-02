@@ -89,7 +89,7 @@
 **Ajan:** **9 — Export**
 
 - `export_gltf` {"y_up": true, "filename": "house-claudesonnet46.glb", "object_names": ["House"], "recenter": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082238-house-claudesonnet46\\house-claudesonnet46.glb", "filename": "house-claudesonnet46.glb", "bytes": 7328, "objects": ["House"], "triangle_count": 68, "format": "GLB", "y_up": true, "recente ... [11 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082238-house-claudesonnet46\\house-claudesonnet46.glb", "filename": "house-claudesonnet46.glb", "bytes": 7328, "objects": ["House"], "triangle_count": 68, "format": "GLB", "y_up": true, "recente ... [11 more characters]
 **Ajan:** ✅ **Tamamlandı.**
 
 ---

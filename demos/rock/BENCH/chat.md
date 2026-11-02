@@ -37,7 +37,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["RockA","MossA","RockB","MossB","RockC"],"center":[0.332,-0.132,0.52],"radius":1.453,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011921-rock\019bd31f-f2f2-4a08-9346-325f4c7c8dc2\tool-results\mcp-blender-blob-1790720412843-sm8v82.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011921-rock\019bd31f-f2f2-4a08-9346-325f4c7c8dc2\tool-results\mcp-blender-blob-1790720412843-sm8v82.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_4254ca1fe203","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":76891,"channels":4},"error":null}
 **Ajan:** Görünüm iyi. Birleştirip dışa aktarıyorum.
 
@@ -49,10 +49,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["RockCluster"],"center":[0.291,-0.146,0.52],"radius":1.37,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {"max_side": 256}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011921-rock\019bd31f-f2f2-4a08-9346-325f4c7c8dc2\tool-results\mcp-blender-blob-1790720417767-1gko5r.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011921-rock\019bd31f-f2f2-4a08-9346-325f4c7c8dc2\tool-results\mcp-blender-blob-1790720417767-1gko5r.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_1c64b6a43eb9","width":256,"height":256,"format":"PNG","mime_type":"image/png","byte_size":20374,"channels":4,"downscaled":true,"requested":"512x512"},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["RockCluster"], "filename": "rock.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011921-rock\\rock.glb","filename":"rock.glb","bytes":9316,"objects":["RockCluster"],"triangle_count":114,"format":"GLB","y_up":true,"recentered":true}, ... [13 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011921-rock\\rock.glb","filename":"rock.glb","bytes":9316,"objects":["RockCluster"],"triangle_count":114,"format":"GLB","y_up":true,"recentered":true}, ... [13 more characters]
 **Ajan:** Kaya kümesi hazır ve `rock.glb` olarak dışa aktarıldı. Toplam **114 üçgen**.
 
 **Ne yaptım:**

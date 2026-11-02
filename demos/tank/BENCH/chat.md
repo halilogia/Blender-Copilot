@@ -31,12 +31,12 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Hull","TrackL","Turret","Barrel","TrackR"],"center":[0.55,0,0.775],"radius":3.359,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011420-tank\ee255652-e0ec-4689-b469-fc19a4f1e74e\tool-results\mcp-blender-blob-1790720087789-0mevnq.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011420-tank\ee255652-e0ec-4689-b469-fc19a4f1e74e\tool-results\mcp-blender-blob-1790720087789-0mevnq.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_19ef5355aaac","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":79179,"channels":4},"error":null}
 **Ajan:** Model görünüyor: gövde, iki palet, kule ve namlu yerinde. Şimdi dışa aktarıyorum.
 
 - `mcp__blender__export_gltf` {"object_names": ["Hull", "TrackL", "TrackR", "Turret", "Barrel"], "filename": "tank.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011420-tank\\tank.glb","filename":"tank.glb","bytes":19340,"objects":["Hull","TrackL","TrackR","Turret","Barrel"],"triangle_count":380,"format":"GLB"," ... [43 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011420-tank\\tank.glb","filename":"tank.glb","bytes":19340,"objects":["Hull","TrackL","TrackR","Turret","Barrel"],"triangle_count":380,"format":"GLB"," ... [43 more characters]
 **Ajan:** Tank hazır ve `tank.glb` olarak dışa aktarıldı: `archives\bench-runs\20260930-011420-tank\tank.glb`. Toplam **380 üçgen**, yani ~3000'lik sınırın çok altında. Modeli ISO açıdan viewport'ta kontrol ettim; tüm parçalar doğru yerde duruyor.
 
 **Yaptıklarım:**

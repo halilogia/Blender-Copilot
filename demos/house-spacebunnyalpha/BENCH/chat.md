@@ -89,7 +89,7 @@
 **Ajan:** Model verified. Export.
 
 - `export_gltf` {"apply_modifiers": true, "filename": "house-spacebunnyalpha.glb", "include_materials": true, "object_names": ["House_LowPoly"], "recenter": true, "y_up": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-083939-house-spacebunnyalpha\\house-spacebunnyalpha.glb", "filename": "house-spacebunnyalpha.glb", "bytes": 8276, "objects": ["House_LowPoly"], "triangle_count": 80, "format": "GLB", "y_up": tru ... [22 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-083939-house-spacebunnyalpha\\house-spacebunnyalpha.glb", "filename": "house-spacebunnyalpha.glb", "bytes": 8276, "objects": ["House_LowPoly"], "triangle_count": 80, "format": "GLB", "y_up": tru ... [22 more characters]
 **Ajan:** Bitti.
 
 **Ne yapıldı**
@@ -106,7 +106,7 @@
 house-spacebunnyalpha.glb  —  8,276 bayt, 80 üçgen, Y-up, recentered
 ```
 
-Dosya yolu: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-083939-house-spacebunnyalpha\`
+Dosya yolu: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-083939-house-spacebunnyalpha\`
 
 Not: oyun projesi kopyalama + `sync_project` bu ortamda yok, sadece export klasörüne yazıldı. Godot/Unity'ye alırken dosyayı `res://assets/` altına kendin kopyala.
 

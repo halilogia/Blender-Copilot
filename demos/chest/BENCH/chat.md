@@ -41,7 +41,7 @@
 
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012028-chest\1f8f7e79-5b35-4927-a6ec-49277f263f73\tool-results\mcp-blender-blob-1790720486192-7qrdav.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-012028-chest\1f8f7e79-5b35-4927-a6ec-49277f263f73\tool-results\mcp-blender-blob-1790720486192-7qrdav.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_622ac8435c2d","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":99363,"channels":4},"error":null}
 **Ajan:** Görüntü iyi: kubbe, bantlar ve kilit doğru yerde. Parçaları birleştirip dışa aktarıyorum.
 
@@ -53,7 +53,7 @@
 - `mcp__blender__set_origin` {"object_name": "Chest", "mode": "BOTTOM_CENTER"}
   > {"success":true,"tool":"set_origin","data":{"object_name":"Chest","type":"MESH","exists":true,"location":[0,-0.0125,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":74,"face_count":51,"triangle_count":120,"local_bounds_min":[-0.45,-0.3325,0],"local_bounds_max":[0.45,0.3325,0.77],"dimensions":[0. ... [58 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["Chest"], "filename": "chest.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012028-chest\\chest.glb","filename":"chest.glb","bytes":8592,"objects":["Chest"],"triangle_count":120,"format":"GLB","y_up":true,"recentered":true},"er ... [10 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-012028-chest\\chest.glb","filename":"chest.glb","bytes":8592,"objects":["Chest"],"triangle_count":120,"format":"GLB","y_up":true,"recentered":true},"er ... [10 more characters]
 **Ajan:** Hazine sandığı hazır ve `chest.glb` olarak dışa aktarıldı. Toplam **120 üçgen**, yani ~3000'lik low-poly bütçesinin çok altında.
 
 **Yaptıklarım:**
@@ -66,7 +66,7 @@
 - Tüm parçaları tek bir `Chest` nesnesinde birleştirdim. Ölçeği mesh'e işledim ve origin'i tabanın ortasına koydum, böylece model oyunda zeminde duruyor.
 
 **Sonuç:** Boyutlar 0.9 × 0.665 × 0.77 m, 3 malzeme. Dosya Y-up olarak kaydedildi:
-`C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012028-chest\chest.glb` (8.6 KB)
+`C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012028-chest\chest.glb` (8.6 KB)
 
 Kapak ayrı bir parça değil, gövdeyle birleşik. Oyunda açılması gerekiyorsa kapağı ayrı bir nesne olarak da verebilirim.
 
@@ -84,6 +84,6 @@ Kapak ayrı bir parça değil, gövdeyle birleşik. Oyunda açılması gerekiyor
 - Tüm parçaları tek bir `Chest` nesnesinde birleştirdim. Ölçeği mesh'e işledim ve origin'i tabanın ortasına koydum, böylece model oyunda zeminde duruyor.
 
 **Sonuç:** Boyutlar 0.9 × 0.665 × 0.77 m, 3 malzeme. Dosya Y-up olarak kaydedildi:
-`C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012028-chest\chest.glb` (8.6 KB)
+`C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-012028-chest\chest.glb` (8.6 KB)
 
 Kapak ayrı bir parça değil, gövdeyle birleşik. Oyunda açılması gerekiyorsa kapağı ayrı bir nesne olarak da verebilirim.

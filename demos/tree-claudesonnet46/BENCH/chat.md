@@ -57,7 +57,7 @@
 - `set_origin` {"object_name": "PineTree", "mode": "BOTTOM_CENTER"}
   > {"object_name": "PineTree", "type": "MESH", "exists": true, "location": [0.0, 0.0, 0.0005], "rotation": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0], "vertex_count": 163, "face_count": 133, "triangle_count": 310, "local_bounds_min": [-1.2, -1.2, 0.0], "local_bounds_max": [1.2, 1.2, 3.9995], "dimensions ... [54 more characters]
 - `export_gltf` {"filename": "tree-claudesonnet46.glb", "object_names": ["PineTree"], "recenter": true, "y_up": true}
-  > {"path": "C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082103-tree-claudesonnet46\\tree-claudesonnet46.glb", "filename": "tree-claudesonnet46.glb", "bytes": 17540, "objects": ["PineTree"], "triangle_count": 310, "format": "GLB", "y_up": true, "recen ... [13 more characters]
+  > {"path": "C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-082103-tree-claudesonnet46\\tree-claudesonnet46.glb", "filename": "tree-claudesonnet46.glb", "bytes": 17540, "objects": ["PineTree"], "triangle_count": 310, "format": "GLB", "y_up": true, "recen ... [13 more characters]
 **Ajan:** Export tamam. Özet:
 
 ---

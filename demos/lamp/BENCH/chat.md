@@ -31,7 +31,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Pole","Base","Arm","Shade","Bulb"],"center":[0.538,0,2],"radius":2.133,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011232-lamp\be10961a-ff7c-44d0-a96c-815f46d517c1\tool-results\mcp-blender-blob-1790719976234-2bgwln.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011232-lamp\be10961a-ff7c-44d0-a96c-815f46d517c1\tool-results\mcp-blender-blob-1790719976234-2bgwln.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_1323ee3ea456","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":71521,"channels":4},"error":null}
 **Ajan:** Looks right. Join, origin to bottom, export.
 
@@ -43,7 +43,7 @@
 - `mcp__blender__set_origin` {"object_name": "StreetLamp", "mode": "BOTTOM_CENTER"}
   > {"success":true,"tool":"set_origin","data":{"object_name":"StreetLamp","type":"MESH","exists":true,"location":[0.5375,0,0],"rotation":[0,0,0],"scale":[1,1,1],"vertex_count":211,"face_count":187,"triangle_count":402,"local_bounds_min":[-0.6875,-0.275,0],"local_bounds_max":[0.6875,0.275,4],"dimensions ... [61 more characters]
 - `mcp__blender__export_gltf` {"object_names": ["StreetLamp"], "filename": "lamp.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011232-lamp\\lamp.glb","filename":"lamp.glb","bytes":23044,"objects":["StreetLamp"],"triangle_count":402,"format":"GLB","y_up":true,"recentered":true}, ... [13 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011232-lamp\\lamp.glb","filename":"lamp.glb","bytes":23044,"objects":["StreetLamp"],"triangle_count":402,"format":"GLB","y_up":true,"recentered":true}, ... [13 more characters]
 **Ajan:** Sokak lambası hazır ve `lamp.glb` olarak dışa aktarıldı: **402 üçgen**, 23 KB.
 
 **Ne yaptım:**
@@ -57,7 +57,7 @@
 
 **Dikkat edilecek bir nokta:** Orijin tabanın altında ama yatayda direğin değil, lambanın tamamının ortasında. Kol yüzünden direkten yaklaşık 54 cm yana kayık. Oyunda lambayı konumlandırırken direk bu kadar kenarda durur. Orijinin tam direk ekseninde olmasını istersen düzeltebilirim.
 
-Dosya: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011232-lamp\lamp.glb`
+Dosya: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011232-lamp\lamp.glb`
 
 
 ---
@@ -74,4 +74,4 @@ Dosya: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench
 
 **Dikkat edilecek bir nokta:** Orijin tabanın altında ama yatayda direğin değil, lambanın tamamının ortasında. Kol yüzünden direkten yaklaşık 54 cm yana kayık. Oyunda lambayı konumlandırırken direk bu kadar kenarda durur. Orijinin tam direk ekseninde olmasını istersen düzeltebilirim.
 
-Dosya: `C:\Users\Halil Emre\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011232-lamp\lamp.glb`
+Dosya: `C:\Users\User\Desktop\GitHub\Public\Blender Copilot\archives\bench-runs\20260930-011232-lamp\lamp.glb`

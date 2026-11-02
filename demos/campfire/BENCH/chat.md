@@ -49,7 +49,7 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"ISO","objects":["Stone_0","Stone_1","Stone_2","Stone_3","Stone_4","Stone_5","Stone_6","Stone_7","Log_0","Log_1","Log_2","Log_3","Log_4","Flame_Outer","Flame_Inner"],"center":[-0.008,0.012,0.274],"radius":0.924,"shading":"MATERIAL","overlays":f ... [19 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-01.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720154936-4iy42f.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720154936-4iy42f.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_e1d0f1c64214","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":85344,"channels":4},"error":null}
 **Ajan:** Taş halka ve odunlar hazır; alev odunların içinde kaybolmuş, odunları dikleştirip alevi büyütüyorum.
 
@@ -69,7 +69,7 @@
   > {"success":true,"tool":"transform_object","data":{"object_name":"Flame_Inner","relative":false,"exists":true,"before":{"location":[0.02,0.01,0.27],"rotation":[0,0,0.4],"scale":[1,1,2]},"after":{"exists":true,"location":[0.03,0.02,0.62],"rotation":[0,0,0.4],"scale":[1,1,2.6]},"actual":{"exists":true, ... [113 more characters]
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-02.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720164802-lxgy9x.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720164802-lxgy9x.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_e74a55bb1a87","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":86515,"channels":4},"error":null}
 - `mcp__blender__transform_object` {"name": "Flame_Outer", "scale": [1.1, 1.1, 3]}
   > {"success":true,"tool":"transform_object","data":{"object_name":"Flame_Outer","relative":false,"exists":true,"before":{"location":[0,0,0.45],"rotation":[0,0,0],"scale":[1.4,1.4,3]},"after":{"exists":true,"location":[0,0,0.45],"rotation":[0,0,0],"scale":[1.1,1.1,3]},"actual":{"exists":true,"location" ... [86 more characters]
@@ -85,10 +85,10 @@
   > {"success":true,"tool":"frame_view","data":{"direction":"FRONT","objects":["Campfire"],"center":[0,0.005,0.441],"radius":0.962,"shading":"MATERIAL","overlays":false},"error":null}
 - `mcp__blender__capture_viewport` {}
   ![](shots/agent-03.png)
-  > [Image: source: C:\Users\Halil Emre\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720177428-i9h077.png]
+  > [Image: source: C:\Users\User\.claude\projects\C--Users-Halil-Emre-Desktop-GitHub-Public-Blender-Copilot-archives-bench-runs-20260930-011502-campfire\4b26a92e-74f5-4b85-bf06-dc38dad78d24\tool-results\mcp-blender-blob-1790720177428-i9h077.png]
   > {"success":true,"tool":"capture_viewport","data":{"image_id":"vp_c78b3569e458","width":512,"height":512,"format":"PNG","mime_type":"image/png","byte_size":81907,"channels":4},"error":null}
 - `mcp__blender__export_gltf` {"object_names": ["Campfire"], "filename": "campfire.glb"}
-  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\Halil Emre\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011502-campfire\\campfire.glb","filename":"campfire.glb","bytes":87292,"objects":["Campfire"],"triangle_count":1384,"format":"GLB","y_up":true,"recente ... [24 more characters]
+  > {"success":true,"tool":"export_gltf","data":{"path":"C:\\Users\\User\\Desktop\\GitHub\\Public\\Blender Copilot\\archives\\bench-runs\\20260930-011502-campfire\\campfire.glb","filename":"campfire.glb","bytes":87292,"objects":["Campfire"],"triangle_count":1384,"format":"GLB","y_up":true,"recente ... [24 more characters]
 **Ajan:** Kamp ateşi hazır ve `campfire.glb` olarak dışa aktarıldı.
 
 **Dosya:** `...\archives\bench-runs\20260930-011502-campfire\campfire.glb` (Y-up, 87 KB)
