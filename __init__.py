@@ -117,17 +117,45 @@ def create_production_provider() -> BaseProvider:
     import bpy
     cfg = get_effective_config()
     online_access = getattr(bpy.app, "online_access", True)
-    if getattr(cfg, "provider", "openai_compatible") == "anthropic":
+    kind = getattr(cfg, "provider", "openai_compatible")
+    if kind == "agy_cli":
+        from .agent.agy_cli_provider import AgyCliProvider
+        return AgyCliProvider(config=cfg)
+    if kind == "anthropic":
         from .agent.anthropic_provider import AnthropicCompatibleProvider
         return AnthropicCompatibleProvider(config=cfg, online_access=online_access)
     return OpenAICompatibleProvider(config=cfg, online_access=online_access)
 
 
+_PROVIDER_CLASS_KIND = {
+    "AgyCliProvider": "agy_cli",
+    "AnthropicCompatibleProvider": "anthropic",
+    "OpenAICompatibleProvider": "openai_compatible",
+}
+
+
 def update_runtime_config(config: Config) -> None:
-    """Dynamically sync configuration changes to the running provider."""
+    """Dynamically sync configuration changes to the running provider.
+
+    A provider-type change (e.g. openai_compatible -> agy_cli) swaps the provider in the
+    runtime, worker and visual verifier, and closes the old one.
+    """
     global _runtime
     if _runtime and hasattr(_runtime, "provider"):
         provider = _runtime.provider
+        current = _PROVIDER_CLASS_KIND.get(type(provider).__name__)
+        wanted = getattr(config, "provider", "openai_compatible")
+        if current is not None and current != wanted and not os.environ.get("BLENDER_AI_USE_MOCK_PROVIDER") == "1":
+            new_provider = create_production_provider()
+            _runtime.provider = new_provider
+            if getattr(_runtime, "worker", None) is not None:
+                _runtime.worker.provider = new_provider
+            verifier = getattr(_runtime, "visual_verifier", None)
+            if verifier is not None:
+                verifier.provider = new_provider
+            if hasattr(provider, "close"):
+                provider.close()
+            return
         if hasattr(provider, "config"):
             provider.config = config
             effective_timeout = getattr(config, "timeout_seconds", 30.0)
@@ -293,6 +321,8 @@ def unregister():
     # 2. Shutdown runtime and background workers
     if _runtime is not None:
         _runtime.shutdown()
+        if hasattr(_runtime.provider, "close"):
+            _runtime.provider.close()  # agy_cli: kill the CLI subprocess
         _runtime = None
 
     # 3. Unregister UI & Keymaps

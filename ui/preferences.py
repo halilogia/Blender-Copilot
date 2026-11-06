@@ -104,6 +104,7 @@ class AI_SIDEBAR_OT_save_preferences(Operator):
                 api_key=prefs.api_key,
                 model=prefs.model,
                 timeout_seconds=float(prefs.timeout_seconds),
+                provider=getattr(prefs, "provider", "openai_compatible"),
             )
             save_config(cfg, get_config_path())
             self.report({"INFO"}, "Preferences saved to config.json.")
@@ -170,6 +171,7 @@ class AISidebarPreferences(AddonPreferences):
         items=[
             ("openai_compatible", "OpenAI-Compatible", "Chat Completions /v1/chat/completions (9Router, Ollama, OpenAI)"),
             ("anthropic", "Anthropic Native", "Messages /v1/messages (Claude)"),
+            ("agy_cli", "Antigravity CLI (agy)", "Local agy CLI, no API key or URL needed. Text only: no image input"),
         ],
         default="openai_compatible",
         update=_on_preference_updated,
@@ -195,7 +197,7 @@ class AISidebarPreferences(AddonPreferences):
         # Online access validation
         online_access = getattr(bpy.app, "online_access", True)
         allowed, msg = is_network_allowed(self.base_url, online_access)
-        if not allowed:
+        if not allowed and self.provider != "agy_cli":
             warning_box = layout.box()
             warning_box.alert = True
             warning_box.label(text=msg, icon="ERROR")

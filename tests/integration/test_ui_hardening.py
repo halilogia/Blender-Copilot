@@ -1,12 +1,7 @@
 """Phase 8: UI Hardening & Edge Cases Tests.
 
-Simulates and tests:
-1. Long prompt input.
-2. Long tool result and detail text truncation (12-line cap).
-3. Empty history state.
-4. Large history list (respecting max_items).
-5. Error state rendering.
-6. Active turn state rendering.
+The N-panel is a thin launcher for the Alt+Space HUD, so this checks that it draws
+safely in every agent state and always offers the HUD and pending approvals.
 """
 
 import os
@@ -28,8 +23,6 @@ blender_ai_sidebar = importlib.util.module_from_spec(spec)
 sys.modules["blender_ai_sidebar"] = blender_ai_sidebar
 spec.loader.exec_module(blender_ai_sidebar)
 
-from blender_ai_sidebar.agent.state_machine import AgentState
-from blender_ai_sidebar.agent.history import HistoryKind
 from blender_ai_sidebar.ui.panel import AISIDEBAR_PT_main_panel
 
 
@@ -37,6 +30,7 @@ class DummyLayout:
     """Mock layout to verify draw calls without crashing."""
     def __init__(self):
         self.labels = []
+        self.operators = []
         self.scale_y = 1.0
 
     def box(self):
@@ -58,6 +52,7 @@ class DummyLayout:
         pass
 
     def operator(self, op_name, text="", icon="NONE"):
+        self.operators.append((op_name, text))
         return self
 
     def template_list(self, *args, **kwargs):
@@ -67,68 +62,41 @@ class DummyLayout:
 import types
 
 def test_ui_drawing_edge_cases():
-    print("Testing UI drawing under extreme states...")
+    print("Testing launcher panel drawing under extreme states...")
     blender_ai_sidebar.register()
     try:
-        wm = bpy.context.window_manager
-        props = wm.ai_sidebar
-        runtime = blender_ai_sidebar.get_runtime()
+        props = bpy.context.window_manager.ai_sidebar
 
-        # 1. Empty history draw
-        dummy_panel = types.SimpleNamespace(layout=DummyLayout())
-        AISIDEBAR_PT_main_panel.draw(dummy_panel, bpy.context)
-        labels = [l[0] for l in dummy_panel.layout.labels]
-        assert any("No messages yet." in l for l in labels)
-        print("  - Empty history draw: OK")
+        def draw():
+            panel = types.SimpleNamespace(layout=DummyLayout())
+            AISIDEBAR_PT_main_panel.draw(panel, bpy.context)
+            return panel.layout
 
-        # 2. Long prompt and long tool result with truncation
-        long_prompt = "A" * 500
-        long_detail = "\n".join([f"Line {i}: " + "X" * 60 for i in range(30)])
+        # 1. Idle: the HUD launcher and the shortcut are always offered
+        layout = draw()
+        assert ("ai_sidebar.viewport_hud", "Open AI HUD") in layout.operators
+        assert any("Alt+Space" in l[0] for l in layout.labels)
 
-        runtime.history.add(
-            item_id="long_item",
-            turn_id="turn_long",
-            kind=HistoryKind.TOOL,
-            title="Tool: long_test",
-            status="OK",
-            summary="Very long summary",
-            detail=long_detail,
-        )
+        # 2. Every agent state draws without raising
+        for status in ("IDLE", "PROCESSING", "EXECUTING_TOOL", "ERROR", "CANCELLED", "SOMETHING_NEW"):
+            props.agent_status = status
+            draw()
 
-        item = props.history.add()
-        item.item_id = "long_item"
-        item.turn_id = "turn_long"
-        item.kind = "TOOL"
-        item.title = "Tool: long_test"
-        item.status = "OK"
-        item.summary = "Very long summary"
-        props.history_index = 0
-
-        # Draw panel with long content
-        dummy_panel.layout = DummyLayout()
-        AISIDEBAR_PT_main_panel.draw(dummy_panel, bpy.context)
-        labels = [l[0] for l in dummy_panel.layout.labels]
-        # Long rows are clipped with an ellipsis rather than overflowing.
-        assert any("…" in l for l in labels)
-        print("  - Long text truncation draw: OK")
-
-        # 3. Error state rendering
-        props.agent_status = "ERROR"
-        dummy_panel.layout = DummyLayout()
-        AISIDEBAR_PT_main_panel.draw(dummy_panel, bpy.context)
-        labels = [l[0] for l in dummy_panel.layout.labels]
-        assert any("Error encountered" in l for l in labels)
-        print("  - Error state draw: OK")
-
-        # 4. Active state rendering
+        # 3. Queued prompts are shown
         props.agent_status = "PROCESSING"
-        dummy_panel.layout = DummyLayout()
-        AISIDEBAR_PT_main_panel.draw(dummy_panel, bpy.context)
-        labels = [l[0] for l in dummy_panel.layout.labels]
-        assert any("AI:" in l for l in labels)
-        print("  - Processing state draw: OK")
+        props.queued_count = 2
+        assert any("2 queued" in l[0] for l in draw().labels)
+        props.queued_count = 0
 
-        print("[PASS] UI draw edge cases verified successfully.")
+        # 4. Approval stays answerable from the panel when the HUD is closed
+        props.agent_status = "PENDING_APPROVAL"
+        ops = [o[0] for o in draw().operators]
+        assert "ai_sidebar.approve_action" in ops and "ai_sidebar.reject_action" in ops
+        props.agent_status = "IDLE"
+        ops = [o[0] for o in draw().operators]
+        assert "ai_sidebar.approve_action" not in ops
+
+        print("[PASS] Launcher panel draw edge cases verified successfully.")
     finally:
         blender_ai_sidebar.unregister()
 

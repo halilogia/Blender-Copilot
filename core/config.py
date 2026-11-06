@@ -57,6 +57,10 @@ def is_network_allowed(url: str, online_access_enabled: bool) -> Tuple[bool, str
     return False, "Blender online access is disabled in Preferences. Enable it or use a local provider (localhost)."
 
 
+#: Valid provider ids. `agy_cli` drives the local Antigravity CLI (no HTTP, no API key, no images).
+PROVIDER_IDS = ("openai_compatible", "anthropic", "agy_cli")
+
+
 @dataclass
 class Config:
     """Strongly-typed configuration container."""
@@ -98,7 +102,7 @@ class Config:
             timeout_seconds = DEFAULT_TIMEOUT_SECONDS
 
         provider = str(data.get("provider", "openai_compatible")).strip() or "openai_compatible"
-        if provider not in ("openai_compatible", "anthropic"):
+        if provider not in PROVIDER_IDS:
             provider = "openai_compatible"
         supports_multimodal = data.get("supports_multimodal", None)
         if supports_multimodal is not None:
@@ -159,7 +163,7 @@ def load_config(config_path: Optional[Path] = None) -> Tuple[Config, Optional[st
             pass
 
     env_provider = os.environ.get("BLENDER_AI_PROVIDER")
-    if env_provider and env_provider.strip() in ("openai_compatible", "anthropic"):
+    if env_provider and env_provider.strip() in PROVIDER_IDS:
         config.provider = env_provider.strip()
 
     return config, warning

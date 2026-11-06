@@ -92,6 +92,8 @@ class TestRuntimeIsolationAndSecurity(unittest.TestCase):
                 # Designated transport and launcher modules
                 norm_path = file_path.replace("\\", "/")
                 is_http_client = norm_path.endswith("agent/http_client.py")
+                # The agy provider is the one designated local-process launcher (the CLI replaces HTTP).
+                is_cli_launcher = norm_path.endswith("agent/agy_cli_provider.py")
 
                 with open(file_path, "r", encoding="utf-8") as fh:
                     content = fh.read()
@@ -107,6 +109,8 @@ class TestRuntimeIsolationAndSecurity(unittest.TestCase):
                         mod = getattr(node, "module", None) or getattr(node, "names", [None])[0].name
                         base_mod = mod.split(".")[0]
                         if is_http_client and base_mod in {"urllib", "http", "socket", "ssl"}:
+                            continue
+                        if is_cli_launcher and base_mod == "subprocess":
                             continue
                         self.assertNotIn(
                             base_mod, forbidden_modules,

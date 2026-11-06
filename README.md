@@ -68,9 +68,9 @@ The Godot side: [Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar
   - In-viewport interactive approval card with `[Approve]` and `[Reject]` buttons, keyboard shortcuts (`Y`/`N`), and single-use cryptographic security tokens.
   - User rejection safely routes back to the LLM conversation loop as structured context without throwing unhandled exceptions.
 
-- **Dual User Interface**:
-  - **Native GPU Viewport Overlay (HUD)**: Sleek, floating bar rendered directly in the 3D Viewport framebuffer (`SpaceView3D.draw_handler_add` with `POST_PIXEL`). Features anti-aliased geometry, drop shadows, Unicode/Turkish input buffer, interactive buttons, and hotkey toggling (`Alt+Space`). Zero external dependencies.
-  - **3D Viewport N-Panel**: Standard persistent sidebar panel with complete session history (`UIList`), operation status badges, and manual approval controls.
+- **One main interface: the Alt+Space HUD** (plus a thin launcher in the N-panel):
+  - **Native GPU Viewport Overlay (HUD)**: Calm graphite bar with one teal accent, rendered directly in the 3D Viewport framebuffer (`SpaceView3D.draw_handler_add` with `POST_PIXEL`). **`Alt+Space`** (or `Shift+Alt+A`) opens it as soon as the add-on is enabled, no setup. Unicode/Turkish input, wheel scrolling for long answers, and everything the old sidebar did: **History** (copy a response or a tool's details), **Menu** (MCP bridge, undo the AI task, clear history, copy log path, check for updates), **What changed? / Undo task**, **Copy plan**, and **Settings** (provider, Base URL, model, masked API key, timeout, online-access status, Test connection, Save). Zero external dependencies. The header button **Ask AI** opens it too.
+  - **3D Viewport N-Panel (launcher)**: one **Open AI HUD** button, the shortcut hint, the agent status and Approve/Reject while a plan waits. It is kept so the add-on is easy to find; all other controls live in the HUD. The MCP bridge settings panel stays in the sidebar.
 
 - **Thread-Isolated Architecture**:
   - **Background Worker**: Handles HTTP connections, SSE streaming, and payload serialization without ever freezing Blender's UI or dropping viewport frames.
@@ -80,6 +80,7 @@ The Godot side: [Godot AI Sidebar](https://github.com/halilogia/Godot-AI-Sidebar
 - **LLM Integration (dual dialect)**:
   - OpenAI-Compatible Chat Completions streaming (`POST /v1/chat/completions` with `stream=True`).
   - Native Anthropic Messages streaming (`POST /v1/messages`, `anthropic-version: 2023-06-01`, shared `SSEParser` + `ToolCallAccumulator`); switch via Preferences Provider dropdown or `BLENDER_AI_PROVIDER`.
+  - **Antigravity CLI (`agy_cli`)**: drives your local `agy` login (stream-json, no HTTP, no API key; `BLENDER_AI_AGY_PATH` if it is not on PATH). Runs on the worker thread so Blender never waits. **Text only: no image input**, so `visual_verify` needs the OpenAI-compatible or Anthropic provider. Pick it in HUD Settings, Preferences or `BLENDER_AI_PROVIDER=agy_cli`.
   - End-to-end tool/function calling round-trips (`tool_calls` -> approval gate -> execute tool -> return `tool` message -> final synthesis).
   - Multi-round conversational loops with automated loop guards (`max_tool_rounds`).
   - Tested with **9Router**, **LM Studio**, **Ollama**, **OpenRouter**, **OpenAI**, and **Anthropic** endpoints.
@@ -213,20 +214,21 @@ Blender Copilot/
 2. In Blender, open **Edit > Preferences > Add-ons**.
 3. Search for **Blender - Copilot** and enable the checkbox.
 4. Expand the addon preferences to configure:
-   - **Provider**: `OpenAI-Compatible` or `Anthropic Native`.
+   (You can also do all of this inside the HUD: `Alt+Space` > **Menu** > **Settings**.)
+   - **Provider**: `OpenAI-Compatible`, `Anthropic Native` or `Antigravity CLI (agy)` (no URL or key needed, text only).
    - **Base URL**: e.g. `http://localhost:20128/v1` (or `https://api.anthropic.com/v1` for Anthropic).
    - **Model**: e.g. `gpt-4o`, `qwen2.5-coder`, `llama3.1`, `claude-sonnet-4-5`.
    - **API Key**: Enter if required (masked automatically; sent as `Bearer` for OpenAI, `x-api-key` for Anthropic).
    - **Timeout (seconds)**: Default is `30.0`.
 5. In the 3D Viewport:
-   - Press **`Alt + Space`** to open the floating **GPU Viewport HUD**, or
-   - Press **`N`** to open the sidebar and switch to the **AI Copilot** tab.
+   - Press **`Alt + Space`** to open the floating **GPU Viewport HUD** (the main interface), or
+   - Press **`N`**, open the **Blender - Copilot** tab and click **Open AI HUD**.
 
 ---
 
 ## Usage
 
-1. **Ask or Command**: Open the HUD (`Alt+Space`) or use the N-Panel, type a request (e.g., *"Sahneyi incele"*, *"Bir küp oluştur"*, or *"Küpü sil"*), and press Enter / Gönder.
+1. **Ask or Command**: Open the HUD (`Alt+Space`), type a request (e.g., *"Sahneyi incele"*, *"Bir küp oluştur"*, or *"Küpü sil"*), and press Enter / Gönder.
 2. **Autonomous Tool Selection**: The Copilot communicates with your LLM, selects the required grounding or mutation tools, and presents them to the execution layer.
 3. **Approval Gate for Destructive Actions**: If a tool carries `MEDIUM` or `HIGH` risk (such as `delete_object`), execution stops immediately in `PENDING_APPROVAL`.
    - An amber approval card appears in the Viewport HUD and N-Panel.

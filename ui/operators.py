@@ -227,6 +227,14 @@ def get_last_copied_text() -> str:
     return _last_copied_text
 
 
+_last_update_message: str = ""
+
+
+def get_last_update_message() -> str:
+    """Return the result text of the most recent update check (for the HUD toast)."""
+    return _last_update_message
+
+
 class AISIDEBAR_OT_copy_turn_response(Operator):
     """Copy assistant response of a timeline turn to clipboard."""
 
@@ -338,6 +346,11 @@ class AISIDEBAR_OT_check_updates(Operator):
     bl_label = "Check for Updates"
     bl_description = "Check GitHub releases for a newer Blender Copilot version"
 
+    def _say(self, level, text):
+        global _last_update_message
+        _last_update_message = text
+        self.report({level}, text)
+
     def execute(self, context):
         from core.update_check import check_for_updates
         from core.config import is_network_allowed
@@ -356,16 +369,16 @@ class AISIDEBAR_OT_check_updates(Operator):
         online = getattr(_bpy.app, "online_access", True)
         allowed, reason = is_network_allowed("https://api.github.com", online)
         if not allowed:
-            self.report({"WARNING"}, reason)
+            self._say("WARNING", reason)
             return {"CANCELLED"}
         status = check_for_updates(current)
         if status.error:
-            self.report({"WARNING"}, f"Update check failed: {status.error}")
+            self._say("WARNING", f"Update check failed: {status.error}")
             return {"CANCELLED"}
         if status.update_available:
-            self.report({"INFO"}, f"Update available: {status.latest} (current {status.current}).")
+            self._say("INFO", f"Update available: {status.latest} (current {status.current}).")
         else:
-            self.report({"INFO"}, f"Up to date ({status.current}).")
+            self._say("INFO", f"Up to date ({status.current}).")
         return {"FINISHED"}
 
 
